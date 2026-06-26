@@ -359,6 +359,8 @@ console.log('[AP2] IDB bridge ready — all data served from IndexedDB via Admin
 .tb-sc.bike:hover{background:var(--teal);color:#fff;}
 .tb-sc.adv{color:var(--amber);border-color:rgba(227,179,65,.3);background:var(--amber-dim);}
 .tb-sc.adv:hover{background:var(--amber);color:#0d1117;}
+.tb-sc.doc{color:var(--red);border-color:rgba(248,81,73,.3);background:var(--red-dim);}
+.tb-sc.doc:hover{background:var(--red);color:#fff;}
 
 .tb-gap{flex:1;min-width:4px;}
 
@@ -885,6 +887,10 @@ console.log('[AP2] IDB bridge ready — all data served from IndexedDB via Admin
           onclick="loadPage('Reg/addSim.html',null,'Add Sim','ti-device-sim','New sim','var(--amber-dim)','var(--amber)')">
           <i class="ti ti-device-sim"></i><span> Add Sim</span>
         </button>
+        <button class="tb-sc doc"
+          onclick="loadPage('pages/addDoc.html',null,'Add Documents','ti-file-plus','Upload new document','var(--red-dim)','var(--red)')">
+          <i class="ti ti-file-plus"></i><span> Add Doc</span>
+        </button>
       </div>
 
       <div class="tb-gap"></div>
@@ -965,8 +971,8 @@ console.log('[AP2] IDB bridge ready — all data served from IndexedDB via Admin
       <button class="ib-btn" id="ib-adv" onclick="ibOpen('ib-adv',this)" title="Advance Salary">
         <i class="ti ti-cash"></i><span class="ib-tip">Advance Salary</span>
       </button>
-      <button class="ib-btn" id="ib-docs" onclick="ibOpen('ib-docs',this)" title="Expiring Docs">
-        <i class="ti ti-file-alert"></i><span class="ib-tip">Expiring Docs</span>
+      <button class="ib-btn" id="ib-docs" onclick="ibOpen('ib-docs',this)" title="Document">
+        <i class="ti ti-file-description"></i><span class="ib-tip">Document</span>
       </button>
       <div class="ib-spacer"></div>
     </nav>
@@ -1214,7 +1220,7 @@ const SECTIONS = {
         { label:'Add Employee',  file:'Reg/addEmp.html', icon:'ti-user-plus', sub:'Register new employee' },
       ]},
       { label:'Documents', items:[
-        { label:'Expiring Docs', file:'Reg/doc.html', icon:'ti-file-x', sub:'Visa · EID · Labour', badge:true },
+        { label:'Expiring Docs', file:'Reg/empExp.html', icon:'ti-file-x', sub:'Visa · EID · Labour', badge:true },
       ]},
     ],
   },
@@ -1267,14 +1273,18 @@ const SECTIONS = {
     ],
   },
   'ib-docs': {
-    icon:'ti-file-alert', label:'Expiring Docs',
-    pageLabel:'Expiring Docs', pageSub:'Document tracker',
-    pillBg:'var(--red-dim)', pillColor:'var(--red)', pillIcon:'ti-file-alert',
+    icon:'ti-file-description', label:'Document',
+    pageLabel:'Document', pageSub:'Document manager',
+    pillBg:'var(--red-dim)', pillColor:'var(--red)', pillIcon:'ti-file-description',
     permKey: null,   // section always shown if at least one child item is permitted
     groups:[
+      { label:'Directory', items:[
+        { label:'Add Documents', file:'pages/addDoc.html', icon:'ti-file-plus', sub:'Upload new document' },
+      ]},
       { label:'Expiry Tracker', items:[
-        { label:'Employee Docs', file:'pages/docPortal.html', icon:'ti-users',     sub:'Visa · EID · Labour', badge:true, permKey:'ap2_employee' },
+        { label:'Employee Docs', file:'pages/empExp.html', icon:'ti-users',     sub:'Visa · EID · Labour', badge:true, permKey:'ap2_employee' },
         { label:'Bike Docs',     file:'pages/bikExp.html', icon:'ti-motorbike', sub:'Mulkiya · Insurance',  badge:true, permKey:'ap2_bike'     },
+        { label:'SIM Pkg Docs',  file:'pages/simPkgExp.html', icon:'ti-device-sim', sub:'SIM package expiry', badge:true, permKey:'ap2_sim'  },
       ]},
     ],
   },
