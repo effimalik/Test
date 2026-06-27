@@ -1609,16 +1609,16 @@ function closeThemeDropdown() {
     const raw = sessionStorage.getItem('ap_session');
     if (!raw) {
       console.warn('[index] auth.js not loaded and no session found — redirecting');
-      window.location.replace('https://effimalik.github.io/Testing/login.html');
+      window.location.replace('https://effimalik.github.io/Test/login.html');
       return;
     }
     const s = JSON.parse(raw);
     if (!s || !s.sessionId || !s.token || !s.email) {
-      window.location.replace('https://effimalik.github.io/Testing/login.html');
+      window.location.replace('https://effimalik.github.io/Test/login.html');
     }
   } catch (e) {
     console.error('[sessionGuard] Error — redirecting to be safe:', e);
-    window.location.replace('https://effimalik.github.io/Testing/login.html');
+    window.location.replace('https://effimalik.github.io/Test/login.html');
   }
 })();
 
@@ -1629,7 +1629,7 @@ function signOut() {
   } else {
     // Fallback if auth.js failed to load
     sessionStorage.removeItem('ap_session');
-    window.location.replace('https://effimalik.github.io/Testing/login.html');
+    window.location.replace('https://effimalik.github.io/Test/login.html');
   }
 }
 
