@@ -41,7 +41,7 @@
   /* ─────────────────────────────────────────
      CONFIG — must match auth.js API_BASE
   ───────────────────────────────────────── */
-  const API_BASE = 'https://script.google.com/macros/s/AKfycbygAyjBCNCMNdhhUFHQaPcaGg08mxgCfrkhMai1wYy0L87tbPlx_RgxVi-arNvI4AAjFg/exec';
+  const API_BASE = 'https://script.google.com/macros/s/AKfycbyJft-IY-ydcsho7DEupdjMJRcjJAP1t7d1SxwkhBpZxv02hayOQWeWiAwytRMOc2hWgg/exec';
 
   const CACHE_PREFIX = 'ap2_';
 
