@@ -1295,29 +1295,19 @@ function previewDoc(rec,docLabel,mode){
   let mediaHtml='';
 
   if(rec.docLink&&rec.docLink.startsWith('http')){
-    /* ── Drive link: iframe embeds are blocked by Google's CSP.
-     *   Show a clean card with file info + prominent Open button.
-     *   No iframe, no external scripts, no CSP violations. ── */
+    /* ── Drive link: no iframe, no thumbnail, no external requests.
+     *   Show a static card with doc type icon + metadata + Open button only. ── */
     const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
-    const fileId=driveMatch?driveMatch[1]:null;
-    const thumbHtml=fileId
-      ?`<img src="https://drive.google.com/thumbnail?id=${fileId}&sz=w400"
-           style="width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-lg);display:block;background:var(--bg3);"
-           onerror="this.style.display='none'"
-           alt="Preview thumbnail"/>`
-      :'';
+    const fileId=driveMatch?driveMatch[1]:'';
 
     mediaHtml=`
       <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg3);">
-        ${thumbHtml}
-        <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <i class="ti ti-brand-google-drive" style="font-size:22px;color:#4285f4;flex-shrink:0;"></i>
-            <div>
-              <div style="font-size:12.5px;font-weight:700;color:var(--text);">Google Drive File</div>
-              <div style="font-size:10.5px;color:var(--text3);font-family:var(--mono);">${fileId||rec.docLink.slice(0,40)+'…'}</div>
-            </div>
-          </div>
+        <div style="padding:28px 16px;text-align:center;border-bottom:1px solid var(--border);">
+          <i class="ti ti-brand-google-drive" style="font-size:48px;color:#4285f4;display:block;margin-bottom:10px;"></i>
+          <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;">Google Drive Document</div>
+          ${fileId?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);word-break:break-all;padding:0 8px;">${fileId}</div>`:''}
+        </div>
+        <div style="padding:12px;">
           <a class="btn btn-primary btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener">
             <i class="ti ti-external-link"></i> Open in Drive
           </a>
@@ -1325,6 +1315,7 @@ function previewDoc(rec,docLabel,mode){
       </div>`;
 
     if(dlBtn){dlBtn.href=rec.docLink;dlBtn.removeAttribute('download');dlBtn.target='_blank';dlBtn.style.display='';}
+    dlBtn && (dlBtn.innerHTML='<i class="ti ti-external-link"></i> Open in Drive');
 
   }else if(rec.fileData){
     /* ── Local base64: image or PDF — safe to embed ── */
