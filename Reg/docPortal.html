@@ -9,33 +9,34 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
 
 <style>
-:root, [data-theme="dark"] {
-  --bg:#0d1117; --bg2:#161b22; --bg3:#1c2333;
-  --surface:#21262d; --surface2:#2d333b;
-  --border:#30363d; --border2:#444c56;
-  --text:#e6edf3; --text2:#8b949e; --text3:#6e7681;
-  --accent:#58a6ff; --accent-dim:rgba(88,166,255,.12); --accent-glow:rgba(88,166,255,.28);
-  --teal:#39d353; --teal-dim:rgba(57,211,83,.12);
-  --amber:#e3b341; --amber-dim:rgba(227,179,65,.12);
-  --red:#f85149; --red-dim:rgba(248,81,73,.12);
-  --purple:#a371f7; --purple-dim:rgba(163,113,247,.12);
-  --orange:#f0883e; --orange-dim:rgba(240,136,62,.12);
-  --radius:8px; --radius-lg:12px; --radius-xl:16px;
-  --font:'Sora',sans-serif; --mono:'JetBrains Mono',monospace;
-  --shadow:0 1px 3px rgba(0,0,0,.4); --shadow-md:0 4px 16px rgba(0,0,0,.5); --shadow-lg:0 8px 32px rgba(0,0,0,.6);
+/* ═══ THEME ═══ */
+:root,[data-theme="dark"]{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;
+  --surface:#21262d;--surface2:#2d333b;
+  --border:#30363d;--border2:#444c56;
+  --text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
+  --accent:#58a6ff;--accent-dim:rgba(88,166,255,.12);--accent-glow:rgba(88,166,255,.28);
+  --teal:#39d353;--teal-dim:rgba(57,211,83,.12);
+  --amber:#e3b341;--amber-dim:rgba(227,179,65,.12);
+  --red:#f85149;--red-dim:rgba(248,81,73,.12);
+  --purple:#a371f7;--purple-dim:rgba(163,113,247,.12);
+  --orange:#f0883e;--orange-dim:rgba(240,136,62,.12);
+  --radius:8px;--radius-lg:12px;--radius-xl:16px;
+  --font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+  --shadow:0 1px 3px rgba(0,0,0,.4);--shadow-md:0 4px 16px rgba(0,0,0,.5);--shadow-lg:0 8px 32px rgba(0,0,0,.6);
 }
-[data-theme="light"] {
-  --bg:#f0f2f5; --bg2:#ffffff; --bg3:#e8ecf0;
-  --surface:#ffffff; --surface2:#e2e7ed;
-  --border:#c8d0d9; --border2:#9aa5b1;
-  --text:#0d1117; --text2:#3d454f; --text3:#5a6370;
-  --accent:#0550ae; --accent-dim:rgba(5,80,174,.12); --accent-glow:rgba(5,80,174,.22);
-  --teal:#116329; --teal-dim:rgba(17,99,41,.13);
-  --amber:#7d4e00; --amber-dim:rgba(125,78,0,.13);
-  --red:#a8111b; --red-dim:rgba(168,17,27,.11);
-  --purple:#6639c8; --purple-dim:rgba(102,57,200,.13);
-  --orange:#953800; --orange-dim:rgba(149,56,0,.13);
-  --shadow:0 1px 3px rgba(0,0,0,.10); --shadow-md:0 4px 16px rgba(0,0,0,.12); --shadow-lg:0 8px 32px rgba(0,0,0,.15);
+[data-theme="light"]{
+  --bg:#f0f2f5;--bg2:#fff;--bg3:#e8ecf0;
+  --surface:#fff;--surface2:#e2e7ed;
+  --border:#c8d0d9;--border2:#9aa5b1;
+  --text:#0d1117;--text2:#3d454f;--text3:#5a6370;
+  --accent:#0550ae;--accent-dim:rgba(5,80,174,.12);--accent-glow:rgba(5,80,174,.22);
+  --teal:#116329;--teal-dim:rgba(17,99,41,.13);
+  --amber:#7d4e00;--amber-dim:rgba(125,78,0,.13);
+  --red:#a8111b;--red-dim:rgba(168,17,27,.11);
+  --purple:#6639c8;--purple-dim:rgba(102,57,200,.13);
+  --orange:#953800;--orange-dim:rgba(149,56,0,.13);
+  --shadow:0 1px 3px rgba(0,0,0,.10);--shadow-md:0 4px 16px rgba(0,0,0,.12);--shadow-lg:0 8px 32px rgba(0,0,0,.15);
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -44,148 +45,181 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
 
-.portal-wrap{display:flex;flex-direction:column;height:100vh;max-width:1500px;margin:0 auto;padding:18px;gap:14px;}
+/* ═══ LAYOUT ═══ */
+.portal-wrap{display:flex;flex-direction:column;height:100vh;max-width:1600px;margin:0 auto;padding:14px;gap:10px;}
 
-.portal-header{display:flex;align-items:center;gap:14px;padding:14px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);flex-shrink:0;}
-.portal-logo{width:40px;height:40px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.portal-logo i{font-size:20px;color:#fff;}
-.portal-title h1{font-size:17px;font-weight:700;color:var(--text);}
-.portal-title p{font-size:11.5px;color:var(--text3);}
+/* ═══ HEADER ═══ */
+.portal-header{display:flex;align-items:center;gap:12px;padding:11px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);flex-shrink:0;}
+.portal-logo{width:38px;height:38px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.portal-logo i{font-size:19px;color:#fff;}
+.portal-title h1{font-size:16px;font-weight:700;}
+.portal-title p{font-size:11px;color:var(--text3);}
 .portal-header-actions{margin-left:auto;display:flex;align-items:center;gap:8px;}
-#cache-status{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text3);padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--mono);}
+#cache-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--mono);}
 
-.tab-nav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:5px;flex-shrink:0;}
-.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 18px;border-radius:var(--radius);border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;}
-.tab-btn i{font-size:16px;line-height:1;}
-.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 0 14px var(--accent-glow);}
+/* ═══ TABS ═══ */
+.tab-nav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:4px;flex-shrink:0;}
+.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:8px 14px;border-radius:var(--radius);border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;}
+.tab-btn i{font-size:15px;}
+.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 0 12px var(--accent-glow);}
 .tab-btn:not(.active):hover{background:var(--surface2);color:var(--text);}
 
-.selector-bar{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:14px 18px;flex-shrink:0;box-shadow:var(--shadow);}
-.field{display:flex;flex-direction:column;gap:6px;}
-.field label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
+/* ═══ SELECTOR BAR ═══ */
+.selector-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:12px 16px;flex-shrink:0;box-shadow:var(--shadow);}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
 .field label span.req{color:var(--red);}
-.search-dropdown-wrap{position:relative;width:280px;}
-.search-dropdown-input{width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:13px;transition:border .18s,box-shadow .18s;}
-.search-dropdown-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}
-.search-dropdown-input::placeholder{color:var(--text3);}
-.dropdown-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:200;max-height:220px;overflow-y:auto;display:none;}
+
+/* ═══ SEARCH DROPDOWN WITH CLEAR BTN ═══ */
+.sdw{position:relative;}
+.sdw input{width:100%;padding:8px 34px 8px 11px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:12.5px;transition:border .15s,box-shadow .15s;}
+.sdw input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}
+.sdw input::placeholder{color:var(--text3);}
+.sdw .clr-btn{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;padding:2px;display:none;font-size:14px;line-height:1;}
+.sdw .clr-btn:hover{color:var(--text);}
+.sdw input:not(:placeholder-shown) ~ .clr-btn{display:flex;}
+.sdw.has-val .clr-btn{display:flex;}
+.dropdown-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:300;max-height:240px;overflow-y:auto;display:none;}
 .dropdown-list.open{display:block;}
-.dropdown-item{padding:9px 13px;font-size:13px;cursor:pointer;transition:background .12s;}
-.dropdown-item:hover{background:var(--accent-dim);}
-.dropdown-item .did{font-family:var(--mono);font-size:11px;color:var(--text3);}
-.dropdown-item .dname{color:var(--text);font-weight:600;}
-.dropdown-item .dname em{color:var(--accent);font-style:normal;}
-.entity-confirm-strip{display:none;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:9px 16px;}
-.entity-confirm-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
-.entity-confirm-name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;}
-.entity-confirm-sub{font-size:10.5px;color:var(--text3);font-family:var(--mono);white-space:nowrap;}
-.confirm-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:9.5px;font-weight:700;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);white-space:nowrap;}
+.di{padding:8px 12px;font-size:12.5px;cursor:pointer;transition:background .1s;}
+.di:hover{background:var(--accent-dim);}
+.di .dn{color:var(--text);font-weight:600;}
+.di .dn em{color:var(--accent);font-style:normal;}
+.di .ds{font-family:var(--mono);font-size:10.5px;color:var(--text3);}
+.di.no-match{color:var(--text3);cursor:default;}
+.di.no-match:hover{background:none;}
 
-.main-split{flex:1;display:flex;gap:14px;min-height:0;}
+/* ═══ CONFIRM STRIP ═══ */
+.confirm-strip{display:none;align-items:center;gap:9px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:8px 14px;flex-shrink:0;}
+.ca{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;}
+.cn{font-size:12.5px;font-weight:700;color:var(--text);}
+.cs{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.cbadge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);white-space:nowrap;}
 
-.doc-sidebar{width:130px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;box-shadow:var(--shadow);}
-.doc-sidebar-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--text3);text-align:center;padding:16px 8px;}
-.doc-sidebar-empty i{font-size:26px;opacity:.4;}
-.doc-sidebar-empty span{font-size:11px;}
+/* ═══ MAIN SPLIT ═══ */
+.main-split{flex:1;display:flex;gap:10px;min-height:0;}
 
-.doc-side-btn{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:var(--radius-lg);border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-family:var(--font);font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;text-align:center;}
-.doc-side-btn i{font-size:20px;line-height:1;}
+/* ═══ DOC SIDEBAR ═══ */
+.doc-sidebar{width:120px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:8px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;box-shadow:var(--shadow);}
+.doc-sidebar-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--text3);text-align:center;padding:12px 6px;}
+.doc-sidebar-empty i{font-size:24px;opacity:.35;}
+.doc-sidebar-empty span{font-size:10.5px;}
+.doc-side-btn{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:var(--radius-lg);border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-family:var(--font);font-size:10px;font-weight:600;cursor:pointer;transition:all .18s;text-align:center;}
+.doc-side-btn i{font-size:18px;}
 .doc-side-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
 .doc-side-btn.selected{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
 .doc-side-btn.has-docs{border-color:var(--teal);color:var(--teal);}
 .doc-side-btn.has-docs i{color:var(--teal);}
 .doc-side-btn.expired-docs{border-color:var(--red);color:var(--red);}
-.doc-side-btn.expired-docs i{color:var(--red);}
 .doc-side-btn.expiring-docs{border-color:var(--amber);color:var(--amber);}
-.doc-side-btn.expiring-docs i{color:var(--amber);}
-.doc-side-btn.selected.has-docs,.doc-side-btn.selected.expired-docs,.doc-side-btn.selected.expiring-docs{box-shadow:0 0 0 1px currentColor;}
-.doc-count-badge{position:absolute;top:5px;right:5px;background:var(--teal);color:#fff;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.doc-count-badge{position:absolute;top:4px;right:4px;background:var(--teal);color:#fff;font-size:8.5px;font-weight:700;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .doc-count-badge.red{background:var(--red);}
 .doc-count-badge.amber{background:var(--amber);}
 
+/* ═══ DOC CENTER ═══ */
 .doc-center{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;}
-.doc-center-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.doc-center-header h3{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
-.doc-center-header h3 i{color:var(--accent);font-size:18px;}
-.doc-center-body{flex:1;overflow-y:auto;padding:16px 18px;}
-.doc-center-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);gap:10px;text-align:center;padding:30px;}
-.doc-center-placeholder i{font-size:36px;opacity:.35;}
-.doc-center-placeholder span{font-size:13px;}
+.doc-center-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.doc-center-header h3{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:7px;}
+.doc-center-header h3 i{color:var(--accent);font-size:17px;}
+.doc-center-body{flex:1;overflow-y:auto;padding:14px 16px;}
+.doc-center-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);gap:10px;text-align:center;padding:24px;}
+.doc-center-placeholder i{font-size:34px;opacity:.3;}
+.doc-center-placeholder span{font-size:12.5px;}
 
-.txn-record{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;transition:border .15s;}
-.txn-record:hover{border-color:var(--border2);}
-.txn-record-icon{width:34px;height:34px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
-.txn-record-icon.pdf{background:var(--red-dim);color:var(--red);}
-.txn-record-icon.img{background:var(--accent-dim);color:var(--accent);}
-.txn-record-meta{flex:1;min-width:0;}
-.txn-id-btn{display:flex;align-items:center;gap:6px;background:none;border:none;padding:0;cursor:pointer;font-family:var(--mono);font-size:11.5px;color:var(--accent);font-weight:600;text-align:left;}
-.txn-id-btn:hover{text-decoration:underline;}
-.txn-record-date{font-size:11.5px;color:var(--text2);margin-top:2px;}
-.txn-record-expiry{font-size:11px;margin-top:1px;}
-.txn-record-expiry.red{color:var(--red);}
-.txn-record-expiry.amber{color:var(--amber);}
-.txn-record-expiry.teal{color:var(--teal);}
-.txn-record-expiry.gray{color:var(--text3);}
-.txn-badge-latest{font-size:9px;font-weight:700;padding:1px 7px;border-radius:20px;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);margin-left:4px;}
+/* ═══ HISTORY RECORD (from ap2_docLog) ═══ */
+.hist-rec{display:flex;gap:10px;padding:10px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:7px;transition:border .12s;align-items:center;}
+.hist-rec:hover{border-color:var(--border2);}
+.hist-icon{width:32px;height:32px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.hist-icon.link{background:var(--accent-dim);color:var(--accent);}
+.hist-icon.local{background:var(--teal-dim);color:var(--teal);}
+.hist-meta{flex:1;min-width:0;}
+.hist-txn{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.hist-badge-latest{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:20px;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);}
+.hist-badge-sheet{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:20px;background:var(--purple-dim);color:var(--purple);border:1px solid rgba(163,113,247,.3);}
+.hist-date{font-size:11px;color:var(--text2);margin-top:1px;}
+.hist-exp{font-size:10.5px;margin-top:1px;}
+.hist-exp.red{color:var(--red);}
+.hist-exp.amber{color:var(--amber);}
+.hist-exp.teal{color:var(--teal);}
+.hist-exp.gray{color:var(--text3);}
+.hist-actions{display:flex;gap:5px;flex-shrink:0;}
 
-.txn-new-row{display:flex;align-items:center;gap:10px;padding:13px 14px;border:1.5px dashed var(--border2);border-radius:var(--radius-lg);margin-top:4px;background:var(--bg2);}
-.txn-new-label{flex:1;font-size:12.5px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:8px;}
-.txn-new-label i{font-size:18px;color:var(--text3);}
-.btn-new-upload{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:var(--radius);border:1.5px solid var(--accent);background:var(--accent-dim);color:var(--accent);font-family:var(--font);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .18s;}
+/* ═══ UPLOAD SECTION ═══ */
+.txn-new-row{display:flex;align-items:center;gap:9px;padding:11px 13px;border:1.5px dashed var(--border2);border-radius:var(--radius-lg);margin-top:4px;background:var(--bg2);}
+.txn-new-label{flex:1;font-size:12px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:7px;}
+.txn-new-label i{font-size:17px;color:var(--text3);}
+.btn-new-upload{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:1.5px solid var(--accent);background:var(--accent-dim);color:var(--accent);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;}
 .btn-new-upload:hover{background:var(--accent);color:#fff;}
-
-.upload-inline{display:none;margin-top:10px;background:var(--bg3);border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:16px;}
+.upload-inline{display:none;margin-top:10px;background:var(--bg3);border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:14px;}
 .upload-inline.open{display:block;}
-.upload-inline-title{font-size:11.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
-.upload-inline-title i{font-size:14px;color:var(--accent);}
-.upload-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
-.upload-row .field{flex:1;min-width:200px;}
-.file-upload-zone{border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:16px;text-align:center;cursor:pointer;transition:all .18s;background:var(--surface);position:relative;}
+.upload-inline-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.upload-inline-title i{font-size:13px;color:var(--accent);}
+.upload-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+.upload-row .field{flex:1;min-width:180px;}
+.file-upload-zone{border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:14px;text-align:center;cursor:pointer;transition:all .18s;background:var(--surface);position:relative;}
 .file-upload-zone:hover,.file-upload-zone.dragover{border-color:var(--accent);background:var(--accent-dim);}
 .file-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.file-upload-zone i{font-size:24px;color:var(--text3);margin-bottom:6px;}
-.file-upload-zone p{font-size:11.5px;color:var(--text3);}
+.file-upload-zone i{font-size:22px;color:var(--text3);display:block;margin-bottom:4px;}
+.file-upload-zone p{font-size:11px;color:var(--text3);}
 .file-upload-zone.has-file{border-color:var(--teal);background:var(--teal-dim);}
-.file-upload-zone.has-file i{color:var(--teal);}
-.file-upload-zone.has-file p{color:var(--teal);}
-.date-input{width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:13px;}
+.file-upload-zone.has-file i,.file-upload-zone.has-file p{color:var(--teal);}
+.date-input{width:100%;padding:8px 11px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:12.5px;}
 .date-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}
-.upload-actions{display:flex;justify-content:flex-end;margin-top:12px;gap:8px;}
-.gs-status{display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:var(--radius-lg);font-size:11.5px;font-weight:600;margin-top:10px;}
+.upload-actions{display:flex;justify-content:flex-end;margin-top:10px;gap:7px;}
+.gs-status{display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:var(--radius-lg);font-size:11px;font-weight:600;margin-top:8px;}
 .gs-status.loading{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(88,166,255,.3);}
 .gs-status.success{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);}
 .gs-status.error{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,81,73,.3);}
 
+/* ═══ PREVIEW PANEL ═══ */
 .doc-preview-panel{width:0;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);overflow:hidden;transition:width .26s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
-.doc-preview-panel.open{width:420px;}
-.preview-panel-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.preview-panel-header h3{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.preview-panel-header h3 i{color:var(--accent);font-size:17px;flex-shrink:0;}
-.preview-panel-close{margin-left:auto;width:28px;height:28px;border-radius:var(--radius);border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;flex-shrink:0;}
-.preview-panel-close:hover{background:var(--red-dim);color:var(--red);border-color:var(--red);}
-.preview-panel-body{flex:1;overflow-y:auto;padding:16px;}
-.preview-panel-body img.preview-img{max-width:100%;border-radius:var(--radius-lg);display:block;margin:0 auto;}
-.preview-panel-body iframe.preview-pdf{width:100%;height:420px;border:none;border-radius:var(--radius-lg);}
-.preview-meta{display:flex;flex-direction:column;gap:10px;margin-top:14px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);}
-.preview-meta-item{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-.preview-meta-item .key{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
-.preview-meta-item .val{font-size:12px;font-weight:600;color:var(--text);font-family:var(--mono);text-align:right;}
-.preview-panel-footer{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;}
+.doc-preview-panel.open{width:400px;}
+.pph{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.pph h3{font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pph h3 i{color:var(--accent);font-size:16px;flex-shrink:0;}
+.pph-close{margin-left:auto;width:26px;height:26px;border-radius:var(--radius);border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;flex-shrink:0;}
+.pph-close:hover{background:var(--red-dim);color:var(--red);border-color:var(--red);}
+.ppb{flex:1;overflow-y:auto;padding:14px;}
+.ppb img.pi{max-width:100%;border-radius:var(--radius-lg);display:block;margin:0 auto;}
+.ppb iframe.pf{width:100%;height:400px;border:none;border-radius:var(--radius-lg);}
+.preview-meta{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);}
+.pmi{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.pmi .k{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
+.pmi .v{font-size:11.5px;font-weight:600;color:var(--text);font-family:var(--mono);text-align:right;}
+.ppf{padding:10px 14px;border-top:1px solid var(--border);flex-shrink:0;}
 
-.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--radius);border:1.5px solid;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;line-height:1;}
-.btn i{font-size:16px;line-height:1;flex-shrink:0;}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 12px var(--accent-glow);}
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1.5px solid;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;line-height:1;}
+.btn i{font-size:15px;flex-shrink:0;}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 10px var(--accent-glow);}
 .btn-primary:hover{filter:brightness(1.1);}
 .btn-ghost{background:transparent;color:var(--text2);border-color:var(--border2);}
 .btn-ghost:hover{background:var(--surface2);color:var(--text);}
-.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-sm{padding:5px 10px;font-size:11.5px;}
 .btn:disabled{opacity:.5;cursor:not-allowed;pointer-events:none;}
 .btn-block{width:100%;justify-content:center;}
-
-.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap;}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
 .badge.purple{background:rgba(163,113,247,.18);color:#a371f7;border:1px solid rgba(163,113,247,.3);}
 
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);color:var(--text);border:1px solid var(--border2);padding:12px 18px;border-radius:var(--radius-lg);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);max-width:360px;}
+/* ═══ DOC LOG TAB ═══ */
+.log-filter-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--radius);border:1.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+.log-filter-btn:hover{border-color:var(--accent);color:var(--accent);}
+.log-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 8px var(--accent-glow);}
+.log-table{width:100%;border-collapse:collapse;font-size:12px;}
+.log-table th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);background:var(--bg3);cursor:pointer;white-space:nowrap;position:sticky;top:0;z-index:2;}
+.log-table th:hover{color:var(--accent);}
+.log-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.log-table tbody tr:hover{background:var(--surface2);}
+.txn-mono{font-family:var(--mono);font-size:10.5px;color:var(--accent);}
+.portal-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9.5px;font-weight:700;}
+.portal-badge.emp{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(88,166,255,.25);}
+.portal-badge.bike{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(240,136,62,.25);}
+.doc-link-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--radius);background:var(--accent-dim);color:var(--accent);border:1px solid rgba(88,166,255,.25);font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .14s;}
+.doc-link-btn:hover{background:var(--accent);color:#fff;}
+.log-stat-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:600;color:var(--text2);}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--surface2);color:var(--text);border:1px solid var(--border2);padding:10px 16px;border-radius:var(--radius-lg);font-size:12.5px;font-weight:500;z-index:999;opacity:0;transform:translateY(10px);transition:all .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow-lg);max-width:340px;}
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.success{background:var(--teal-dim);color:var(--teal);border-color:rgba(57,211,83,.25);}
 .toast.error{background:var(--red-dim);color:var(--red);border-color:rgba(248,81,73,.25);}
@@ -193,202 +227,173 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 @keyframes spin{to{transform:rotate(360deg);}}
 .spinner{animation:spin 1s linear infinite;display:inline-flex;}
 
-/* ── Doc Log ── */
-.log-filter-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--radius);border:1.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .16s;}
-.log-filter-btn i{font-size:14px;}
-.log-filter-btn:hover{border-color:var(--accent);color:var(--accent);}
-.log-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 10px var(--accent-glow);}
-.log-table{width:100%;border-collapse:collapse;font-size:12.5px;}
-.log-table th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);background:var(--bg3);cursor:pointer;white-space:nowrap;position:sticky;top:0;z-index:2;}
-.log-table th:hover{color:var(--accent);}
-.log-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.log-table tbody tr:hover{background:var(--surface2);}
-.log-table .txn-mono{font-family:var(--mono);font-size:11px;color:var(--accent);}
-.log-table .portal-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
-.log-table .portal-badge.emp{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(88,166,255,.25);}
-.log-table .portal-badge.bike{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(240,136,62,.25);}
-.log-table .doc-link-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius);background:var(--accent-dim);color:var(--accent);border:1px solid rgba(88,166,255,.25);font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .15s;}
-.log-table .doc-link-btn:hover{background:var(--accent);color:#fff;}
-.log-table .doc-link-btn.local{background:var(--teal-dim);color:var(--teal);border-color:rgba(57,211,83,.25);}
-.log-table .doc-link-btn.local:hover{background:var(--teal);color:#fff;}
-.log-stat-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--surface);font-size:11.5px;font-weight:600;color:var(--text2);}
-.log-stat-chip i{font-size:14px;}
-
+/* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){
-  .doc-sidebar{width:90px;}
-  .doc-side-btn span{font-size:9.5px;}
-  .doc-preview-panel.open{width:340px;}
+  .doc-sidebar{width:86px;}
+  .doc-side-btn span{font-size:9px;}
+  .doc-preview-panel.open{width:320px;}
+  .portal-title p{display:none;}
 }
-@media(max-width:640px){
+@media(max-width:700px){
+  .portal-wrap{padding:8px;gap:7px;}
+  .tab-btn span{display:none;}
+  .tab-btn{padding:8px;}
   .main-split{flex-direction:column;}
-  .doc-sidebar{width:100%;flex-direction:row;overflow-x:auto;}
+  .doc-sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:6px;}
   .doc-preview-panel.open{width:100%;}
-  .doc-preview-panel{position:fixed;inset:0;z-index:300;border-radius:0;}
+  .doc-preview-panel{position:fixed;inset:0;z-index:300;border-radius:0;width:0!important;}
+  .doc-preview-panel.open{width:100%!important;}
+  .selector-bar{gap:8px;padding:10px 12px;}
+  .sdw{width:100%!important;}
+  .sdw input{width:100%!important;}
+  .log-table td:nth-child(8),.log-table th:nth-child(8){display:none;}
+}
+@media(max-width:480px){
+  .portal-header{flex-wrap:wrap;gap:8px;}
+  #cache-status{font-size:10px;}
+  .doc-sidebar{flex-wrap:wrap;}
 }
 </style>
 </head>
 <body>
-
 <div class="portal-wrap">
 
+  <!-- HEADER -->
   <div class="portal-header">
     <div class="portal-logo"><i class="ti ti-file-certificate"></i></div>
     <div class="portal-title">
       <h1>Document Management Portal</h1>
-      <p>Rider & vehicle document tracking · Synced from fleet cache</p>
+      <p>Rider & vehicle document tracking · ap2_docLog cache</p>
     </div>
     <div class="portal-header-actions">
-      <div id="cache-status">
-        <i class="ti ti-loader spinner" style="font-size:13px;"></i> Loading cache…
-      </div>
+      <div id="cache-status"><i class="ti ti-loader spinner" style="font-size:12px;"></i> Loading…</div>
     </div>
   </div>
 
+  <!-- TABS -->
   <div class="tab-nav">
     <button class="tab-btn active" id="tab-emp-btn" onclick="switchTab('emp')">
-      <i class="ti ti-user-check"></i><span>Employee Documents</span>
+      <i class="ti ti-user-check"></i><span>Employee Docs</span>
     </button>
     <button class="tab-btn" id="tab-bike-btn" onclick="switchTab('bike')">
-      <i class="ti ti-motorbike"></i><span>Bike Documents</span>
+      <i class="ti ti-motorbike"></i><span>Bike Docs</span>
     </button>
     <button class="tab-btn" id="tab-log-btn" onclick="switchTab('log')">
       <i class="ti ti-table"></i><span>Doc Log</span>
     </button>
   </div>
 
-  <!-- EMPLOYEE TAB -->
-  <div class="tab-panel" id="tab-emp" style="display:flex;flex-direction:column;gap:14px;flex:1;min-height:0;">
-
+  <!-- ══ EMPLOYEE TAB ══ -->
+  <div class="tab-panel" id="tab-emp" style="display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;">
     <div class="selector-bar">
       <div class="field">
-        <label>Employee ID <span class="req">*</span></label>
-        <div class="search-dropdown-wrap">
-          <input class="search-dropdown-input" id="emp-search" type="text" placeholder="Type Emp ID or Name…" autocomplete="off"
-            oninput="filterEmpDropdown(this.value)" onfocus="openEmpDropdown()" onblur="setTimeout(()=>closeEmpDropdown(),180)"/>
+        <label>Employee <span class="req">*</span></label>
+        <div class="sdw" id="emp-sdw" style="width:280px;">
+          <input id="emp-search" type="text" placeholder="Search by name or ID…" autocomplete="off"
+            oninput="filterDrop('emp',this.value)"
+            onfocus="openDrop('emp')"
+            onblur="setTimeout(()=>closeDrop('emp'),160)"/>
+          <button class="clr-btn" tabindex="-1" onclick="clearDrop('emp')"><i class="ti ti-x"></i></button>
           <div class="dropdown-list" id="emp-dropdown"></div>
         </div>
       </div>
-      <div id="emp-confirm" class="entity-confirm-strip">
-        <div class="entity-confirm-avatar" id="emp-avatar"></div>
+      <div id="emp-confirm" class="confirm-strip">
+        <div class="ca" id="emp-avatar"></div>
         <div>
-          <div class="entity-confirm-name" id="emp-confirm-name">—</div>
-          <div class="entity-confirm-sub" id="emp-confirm-id">—</div>
+          <div class="cn" id="emp-confirm-name">—</div>
+          <div class="cs" id="emp-confirm-id">—</div>
         </div>
-        <span class="confirm-badge"><i class="ti ti-check" style="font-size:10px;"></i> Confirmed</span>
+        <span class="cbadge"><i class="ti ti-check" style="font-size:9px;"></i> Confirmed</span>
+        <button class="btn btn-ghost btn-sm" onclick="clearDrop('emp')" title="Change employee" style="margin-left:2px;"><i class="ti ti-replace"></i></button>
       </div>
     </div>
-
-    <div class="main-split" id="emp-main-split">
+    <div class="main-split">
       <div class="doc-sidebar" id="emp-doc-sidebar">
-        <div class="doc-sidebar-empty"><i class="ti ti-user-search"></i><span>Select an employee to view document categories</span></div>
+        <div class="doc-sidebar-empty"><i class="ti ti-user-search"></i><span>Select an employee</span></div>
       </div>
       <div class="doc-center" id="emp-doc-center">
-        <div class="doc-center-placeholder">
-          <i class="ti ti-files"></i>
-          <span>Select a document type from the left to view its records</span>
-        </div>
+        <div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>
       </div>
       <div class="doc-preview-panel" id="emp-preview-panel">
-        <div class="preview-panel-header">
-          <h3><i class="ti ti-eye"></i> <span id="emp-preview-title">Preview</span></h3>
-          <button class="preview-panel-close" onclick="closePreview('emp')"><i class="ti ti-x"></i></button>
-        </div>
-        <div class="preview-panel-body" id="emp-preview-body"></div>
-        <div class="preview-panel-footer">
-          <a id="emp-preview-download" class="btn btn-ghost btn-sm btn-block" download><i class="ti ti-download"></i> Download Document</a>
-        </div>
+        <div class="pph"><h3><i class="ti ti-eye"></i><span id="emp-preview-title">Preview</span></h3><button class="pph-close" onclick="closePreview('emp')"><i class="ti ti-x"></i></button></div>
+        <div class="ppb" id="emp-preview-body"></div>
+        <div class="ppf"><a id="emp-preview-download" class="btn btn-ghost btn-sm btn-block" download><i class="ti ti-download"></i> Download</a></div>
       </div>
     </div>
   </div>
 
-  <!-- BIKE TAB -->
-  <div class="tab-panel" id="tab-bike" style="display:none;flex-direction:column;gap:14px;flex:1;min-height:0;">
-
+  <!-- ══ BIKE TAB ══ -->
+  <div class="tab-panel" id="tab-bike" style="display:none;flex-direction:column;gap:10px;flex:1;min-height:0;">
     <div class="selector-bar">
       <div class="field">
-        <label>Bike ID <span class="req">*</span></label>
-        <div class="search-dropdown-wrap">
-          <input class="search-dropdown-input" id="bike-search" type="text" placeholder="Type Bike ID (known) or a new one…" autocomplete="off"
-            oninput="filterBikeDropdown(this.value)" onfocus="openBikeDropdown()" onblur="setTimeout(()=>closeBikeDropdown(),180)"/>
+        <label>Bike <span class="req">*</span></label>
+        <div class="sdw" id="bike-sdw" style="width:280px;">
+          <input id="bike-search" type="text" placeholder="Search by bike ID or plate…" autocomplete="off"
+            oninput="filterDrop('bike',this.value)"
+            onfocus="openDrop('bike')"
+            onblur="setTimeout(()=>closeDrop('bike'),160)"/>
+          <button class="clr-btn" tabindex="-1" onclick="clearDrop('bike')"><i class="ti ti-x"></i></button>
           <div class="dropdown-list" id="bike-dropdown"></div>
         </div>
       </div>
-      <div class="field" id="bike-plate-field" style="display:none;">
-        <label>Plate Number <span class="req">*</span></label>
-        <input class="search-dropdown-input" id="bike-plate-input" type="text" placeholder="e.g. Dubai A 12345" style="width:220px;"/>
-      </div>
-      <button class="btn btn-primary btn-sm" id="bike-confirm-btn" style="display:none;" onclick="confirmNewBike()">
-        <i class="ti ti-check"></i> Use this Bike
-      </button>
-      <div id="bike-confirm" class="entity-confirm-strip">
-        <div class="entity-confirm-avatar" id="bike-avatar" style="background:var(--orange-dim);color:var(--orange);">
-          <i class="ti ti-motorbike" style="font-size:15px;"></i>
-        </div>
+      <div id="bike-confirm" class="confirm-strip">
+        <div class="ca" style="background:var(--orange-dim);color:var(--orange);"><i class="ti ti-motorbike" style="font-size:14px;"></i></div>
         <div>
-          <div class="entity-confirm-name" id="bike-confirm-plate">—</div>
-          <div class="entity-confirm-sub" id="bike-confirm-id">—</div>
+          <div class="cn" id="bike-confirm-plate">—</div>
+          <div class="cs" id="bike-confirm-id">—</div>
         </div>
-        <span class="confirm-badge"><i class="ti ti-check" style="font-size:10px;"></i> Confirmed</span>
-        <button class="btn btn-ghost btn-sm" style="margin-left:4px;" onclick="changeBike()" title="Switch bike"><i class="ti ti-replace"></i></button>
+        <span class="cbadge"><i class="ti ti-check" style="font-size:9px;"></i> Confirmed</span>
+        <button class="btn btn-ghost btn-sm" onclick="clearDrop('bike')" title="Change bike" style="margin-left:2px;"><i class="ti ti-replace"></i></button>
       </div>
     </div>
-    <div id="bike-registry-note" style="display:none;font-size:11px;color:var(--text3);padding:0 4px;">
-      <i class="ti ti-info-circle" style="font-size:12px;"></i> No bike master-list exists in the fleet cache — bikes you confirm here are saved locally to this portal for reuse.
-    </div>
-
-    <div class="main-split" id="bike-main-split">
+    <div class="main-split">
       <div class="doc-sidebar" id="bike-doc-sidebar">
-        <div class="doc-sidebar-empty"><i class="ti ti-motorbike"></i><span>Select a bike to view document categories</span></div>
+        <div class="doc-sidebar-empty"><i class="ti ti-motorbike"></i><span>Select a bike</span></div>
       </div>
       <div class="doc-center" id="bike-doc-center">
-        <div class="doc-center-placeholder">
-          <i class="ti ti-files"></i>
-          <span>Select a document type from the left to view its records</span>
-        </div>
+        <div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>
       </div>
       <div class="doc-preview-panel" id="bike-preview-panel">
-        <div class="preview-panel-header">
-          <h3><i class="ti ti-eye"></i> <span id="bike-preview-title">Preview</span></h3>
-          <button class="preview-panel-close" onclick="closePreview('bike')"><i class="ti ti-x"></i></button>
-        </div>
-        <div class="preview-panel-body" id="bike-preview-body"></div>
-        <div class="preview-panel-footer">
-          <a id="bike-preview-download" class="btn btn-ghost btn-sm btn-block" download><i class="ti ti-download"></i> Download Document</a>
-        </div>
+        <div class="pph"><h3><i class="ti ti-eye"></i><span id="bike-preview-title">Preview</span></h3><button class="pph-close" onclick="closePreview('bike')"><i class="ti ti-x"></i></button></div>
+        <div class="ppb" id="bike-preview-body"></div>
+        <div class="ppf"><a id="bike-preview-download" class="btn btn-ghost btn-sm btn-block" download><i class="ti ti-download"></i> Download</a></div>
       </div>
     </div>
   </div>
 
-  <!-- DOC LOG TAB -->
-  <div class="tab-panel" id="tab-log" style="display:none;flex-direction:column;gap:14px;flex:1;min-height:0;">
-
-    <!-- Filter bar -->
-    <div class="selector-bar" style="gap:14px;flex-wrap:wrap;">
+  <!-- ══ DOC LOG TAB ══ -->
+  <div class="tab-panel" id="tab-log" style="display:none;flex-direction:column;gap:10px;flex:1;min-height:0;">
+    <div class="selector-bar" style="gap:12px;flex-wrap:wrap;">
       <div class="field">
-        <label>Portal Type</label>
-        <div style="display:flex;gap:6px;">
-          <button class="log-filter-btn active" id="log-filter-emp" onclick="setLogPortal('emp')"><i class="ti ti-user-check"></i> Employee</button>
-          <button class="log-filter-btn" id="log-filter-bike" onclick="setLogPortal('bike')"><i class="ti ti-motorbike"></i> Bike</button>
-          <button class="log-filter-btn" id="log-filter-all" onclick="setLogPortal('all')"><i class="ti ti-stack-2"></i> All</button>
+        <label>Portal</label>
+        <div style="display:flex;gap:5px;">
+          <button class="log-filter-btn active" id="log-filter-all"  onclick="setLogPortal('all')"><i class="ti ti-stack-2"></i> All</button>
+          <button class="log-filter-btn"        id="log-filter-emp"  onclick="setLogPortal('emp')"><i class="ti ti-user-check"></i> Employee</button>
+          <button class="log-filter-btn"        id="log-filter-bike" onclick="setLogPortal('bike')"><i class="ti ti-motorbike"></i> Bike</button>
         </div>
       </div>
       <div class="field" id="log-id-field" style="display:none;">
-        <label id="log-id-label">Employee</label>
-        <div class="search-dropdown-wrap" style="width:240px;">
-          <input class="search-dropdown-input" id="log-id-search" type="text" placeholder="All — or type to filter…" autocomplete="off"
-            oninput="filterLogIdDropdown(this.value)" onfocus="openLogIdDropdown()" onblur="setTimeout(()=>closeLogIdDropdown(),180)"/>
+        <label id="log-id-label">Filter by Employee</label>
+        <div class="sdw" id="log-id-sdw" style="width:220px;">
+          <input id="log-id-search" type="text" placeholder="All — or type to filter…" autocomplete="off"
+            oninput="filterLogIdDrop(this.value)"
+            onfocus="openLogIdDrop()"
+            onblur="setTimeout(()=>closeLogIdDrop(),160)"/>
+          <button class="clr-btn" tabindex="-1" onclick="clearLogId()"><i class="ti ti-x"></i></button>
           <div class="dropdown-list" id="log-id-dropdown"></div>
         </div>
       </div>
       <div class="field">
         <label>Doc Type</label>
-        <select class="search-dropdown-input" id="log-doctype-filter" onchange="renderLogTable()" style="width:180px;cursor:pointer;">
+        <select id="log-doctype-filter" onchange="renderLogTable()"
+          style="padding:8px 11px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:12px;cursor:pointer;min-width:150px;">
           <option value="">All Types</option>
         </select>
       </div>
       <div class="field">
-        <label>Expiry Status</label>
-        <select class="search-dropdown-input" id="log-expiry-filter" onchange="renderLogTable()" style="width:150px;cursor:pointer;">
+        <label>Expiry</label>
+        <select id="log-expiry-filter" onchange="renderLogTable()"
+          style="padding:8px 11px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:12px;cursor:pointer;min-width:130px;">
           <option value="">All</option>
           <option value="red">Expired</option>
           <option value="amber">Expiring Soon</option>
@@ -397,35 +402,29 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
       </div>
       <div class="field" style="margin-left:auto;">
         <label>&nbsp;</label>
-        <button class="btn btn-ghost btn-sm" onclick="refreshLogCache()" title="Reload from ap2_docLog cache"><i class="ti ti-refresh"></i> Refresh</button>
+        <button class="btn btn-ghost btn-sm" onclick="refreshLog()"><i class="ti ti-refresh"></i> Refresh</button>
       </div>
     </div>
-
-    <!-- Summary strip -->
-    <div id="log-summary" style="display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0;"></div>
-
-    <!-- Table -->
+    <div id="log-summary" style="display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;"></div>
     <div style="flex:1;min-height:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;">
-      <div style="overflow-x:auto;overflow-y:auto;flex:1;">
-        <table class="log-table" id="log-table">
-          <thead>
-            <tr>
-              <th onclick="sortLog('txnId')">Transaction ID <i class="ti ti-selector" style="font-size:11px;opacity:.5;"></i></th>
-              <th onclick="sortLog('portal')">Portal <i class="ti ti-selector" style="font-size:11px;opacity:.5;"></i></th>
-              <th onclick="sortLog('entityId')">ID <i class="ti ti-selector" style="font-size:11px;opacity:.5;"></i></th>
-              <th onclick="sortLog('entityName')">Name / Plate <i class="ti ti-selector" style="font-size:11px;opacity:.5;"></i></th>
-              <th onclick="sortLog('docType')">Doc Type <i class="ti ti-selector" style="font-size:11px;opacity:.5;"></i></th>
-              <th>Doc Link</th>
-              <th onclick="sortLog('expiry')">Exp Date <i class="ti ti-selector" style="font-size:11px;opacity:.5;"></i></th>
-              <th onclick="sortLog('uploadedAt')">Uploaded <i class="ti ti-selector" style="font-size:11px;opacity:.5;"></i></th>
-            </tr>
-          </thead>
+      <div style="overflow:auto;flex:1;">
+        <table class="log-table">
+          <thead><tr>
+            <th onclick="sortLog('txnId')">TXN ID</th>
+            <th onclick="sortLog('portal')">Portal</th>
+            <th onclick="sortLog('entityId')">ID</th>
+            <th onclick="sortLog('entityName')">Name / Plate</th>
+            <th onclick="sortLog('docType')">Doc Type</th>
+            <th>Link</th>
+            <th onclick="sortLog('expiry')">Exp Date</th>
+            <th onclick="sortLog('ts')">Cached At</th>
+          </tr></thead>
           <tbody id="log-tbody">
-            <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text3);"><i class="ti ti-loader spinner" style="font-size:20px;display:block;margin-bottom:8px;"></i> Loading log…</td></tr>
+            <tr><td colspan="8" style="text-align:center;padding:28px;color:var(--text3);"><i class="ti ti-loader spinner"></i> Loading…</td></tr>
           </tbody>
         </table>
       </div>
-      <div id="log-footer" style="padding:10px 16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);display:flex;align-items:center;gap:10px;flex-shrink:0;"></div>
+      <div id="log-footer" style="padding:8px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);display:flex;align-items:center;gap:8px;flex-shrink:0;"></div>
     </div>
   </div>
 
@@ -439,512 +438,485 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 <script>
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════════════════
- *  GOOGLE SHEETS SYNC — paste your deployed Apps Script Web App URL below.
- *
- *  How to get this URL:
- *    1. Open script.google.com → New Project
- *    2. Paste in the contents of appsScript.gs (provided separately)
- *    3. Deploy → New deployment → type: Web app
- *       - Execute as: Me
- *       - Who has access: Anyone
- *    4. Copy the resulting URL (ends in /exec) and paste it below.
- *
- *  Until a real URL is pasted here, the portal still works fully offline —
- *  documents save to local IndexedDB — but will NOT appear in Google Sheets.
- * ═══════════════════════════════════════════════════════════════════════ */
-const SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyhdEeSqKnsV_EANDHxjXBlpx9PjFYL1UQpD77PQ7bEWcCiohuD45Rp9Fd3tu-s0DeMTQ/exec';
-const SHEETS_SYNC_ENABLED = SHEETS_WEBAPP_URL.startsWith('https://script.google.com/');
+/* ═══════════════════════════════════════════════════════
+ *  SHEETS URL
+ * ═══════════════════════════════════════════════════════ */
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyhdEeSqKnsV_EANDHxjXBlpx9PjFYL1UQpD77PQ7bEWcCiohuD45Rp9Fd3tu-s0DeMTQ/exec';
+const SHEETS_ON  = SHEETS_URL.startsWith('https://script.google.com/');
 
+/* ═══════════════════════════════════════════════════════
+ *  DOC TYPE DEFINITIONS
+ * ═══════════════════════════════════════════════════════ */
 const EMP_DOC_TYPES = [
-  { key:'contract',      label:'Contract',       icon:'ti-file-text'       },
-  { key:'visa',          label:'Visa',            icon:'ti-globe'           },
-  { key:'labour_card',   label:'Labour Card',     icon:'ti-briefcase'       },
-  { key:'eid_card',      label:'EID Card',        icon:'ti-id-badge-2'      },
-  { key:'rta_card',      label:'RTA Card',        icon:'ti-steering-wheel'  },
-  { key:'driving_lic',   label:'Driving License', icon:'ti-license'         },
-  { key:'health_card',   label:'Health Card',     icon:'ti-heart-plus'      },
-  { key:'passport',      label:'Passport',        icon:'ti-passport'        },
+  {key:'contract',    label:'Contract',        icon:'ti-file-text'},
+  {key:'visa',        label:'Visa',            icon:'ti-globe'},
+  {key:'labour_card', label:'Labour Card',     icon:'ti-briefcase'},
+  {key:'eid_card',    label:'EID Card',        icon:'ti-id-badge-2'},
+  {key:'rta_card',    label:'RTA Card',        icon:'ti-steering-wheel'},
+  {key:'driving_lic', label:'Driving License', icon:'ti-license'},
+  {key:'health_card', label:'Health Card',     icon:'ti-heart-plus'},
+  {key:'passport',    label:'Passport',        icon:'ti-passport'},
 ];
-
 const BIKE_DOC_TYPES = [
-  { key:'mulkia',        label:'Mulkia',          icon:'ti-certificate'      },
-  { key:'passing',       label:'Passing',         icon:'ti-check-badge'      },
+  {key:'mulkia', label:'Mulkia',  icon:'ti-certificate'},
+  {key:'passing',label:'Passing', icon:'ti-check-badge'},
 ];
+const ALL_DOC_TYPES = [...EMP_DOC_TYPES, ...BIKE_DOC_TYPES];
+function docTypeLabel(k){const f=ALL_DOC_TYPES.find(d=>d.key===k);return f?f.label:k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}
 
-let employees    = [];
-let bikes        = [];
-let empDocs      = {};
-let bikeDocs     = {};
-let selEmpId     = null;
-let selBikeId    = null;
-let activeEmpDocType  = null;
-let activeBikeDocType = null;
-
-const AV_BG = ['rgba(88,166,255,.2)','rgba(57,211,83,.2)','rgba(227,179,65,.2)','rgba(163,113,247,.2)','rgba(240,136,62,.2)','rgba(248,81,73,.2)'];
-const AV_FG = ['#58a6ff','#39d353','#e3b341','#a371f7','#f0883e','#f85149'];
-function avatarStyle(name) {
-  const i = name.charCodeAt(0) % AV_BG.length;
-  return { bg: AV_BG[i], fg: AV_FG[i], initials: (name.split(' ').map(w=>w[0]).join('').substring(0,2)).toUpperCase() };
-}
-
-/* ══ FLEET CACHE (READ-ONLY) — exact same source allEmp.html uses ══
- *  IndexedDB: ap2_fleet_cache  ›  Object Store: datasets  ›  Key: 'ap2_employee'
- *  IMPORTANT: this cache is populated by the MAIN fleet app, in the SAME browser.
- *  This portal does not create or seed it — it only reads what's already there.
- *  There is currently no equivalent master-list cache for bikes in the source
- *  system (only a "Bike No" column inside check-in/out log rows) — so Bike ID
- *  is entered manually below, with autocomplete from bikes you've used before.
- * ════════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+ *  IDB — FLEET CACHE (READ-ONLY, mirrors allEmp.html)
+ *  DB: ap2_fleet_cache  Store: datasets
+ *  Keys: ap2_employee | ap2_bike | ap2_docLog
+ * ═══════════════════════════════════════════════════════ */
 const FLEET_IDB   = 'ap2_fleet_cache';
 const FLEET_STORE = 'datasets';
-const FLEET_KEY_EMP = 'ap2_employee';
-let _fleetConn = null;
-let _fleetOpenError = null;
+const KEY_EMP  = 'ap2_employee';
+const KEY_BIKE = 'ap2_bike';
+const KEY_LOG  = 'ap2_docLog';
 
-function _getFleetDB() {
-  if (_fleetConn) return Promise.resolve(_fleetConn);
-  return new Promise((res, rej) => {
-    // No version specified — opens whatever version already exists.
-    // If the DB has never been created (main app never ran in this browser),
-    // this call itself will CREATE an empty v1 DB with no object stores,
-    // which is indistinguishable from "not populated yet" — we detect that below.
-    const req = indexedDB.open(FLEET_IDB);
-    req.onsuccess = e => { _fleetConn = e.target.result; res(_fleetConn); };
-    req.onerror   = e => { _fleetOpenError = e.target.error; rej(e.target.error); };
+let _fdb = null;
+function _getFleetDB(){
+  if(_fdb) return Promise.resolve(_fdb);
+  return new Promise((res,rej)=>{
+    const r = indexedDB.open(FLEET_IDB); // no version — open as-is
+    r.onsuccess = e=>{_fdb=e.target.result;res(_fdb);};
+    r.onerror   = e=>rej(e.target.error);
   });
 }
-
-async function _fleetRead(cacheKey) {
+async function _fleetRead(key){
   const db = await _getFleetDB();
-  if (!db.objectStoreNames.contains(FLEET_STORE)) {
-    // Store doesn't exist — the main app has never written to this DB in this browser
-    throw new Error(`Object store "${FLEET_STORE}" not found — open the main fleet app in this browser first`);
-  }
-  const rec = await new Promise((res, rej) => {
-    const tx  = db.transaction(FLEET_STORE, 'readonly');
-    const req = tx.objectStore(FLEET_STORE).get(cacheKey);
-    req.onsuccess = () => res(req.result || null);
-    req.onerror   = () => rej(req.error);
+  if(!db.objectStoreNames.contains(FLEET_STORE))
+    throw new Error(`Store "${FLEET_STORE}" not found — open fleet app first`);
+  const rec = await new Promise((res,rej)=>{
+    const r = db.transaction(FLEET_STORE,'readonly').objectStore(FLEET_STORE).get(key);
+    r.onsuccess=()=>res(r.result||null);
+    r.onerror=()=>rej(r.error);
   });
-  if (!rec) throw new Error(`Key "${cacheKey}" not found in cache yet`);
-  if (!Array.isArray(rec.data)) throw new Error(`Key "${cacheKey}" exists but has no .data array`);
-  return rec.data;
+  if(!rec||!Array.isArray(rec.data)) return null; // not an error — just empty
+  return rec; // return full record: { ts, data, fingerprint }
 }
 
-/* ══ DOCUMENT STORE (READ-WRITE) — local to this portal only ══ */
-const DOC_IDB   = 'ap2_docportal';
-const DOC_STORE = 'docdata';
-let _docConn = null;
+/* ═══════════════════════════════════════════════════════
+ *  STATE
+ * ═══════════════════════════════════════════════════════ */
+let employees = [];   // [{id,name,eid,mobile,...}]
+let bikes     = [];   // [{id,plate,make,...}]
+let logRows   = [];   // normalised rows from ap2_docLog
 
-function _getDocDB() {
-  if (_docConn) return Promise.resolve(_docConn);
-  return new Promise((res, rej) => {
-    const req = indexedDB.open(DOC_IDB, 1);
-    req.onupgradeneeded = e => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(DOC_STORE)) db.createObjectStore(DOC_STORE);
+let selEmpId  = null;
+let selBikeId = null;
+let activeEmpDocType  = null;
+let activeBikeDocType = null;
+let logPortal  = 'all';
+let logSelId   = '';
+let logSortKey = 'ts';
+let logSortAsc = false;
+
+/* ═══════════════════════════════════════════════════════
+ *  NORMALISE HELPERS
+ * ═══════════════════════════════════════════════════════ */
+const _s = v => (v!==null&&v!==undefined&&v!=='') ? String(v).trim() : '';
+
+/* allEmp.html column map (0-based):
+   [0]EmpID [1]Name [2]EID [3]DOB [4]Mobile [5]Emergency [6]Ref
+   [7]Timestamp [8]HR_Status [9]Checkout_Exc
+   [10]EID_Exp [11]Lic_Exp [12]Labour_Exp [13]Insurance_Exp */
+function normaliseEmp(r,i){
+  if(!r) return null;
+  if(!Array.isArray(r)){
+    if(!r['Name']) return null;
+    return {id:r['Emp ID']||(i+1),name:r['Name'],eid:_s(r['EID Number']),
+            mobile:_s(r['UAE Mobile No']),status:_s(r['HR_Status'])||'Active'};
+  }
+  if(_s(r[0])==='Emp ID') return null;
+  const empId=(r[0]!==null&&r[0]!==''&&r[0]!==undefined)?r[0]:(i+1);
+  const name=_s(r[1]); if(!name) return null;
+  return {id:empId,name,eid:_s(r[2]),dob:_s(r[3]),mobile:_s(r[4]),
+          emergency:_s(r[5]),hrStatus:_s(r[8]),status:_s(r[8])||'Active'};
+}
+
+function normaliseBike(r,i){
+  if(!r) return null;
+  if(!Array.isArray(r)){
+    const id=_s(r['Bike ID']||r['id']); if(!id) return null;
+    return {id,plate:_s(r['Plate Number']||r['plate']||''),
+            make:_s(r['Make']||''),model:_s(r['Model']||''),
+            year:_s(r['Year']||''),status:_s(r['Status']||'')};
+  }
+  const first=_s(r[0]);
+  if(first==='Bike ID'||first==='id'||!first) return null;
+  return {id:first,plate:_s(r[1]),make:_s(r[2]),model:_s(r[3]),year:_s(r[4]),status:_s(r[6])};
+}
+
+/* ap2_docLog row format (from the actual cache data provided):
+   ['', 'Employee', 'EMP-TEST-001', 'eid_card',
+    'https://drive.google.com/...', '31122026000000']
+   col[0]: TxnId (may be empty)
+   col[1]: Portal ('Employee'|'Bike')
+   col[2]: Entity ID
+   col[3]: Doc type key
+   col[4]: Google Drive link
+   col[5]: Expiry as DDMMYYYY000000 timestamp string */
+function parseDocLogExpiry(raw){
+  // Format: DDMMYYYY000000 → e.g. '31122026000000' = 31 Dec 2026
+  if(!raw) return '';
+  const s=String(raw).trim();
+  if(s.length>=8){
+    // Try DDMMYYYY prefix
+    const dd=s.substring(0,2),mm=s.substring(2,4),yyyy=s.substring(4,8);
+    const d=parseInt(dd,10),mo=parseInt(mm,10),y=parseInt(yyyy,10);
+    if(d>=1&&d<=31&&mo>=1&&mo<=12&&y>=2000&&y<=2099){
+      return `${yyyy}-${mm.padStart(2,'0')}-${dd.padStart(2,'0')}`; // ISO
+    }
+  }
+  // Fallback: try direct date parse
+  const dt=new Date(s);
+  if(!isNaN(dt.getTime())) return dt.toISOString().slice(0,10);
+  return '';
+}
+
+function normaliseLogRow(r,recTs){
+  if(!r) return null;
+  if(Array.isArray(r)){
+    // Skip header rows
+    const f=_s(r[1]).toLowerCase();
+    if(f==='portal'||f==='portal type') return null;
+    const portal=_s(r[1]); if(!portal) return null;
+    const entityId=_s(r[2]); if(!entityId) return null;
+    const isEmp = portal.toLowerCase().includes('emp');
+    return {
+      txnId:    _s(r[0])||('LOG-'+Math.random().toString(36).slice(2,8).toUpperCase()),
+      portal:   isEmp?'emp':'bike',
+      entityId,
+      docType:  _s(r[3]),
+      docLink:  _s(r[4]),
+      expiry:   parseDocLogExpiry(_s(r[5])),
+      ts:       recTs||0,
     };
-    req.onsuccess = e => { _docConn = e.target.result; res(_docConn); };
-    req.onerror   = e => rej(e.target.error || new Error('Failed to open document database'));
-    req.onblocked = () => rej(new Error('Document database is blocked — close other tabs of this portal and retry'));
-  });
-}
-async function idbGet(key) {
-  const db = await _getDocDB();
-  return new Promise((res, rej) => {
-    const tx  = db.transaction(DOC_STORE, 'readonly');
-    const req = tx.objectStore(DOC_STORE).get(key);
-    req.onsuccess = () => res(req.result ?? null);
-    req.onerror   = () => rej(req.error || new Error('Read failed'));
-  });
-}
-async function idbSet(key, val) {
-  const db = await _getDocDB();
-  return new Promise((res, rej) => {
-    let tx;
-    try {
-      tx = db.transaction(DOC_STORE, 'readwrite');
-    } catch(err) {
-      rej(new Error('Could not start write transaction: ' + err.message));
-      return;
-    }
-    const req = tx.objectStore(DOC_STORE).put(val, key);
-    req.onsuccess = () => res(true);
-    req.onerror   = () => rej(req.error || new Error('Write failed'));
-    tx.onerror    = () => rej(tx.error || new Error('Transaction failed — possibly quota exceeded'));
-    tx.onabort    = () => rej(tx.error || new Error('Transaction aborted'));
-  });
-}
-
-function normaliseEmp(r, i) {
-  if (!r) return null;
-  const _s = v => (v !== null && v !== undefined && v !== '') ? String(v).trim() : '';
-  if (Array.isArray(r)) {
-    if (_s(r[0]) === 'Emp ID') return null;
-    const empId   = (r[0] !== null && r[0] !== undefined && r[0] !== '') ? r[0] : (i + 1);
-    const empName = _s(r[1]);
-    if (!empName) return null;
-    return { id: empId, name: empName, eid: _s(r[2]), dob: _s(r[3]), mobile: _s(r[4]), status: _s(r[8]) || 'Active' };
   }
-  if (r['Name'] !== undefined) {
-    if (!r['Name']) return null;
-    return { id: r['Emp ID'] || (i + 1), name: r['Name'], eid: String(r['EID Number'] || ''), dob: r['Date of Birth'] || '', mobile: r['UAE Mobile No'] || '', status: r['HR_Status'] || 'Active' };
-  }
-  return null;
-}
-
-/* ── Bikes: there is no master "bike list" cache in the source system —
- *  only a free-text "Bike No" column inside check-out/check-in log rows.
- *  So bikes here are a locally-maintained registry (saved in our own
- *  ap2_docportal IDB), seeded from any bike IDs you've already uploaded
- *  documents for, plus whatever you add manually via "+ Add Bike". ── */
-let bikeRegistry = []; // [{id, plate}]
-
-function normaliseBike(r, i) {
-  // Kept for forward-compatibility if a real bike cache is added later.
-  if (!r) return null;
-  const _s = v => (v !== null && v !== undefined && v !== '') ? String(v).trim() : '';
-  if (Array.isArray(r)) {
-    if (_s(r[0]) === 'Bike ID' || _s(r[0]) === 'id') return null;
-    const bikeId = _s(r[0]);
-    if (!bikeId) return null;
-    return { id: bikeId, plate: _s(r[1]), make: _s(r[2]), model: _s(r[3]), year: _s(r[4]), colour: _s(r[5]), status: _s(r[6]) };
-  }
-  if (r['Bike ID'] !== undefined || r['id'] !== undefined) {
-    const bikeId = _s(r['Bike ID'] || r['id']);
-    if (!bikeId) return null;
-    return { id: bikeId, plate: _s(r['Plate Number'] || r['plate'] || ''), make: _s(r['Make'] || r['make'] || ''), model: _s(r['Model'] || r['model'] || ''), year: _s(r['Year'] || r['year'] || ''), colour: _s(r['Colour'] || r['Color'] || r['colour'] || ''), status: _s(r['Status'] || r['status'] || '') };
-  }
-  return null;
-}
-
-function daysUntil(d) { if(!d) return Infinity; return Math.ceil((new Date(d)-new Date())/86400000); }
-function expiryStatus(d) {
-  if(!d) return {status:'gray',label:'No Expiry'};
-  const days = daysUntil(d);
-  if(days < 0)   return {status:'red',   label:`Expired ${Math.abs(days)}d ago`};
-  if(days <= 45)  return {status:'amber', label:`Expires in ${days}d`};
-  return {status:'teal', label:`Valid · ${days}d left`};
-}
-function fmtDate(d) { if(!d) return '—'; const dt=new Date(d); return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
-function genTxnId() { return 'TXN-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase(); }
-function fileToBase64(file) {
-  return new Promise((res,rej) => {
-    const r = new FileReader();
-    r.onload  = e => res(e.target.result);
-    r.onerror = () => rej(new Error('Read failed'));
-    r.readAsDataURL(file);
-  });
-}
-
-let _toastTimer;
-function toast(msg, type='success') {
-  const el=document.getElementById('toast'), msgEl=document.getElementById('toast-msg'), icon=document.getElementById('toast-icon');
-  clearTimeout(_toastTimer); el.className='toast';
-  msgEl.textContent=msg;
-  icon.className = type==='error' ? 'ti ti-x-circle' : 'ti ti-circle-check';
-  requestAnimationFrame(()=>{ el.classList.add('show',type); });
-  _toastTimer = setTimeout(()=>{ el.classList.remove('show'); },3500);
-}
-
-function switchTab(tab) {
-  document.getElementById('tab-emp').style.display  = tab==='emp'  ? 'flex' : 'none';
-  document.getElementById('tab-bike').style.display = tab==='bike' ? 'flex' : 'none';
-  document.getElementById('tab-log').style.display  = tab==='log'  ? 'flex' : 'none';
-  document.getElementById('tab-emp-btn').classList.toggle('active', tab==='emp');
-  document.getElementById('tab-bike-btn').classList.toggle('active', tab==='bike');
-  document.getElementById('tab-log-btn').classList.toggle('active', tab==='log');
-  if (tab === 'log') { buildLogDocTypeOptions(); renderLogTable(); }
-}
-
-async function loadInitialData() {
-  const statusEl = document.getElementById('cache-status');
-  const setStatus = (icon, msg, color, title) => {
-    if (!statusEl) return;
-    statusEl.style.color = color || 'var(--text3)';
-    statusEl.title = title || '';
-    statusEl.innerHTML = `<i class="ti ${icon}" style="font-size:13px;${icon.includes('loader')?'animation:spin 1s linear infinite;':''}"></i> ${msg}`;
+  // Object row
+  const p=_s(r['Portal']||r['portal']||'emp');
+  const eId=_s(r['ID']||r['entityId']||r['Emp ID']||r['Bike ID']||'');
+  if(!eId) return null;
+  return {
+    txnId:    _s(r['Transaction ID']||r['txnId'])||('LOG-'+Math.random().toString(36).slice(2,8).toUpperCase()),
+    portal:   p.toLowerCase().includes('bike')?'bike':'emp',
+    entityId: eId,
+    docType:  _s(r['Doc Type']||r['docType']||''),
+    docLink:  _s(r['Doc Link']||r['docLink']||r['File Link']||''),
+    expiry:   parseDocLogExpiry(_s(r['Exp Date']||r['expiry']||'')),
+    ts:       recTs||0,
   };
-  setStatus('ti-loader','Loading cache…');
+}
 
-  let empOk = false, empErrMsg = '';
+/* ═══════════════════════════════════════════════════════
+ *  DATE / EXPIRY UTILS
+ * ═══════════════════════════════════════════════════════ */
+const WARN_DAYS=45;
+function daysUntil(d){if(!d)return Infinity;return Math.ceil((new Date(d)-new Date())/86400000);}
+function expiryStatus(d){
+  if(!d)return{status:'gray',label:'No expiry'};
+  const n=daysUntil(d);
+  if(n<0)return{status:'red',label:`Expired ${Math.abs(n)}d ago`};
+  if(n<=WARN_DAYS)return{status:'amber',label:`Expires in ${n}d`};
+  return{status:'teal',label:`Valid · ${n}d left`};
+}
+function fmtDate(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtTs(ts){if(!ts)return'—';return new Date(ts).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function genTxnId(){return'TXN-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();}
+function fileToBase64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>rej(new Error('Read failed'));r.readAsDataURL(f);});}
 
-  try {
-    const empRows = await _fleetRead(FLEET_KEY_EMP);
-    const parsed = empRows.map((r, i) => normaliseEmp(r, i)).filter(Boolean);
-    if (parsed.length) { employees = parsed; empOk = true; }
-    else empErrMsg = 'Cache has rows but none parsed — check column layout';
-  } catch(err) {
-    empErrMsg = err.message;
-    console.warn('[docPortal] employee cache read failed:', err.message);
-  }
+/* ═══════════════════════════════════════════════════════
+ *  AVATAR
+ * ═══════════════════════════════════════════════════════ */
+const AV_FG=['#58a6ff','#3fb950','#e3b341','#d2a8ff','#ffa198','#22d3ee'];
+const AV_BG=['rgba(31,111,235,.2)','rgba(26,127,55,.2)','rgba(154,103,0,.2)','rgba(110,64,201,.2)','rgba(191,69,66,.2)','rgba(14,116,144,.2)'];
+function avatarStyle(name,idx){
+  const i=(idx!==undefined?idx:(_s(name).charCodeAt(0)))%AV_BG.length;
+  return{bg:AV_BG[i],fg:AV_FG[i],initials:(_s(name).split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase())||'?'};
+}
 
-  // ── Document records (read-write, local to this portal) ──
-  try {
-    const ed = await idbGet('portal_emp_docs');
-    const bd = await idbGet('portal_bike_docs');
-    const br = await idbGet('portal_bike_registry');
-    if (ed) empDocs  = ed;
-    if (bd) bikeDocs = bd;
-    if (br && Array.isArray(br)) bikeRegistry = br;
-  } catch(err) {
-    console.error('[docPortal] local document store read failed:', err.message);
-    toast('Could not read local document store: ' + err.message, 'error');
-  }
+/* ═══════════════════════════════════════════════════════
+ *  TOAST
+ * ═══════════════════════════════════════════════════════ */
+let _tt;
+function toast(msg,type='success'){
+  const el=document.getElementById('toast'),mi=document.getElementById('toast-msg'),ic=document.getElementById('toast-icon');
+  clearTimeout(_tt);el.className='toast';
+  mi.textContent=msg;
+  ic.className=type==='error'?'ti ti-x-circle':'ti ti-circle-check';
+  requestAnimationFrame(()=>el.classList.add('show',type));
+  _tt=setTimeout(()=>el.classList.remove('show'),3500);
+}
 
-  // ── Seed bike registry from any bike IDs already used in uploaded docs ──
-  Object.keys(bikeDocs).forEach(bikeId => {
-    if (!bikeRegistry.find(b => b.id === bikeId)) bikeRegistry.push({ id: bikeId, plate: '' });
+/* ═══════════════════════════════════════════════════════
+ *  TAB SWITCHING
+ * ═══════════════════════════════════════════════════════ */
+function switchTab(t){
+  ['emp','bike','log'].forEach(k=>{
+    document.getElementById(`tab-${k}`).style.display       = k===t?'flex':'none';
+    document.getElementById(`tab-${k}-btn`).classList.toggle('active',k===t);
   });
-  bikes = bikeRegistry;
+  if(t==='log'){buildLogDocTypeOptions();renderLogTable();}
+}
 
-  if (empOk) {
-    setStatus('ti-circle-check', `${employees.length} employees · ${bikes.length} bikes registered`, 'var(--teal)');
-  } else {
-    setStatus('ti-alert-triangle', 'Employee cache unavailable — see tooltip', 'var(--amber)',
-      `${empErrMsg}\n\nOpen the main fleet app (allEmp.html) in THIS SAME browser/tab group first — it writes to IndexedDB "ap2_fleet_cache" which this portal then reads. This portal cannot create that data itself.`);
-  }
+/* ═══════════════════════════════════════════════════════
+ *  LOAD DATA — reads ap2_employee, ap2_bike, ap2_docLog
+ * ═══════════════════════════════════════════════════════ */
+async function loadInitialData(){
+  const statusEl=document.getElementById('cache-status');
+  const setStatus=(icon,msg,color,title)=>{
+    if(!statusEl)return;
+    statusEl.style.color=color||'var(--text3)';
+    statusEl.title=title||'';
+    statusEl.innerHTML=`<i class="ti ${icon}" style="font-size:12px;${icon.includes('loader')?'animation:spin 1s linear infinite;':''}"></i> ${msg}`;
+  };
+  setStatus('ti-loader','Loading…');
+  let empOk=false,bikeOk=false;
 
-  // ── Load Doc Log (cache + local merge) ──
-  try {
-    await buildLogRows();
-  } catch(e) {
-    console.warn('[docPortal] buildLogRows failed:', e.message);
+  try{
+    const rec=await _fleetRead(KEY_EMP);
+    if(rec&&rec.data.length){
+      employees=rec.data.map((r,i)=>normaliseEmp(r,i)).filter(Boolean);
+      empOk=employees.length>0;
+    }
+  }catch(e){console.warn('[portal] emp cache:',e.message);}
+
+  try{
+    const rec=await _fleetRead(KEY_BIKE);
+    if(rec&&rec.data.length){
+      bikes=rec.data.map((r,i)=>normaliseBike(r,i)).filter(Boolean);
+      bikeOk=bikes.length>0;
+    }
+  }catch(e){console.warn('[portal] bike cache:',e.message);}
+
+  await loadDocLog();
+
+  if(empOk||bikeOk){
+    setStatus('ti-circle-check',`${employees.length} emp · ${bikes.length} bikes · ${logRows.length} docs`,'var(--teal)');
+  }else{
+    setStatus('ti-alert-triangle','Fleet cache unavailable','var(--amber)',
+      'Open allEmp.html in this browser first to populate ap2_fleet_cache.');
   }
 }
 
-/* ── Bike registry: add / persist manually-entered bikes locally ── */
-async function addBikeToRegistry(id, plate) {
-  id = String(id || '').trim();
-  if (!id) return false;
-  if (bikeRegistry.find(b => b.id === id)) return true; // already known
-  bikeRegistry.push({ id, plate: String(plate || '').trim() });
-  try {
-    await idbSet('portal_bike_registry', bikeRegistry);
-    bikes = bikeRegistry;
-    return true;
-  } catch(err) {
-    toast('Could not save bike to registry: ' + err.message, 'error');
-    return false;
+/* ═══════════════════════════════════════════════════════
+ *  BACKGROUND POLL (mirrors allEmp.html IIFE) — 30s
+ * ═══════════════════════════════════════════════════════ */
+(function(){
+  let _deb=null;
+  async function _refresh(){
+    try{const r=await _fleetRead(KEY_EMP);if(r&&r.data.length){const p=r.data.map((v,i)=>normaliseEmp(v,i)).filter(Boolean);if(p.length)employees=p;}}catch(e){}
+    try{const r=await _fleetRead(KEY_BIKE);if(r&&r.data.length){const p=r.data.map((v,i)=>normaliseBike(v,i)).filter(Boolean);if(p.length)bikes=p;}}catch(e){}
+    await loadDocLog();
+    const s=document.getElementById('cache-status');
+    if(s&&employees.length){s.style.color='var(--teal)';s.innerHTML=`<i class="ti ti-circle-check" style="font-size:12px;"></i> ${employees.length} emp · ${bikes.length} bikes · ${logRows.length} docs`;}
+  }
+  setInterval(_refresh,30000);
+  window.addEventListener('ap-cache-updated',()=>{if(_deb)clearTimeout(_deb);_deb=setTimeout(_refresh,200);});
+})();
+
+/* ═══════════════════════════════════════════════════════
+ *  ap2_docLog — ONLY source for document history
+ *  Shape: { ts, data: Array of arrays, fingerprint }
+ * ═══════════════════════════════════════════════════════ */
+async function loadDocLog(){
+  try{
+    const rec=await _fleetRead(KEY_LOG);
+    if(!rec){logRows=[];return;}
+    logRows=rec.data.map(r=>normaliseLogRow(r,rec.ts)).filter(Boolean);
+  }catch(e){
+    console.warn('[portal] docLog cache:',e.message);
+    logRows=[];
   }
 }
 
-function filterEmpDropdown(q) {
-  const list = document.getElementById('emp-dropdown');
-  const lq = q.toLowerCase().trim();
-  const hits = employees.filter(e => String(e.id).toLowerCase().includes(lq) || e.name.toLowerCase().includes(lq)).slice(0,12);
-  if(!hits.length) { list.innerHTML='<div class="dropdown-item" style="color:var(--text3);">No employees found</div>'; }
-  else {
-    list.innerHTML = hits.map(e => {
-      const hl = v => v.replace(new RegExp(`(${lq})`, 'gi'), '<em>$1</em>');
-      return `<div class="dropdown-item" onmousedown="selectEmployee('${e.id}')">
-        <div class="dname">${hl(e.name)}</div><div class="did">ID: ${hl(String(e.id))}</div>
+/* get all docs for entity+docType from logRows */
+function getEntityDocs(entityId,docType,portal){
+  return logRows.filter(r=>
+    String(r.entityId)===String(entityId)&&
+    r.docType===docType&&
+    r.portal===portal
+  );
+}
+
+/* entity name resolver */
+function entityName(row){
+  if(row.portal==='emp'){
+    const e=employees.find(x=>String(x.id)===String(row.entityId));
+    return e?e.name:'—';
+  }
+  const b=bikes.find(x=>String(x.id)===String(row.entityId));
+  return b?(b.plate||b.id):'—';
+}
+
+/* ═══════════════════════════════════════════════════════
+ *  UNIFIED DROPDOWN — emp & bike both use same pattern
+ *  Event delegation wired in init()
+ * ═══════════════════════════════════════════════════════ */
+function filterDrop(mode,q){
+  const list=document.getElementById(mode+'-dropdown');
+  const lq=q.toLowerCase().trim();
+  const source=mode==='bike'?bikes:employees;
+  const hits=source.filter(e=>
+    String(e.id).toLowerCase().includes(lq)||
+    (e.name||e.plate||'').toLowerCase().includes(lq)||
+    (e.eid||'').toLowerCase().includes(lq)
+  ).slice(0,15);
+  const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const hl=v=>lq?String(v).replace(new RegExp(`(${esc(lq)})`,'gi'),'<em>$1</em>'):String(v);
+  if(!hits.length){
+    list.innerHTML=`<div class="di no-match">No ${mode==='bike'?'bikes':'employees'} found</div>`;
+  }else{
+    list.innerHTML=hits.map(e=>{
+      const label=e.name||e.plate||e.id;
+      const sub=[e.eid?`EID:${e.eid}`:'',e.mobile||'',e.make?`${e.make} ${e.model||''}`.trim():''].filter(Boolean).join(' · ');
+      return `<div class="di" data-${mode}-id="${e.id}">
+        <div class="dn">${hl(label)}</div>
+        <div class="ds">ID: ${hl(String(e.id))}${sub?' · '+sub:''}</div>
       </div>`;
     }).join('');
   }
   list.classList.add('open');
+  document.getElementById(mode+'-sdw').classList.add('has-val');
 }
-function openEmpDropdown() { filterEmpDropdown(document.getElementById('emp-search').value); }
-function closeEmpDropdown() { document.getElementById('emp-dropdown').classList.remove('open'); }
 
-function selectEmployee(id) {
-  const emp = employees.find(e => String(e.id) === String(id));
-  if(!emp) return;
-  selEmpId = String(id);
-  activeEmpDocType = null;
-  document.getElementById('emp-search').value = `${emp.id} — ${emp.name}`;
-  closeEmpDropdown();
+function openDrop(mode){filterDrop(mode,document.getElementById(mode+'-search').value);}
+function closeDrop(mode){document.getElementById(mode+'-dropdown').classList.remove('open');}
 
-  const av = avatarStyle(emp.name);
-  const avEl = document.getElementById('emp-avatar');
-  avEl.style.background = av.bg; avEl.style.color = av.fg; avEl.textContent = av.initials;
-  document.getElementById('emp-confirm-name').textContent = emp.name;
-  document.getElementById('emp-confirm-id').textContent = `ID: ${emp.id}` + (emp.eid ? ` · EID: ${emp.eid}` : '') + (emp.mobile ? ` · ${emp.mobile}` : '');
+function clearDrop(mode){
+  document.getElementById(mode+'-search').value='';
+  document.getElementById(mode+'-sdw').classList.remove('has-val');
+  closeDrop(mode);
+  if(mode==='emp'){
+    selEmpId=null;activeEmpDocType=null;
+    document.getElementById('emp-confirm').style.display='none';
+    document.getElementById('emp-doc-sidebar').innerHTML='<div class="doc-sidebar-empty"><i class="ti ti-user-search"></i><span>Select an employee</span></div>';
+    resetCenter('emp');closePreview('emp');
+  }else{
+    selBikeId=null;activeBikeDocType=null;
+    document.getElementById('bike-confirm').style.display='none';
+    document.getElementById('bike-doc-sidebar').innerHTML='<div class="doc-sidebar-empty"><i class="ti ti-motorbike"></i><span>Select a bike</span></div>';
+    resetCenter('bike');closePreview('bike');
+  }
+}
+
+function selectEntity(mode,id){
+  if(mode==='emp') selectEmployee(id);
+  else             selectBike(id);
+}
+
+function selectEmployee(id){
+  const emp=employees.find(e=>String(e.id)===String(id));
+  if(!emp)return;
+  selEmpId=String(id);activeEmpDocType=null;
+  const inp=document.getElementById('emp-search');
+  inp.value=`${emp.id} — ${emp.name}`;
+  document.getElementById('emp-sdw').classList.add('has-val');
+  closeDrop('emp');
+  const idx=employees.indexOf(emp);
+  const av=avatarStyle(emp.name,idx);
+  const avEl=document.getElementById('emp-avatar');
+  avEl.style.background=av.bg;avEl.style.color=av.fg;avEl.textContent=av.initials;
+  document.getElementById('emp-confirm-name').textContent=emp.name;
+  document.getElementById('emp-confirm-id').textContent=`ID: ${emp.id}`+(emp.eid?` · EID: ${emp.eid}`:'')+(emp.mobile?` · ${emp.mobile}`:'');
   document.getElementById('emp-confirm').style.display='flex';
-
-  buildEmpSidebar();
-  resetEmpCenter();
-  closePreview('emp');
+  buildSidebar('emp');resetCenter('emp');closePreview('emp');
 }
 
-function getEmpDocs(empId, docType) { return (empDocs[empId]?.[docType]) || []; }
-
-function buildEmpSidebar() {
-  const sb = document.getElementById('emp-doc-sidebar');
-  sb.innerHTML = EMP_DOC_TYPES.map(dt => {
-    const recs = getEmpDocs(selEmpId, dt.key);
-    const latest = recs.length ? recs[recs.length-1] : null;
-    const exp = latest?.expiry ? expiryStatus(latest.expiry) : null;
-    let cls = 'doc-side-btn';
-    if (dt.key === activeEmpDocType) cls += ' selected';
-    let countBadge = '';
-    if(recs.length) {
-      if(exp?.status==='red')   { cls+=' expired-docs';  countBadge=`<div class="doc-count-badge red">${recs.length}</div>`; }
-      else if(exp?.status==='amber') { cls+=' expiring-docs'; countBadge=`<div class="doc-count-badge amber">${recs.length}</div>`; }
-      else { cls+=' has-docs'; countBadge=`<div class="doc-count-badge">${recs.length}</div>`; }
-    }
-    return `<button class="${cls}" onclick="openEmpDocType('${dt.key}')">${countBadge}<i class="ti ${dt.icon}"></i><span>${dt.label}</span></button>`;
-  }).join('');
-}
-
-function resetEmpCenter() {
-  document.getElementById('emp-doc-center').innerHTML = `<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a document type from the left to view its records</span></div>`;
-}
-
-function openEmpDocType(docType) {
-  activeEmpDocType = docType;
-  buildEmpSidebar();
-  const dt = EMP_DOC_TYPES.find(d=>d.key===docType);
-  const recs = getEmpDocs(selEmpId, docType);
-  document.getElementById('emp-doc-center').innerHTML = buildCenterPanel(dt, recs, 'emp');
-  initFileUploadZone('emp-file-zone','emp-file-input','emp-chosen-file');
-}
-
-function filterBikeDropdown(q) {
-  const list = document.getElementById('bike-dropdown');
-  const plateField = document.getElementById('bike-plate-field');
-  const confirmBtn = document.getElementById('bike-confirm-btn');
-  const note = document.getElementById('bike-registry-note');
-  const lq = q.toLowerCase().trim();
-
-  if (!lq) { list.classList.remove('open'); plateField.style.display='none'; confirmBtn.style.display='none'; note.style.display='none'; return; }
-
-  const hits = bikes.filter(b => String(b.id).toLowerCase().includes(lq) || (b.plate||'').toLowerCase().includes(lq)).slice(0,12);
-
-  if(!hits.length) {
-    list.innerHTML = `<div class="dropdown-item" style="color:var(--text3);"><i class="ti ti-plus" style="font-size:12px;"></i> No match — fill in plate number below and click "Use this Bike" to register "${q.trim()}"</div>`;
-    plateField.style.display='flex';
-    confirmBtn.style.display='inline-flex';
-    note.style.display='block';
-  } else {
-    list.innerHTML = hits.map(b => {
-      const hl = v => v.replace(new RegExp(`(${lq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<em>$1</em>');
-      return `<div class="dropdown-item" onmousedown="selectBike('${b.id}')">
-        <div class="dname">${hl(b.plate||b.id)}</div><div class="did">ID: ${hl(String(b.id))}</div>
-      </div>`;
-    }).join('');
-    plateField.style.display='none';
-    confirmBtn.style.display='none';
-    note.style.display='none';
-  }
-  list.classList.add('open');
-}
-function openBikeDropdown() { filterBikeDropdown(document.getElementById('bike-search').value); }
-function closeBikeDropdown() { document.getElementById('bike-dropdown').classList.remove('open'); }
-
-function selectBike(id) {
-  const bike = bikes.find(b => String(b.id) === String(id));
-  if(!bike) return;
-  applyBikeSelection(bike);
-  closeBikeDropdown();
-}
-
-async function confirmNewBike() {
-  const idInput    = document.getElementById('bike-search');
-  const plateInput = document.getElementById('bike-plate-input');
-  const id    = idInput.value.trim();
-  const plate = plateInput.value.trim();
-
-  if (!id)    { toast('Enter a Bike ID', 'error'); return; }
-  if (!plate) { toast('Plate Number is required to confirm a new bike', 'error'); return; }
-
-  const ok = await addBikeToRegistry(id, plate);
-  if (!ok) return;
-
-  const bike = bikes.find(b => b.id === id);
-  applyBikeSelection(bike);
-  toast(`Bike "${id}" registered and selected`);
-}
-
-function applyBikeSelection(bike) {
-  selBikeId = String(bike.id);
-  activeBikeDocType = null;
-  document.getElementById('bike-search').value = bike.plate ? `${bike.id} — ${bike.plate}` : bike.id;
-  document.getElementById('bike-plate-field').style.display='none';
-  document.getElementById('bike-confirm-btn').style.display='none';
-  document.getElementById('bike-registry-note').style.display='none';
-
-  document.getElementById('bike-confirm-plate').textContent = bike.plate || bike.id;
-  document.getElementById('bike-confirm-id').textContent = `ID: ${bike.id}` + (bike.make ? ` · ${bike.make} ${bike.model||''}` : '');
+function selectBike(id){
+  const b=bikes.find(b=>String(b.id)===String(id));
+  if(!b)return;
+  selBikeId=String(id);activeBikeDocType=null;
+  document.getElementById('bike-search').value=b.plate?`${b.id} — ${b.plate}`:b.id;
+  document.getElementById('bike-sdw').classList.add('has-val');
+  closeDrop('bike');
+  document.getElementById('bike-confirm-plate').textContent=b.plate||b.id;
+  document.getElementById('bike-confirm-id').textContent=`ID: ${b.id}`+(b.make?` · ${b.make} ${b.model||''}`:'')+(b.year?` · ${b.year}`:'');
   document.getElementById('bike-confirm').style.display='flex';
-
-  buildBikeSidebar();
-  resetBikeCenter();
-  closePreview('bike');
+  buildSidebar('bike');resetCenter('bike');closePreview('bike');
 }
 
-function changeBike() {
-  selBikeId = null;
-  activeBikeDocType = null;
-  document.getElementById('bike-confirm').style.display='none';
-  document.getElementById('bike-search').value = '';
-  document.getElementById('bike-search').focus();
-  resetBikeCenter();
-  closePreview('bike');
-}
-
-function getBikeDocs(bikeId, docType) { return (bikeDocs[bikeId]?.[docType]) || []; }
-
-function buildBikeSidebar() {
-  const sb = document.getElementById('bike-doc-sidebar');
-  sb.innerHTML = BIKE_DOC_TYPES.map(dt => {
-    const recs = getBikeDocs(selBikeId, dt.key);
-    const latest = recs.length ? recs[recs.length-1] : null;
-    const exp = latest?.expiry ? expiryStatus(latest.expiry) : null;
-    let cls = 'doc-side-btn';
-    if (dt.key === activeBikeDocType) cls += ' selected';
-    let countBadge = '';
-    if(recs.length) {
-      if(exp?.status==='red')    { cls+=' expired-docs';  countBadge=`<div class="doc-count-badge red">${recs.length}</div>`; }
-      else if(exp?.status==='amber') { cls+=' expiring-docs'; countBadge=`<div class="doc-count-badge amber">${recs.length}</div>`; }
-      else { cls+=' has-docs'; countBadge=`<div class="doc-count-badge">${recs.length}</div>`; }
+/* ═══════════════════════════════════════════════════════
+ *  SIDEBAR — reads history from ap2_docLog
+ * ═══════════════════════════════════════════════════════ */
+function buildSidebar(mode){
+  const sb=document.getElementById(mode+'-doc-sidebar');
+  const types=mode==='emp'?EMP_DOC_TYPES:BIKE_DOC_TYPES;
+  const entityId=mode==='emp'?selEmpId:selBikeId;
+  const activeType=mode==='emp'?activeEmpDocType:activeBikeDocType;
+  sb.innerHTML=types.map(dt=>{
+    const recs=getEntityDocs(entityId,dt.key,mode);
+    // latest = highest ts record
+    const latest=recs.length?recs.reduce((a,b)=>(b.ts>a.ts?b:a)):null;
+    const exp=latest?.expiry?expiryStatus(latest.expiry):null;
+    let cls='doc-side-btn';
+    if(dt.key===activeType) cls+=' selected';
+    let badge='';
+    if(recs.length){
+      const bClass=exp?.status==='red'?'red':exp?.status==='amber'?'amber':'';
+      if(exp?.status==='red') cls+=' expired-docs';
+      else if(exp?.status==='amber') cls+=' expiring-docs';
+      else cls+=' has-docs';
+      badge=`<div class="doc-count-badge ${bClass}">${recs.length}</div>`;
     }
-    return `<button class="${cls}" onclick="openBikeDocType('${dt.key}')">${countBadge}<i class="ti ${dt.icon}"></i><span>${dt.label}</span></button>`;
+    return `<button class="${cls}" data-mode="${mode}" data-doctype="${dt.key}">${badge}<i class="ti ${dt.icon}"></i><span>${dt.label}</span></button>`;
   }).join('');
 }
 
-function resetBikeCenter() {
-  document.getElementById('bike-doc-center').innerHTML = `<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a document type from the left to view its records</span></div>`;
+function resetCenter(mode){
+  document.getElementById(mode+'-doc-center').innerHTML=`<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>`;
 }
 
-function openBikeDocType(docType) {
-  activeBikeDocType = docType;
-  buildBikeSidebar();
-  const dt = BIKE_DOC_TYPES.find(d=>d.key===docType);
-  const recs = getBikeDocs(selBikeId, docType);
-  document.getElementById('bike-doc-center').innerHTML = buildCenterPanel(dt, recs, 'bike');
-  initFileUploadZone('bike-file-zone','bike-file-input','bike-chosen-file');
+function openDocType(mode,docType){
+  if(mode==='emp') activeEmpDocType=docType;
+  else activeBikeDocType=docType;
+  buildSidebar(mode);
+  const types=mode==='emp'?EMP_DOC_TYPES:BIKE_DOC_TYPES;
+  const dt=types.find(d=>d.key===docType);
+  const entityId=mode==='emp'?selEmpId:selBikeId;
+  const recs=getEntityDocs(entityId,docType,mode);
+  document.getElementById(mode+'-doc-center').innerHTML=buildCenterPanel(dt,recs,mode);
+  initDropZone(mode+'-file-zone',mode+'-file-input',mode+'-chosen-file');
 }
 
-function buildCenterPanel(dt, recs, mode) {
-  const fileZone  = mode+'-file-zone';
-  const fileInput = mode+'-file-input';
-  const chosenFile= mode+'-chosen-file';
-  const dateId    = mode+'-exp-date';
-  const gsStatusId= mode+'-gs-status';
-  const uploadId  = mode+'-upload-inline';
+/* ═══════════════════════════════════════════════════════
+ *  CENTER PANEL — history from ap2_docLog + upload form
+ * ═══════════════════════════════════════════════════════ */
+function buildCenterPanel(dt,recs,mode){
+  const fz=mode+'-file-zone',fi=mode+'-file-input',fc=mode+'-chosen-file';
+  const di=mode+'-exp-date',gs=mode+'-gs-status',up=mode+'-upload-inline';
 
-  let recordsHtml = '';
-  if(!recs.length) {
-    recordsHtml = `<div style="text-align:center;padding:20px 0;color:var(--text3);font-size:12.5px;">
-      <i class="ti ti-file-off" style="font-size:26px;display:block;margin-bottom:8px;opacity:.4;"></i>
-      No previous documents for this category.
+  // Sort by ts descending (latest first)
+  const sorted=[...recs].sort((a,b)=>b.ts-a.ts);
+
+  let histHtml='';
+  if(!sorted.length){
+    histHtml=`<div style="text-align:center;padding:18px 0;color:var(--text3);font-size:12px;">
+      <i class="ti ti-file-off" style="font-size:24px;display:block;margin-bottom:6px;opacity:.35;"></i>
+      No records in ap2_docLog for this category.
     </div>`;
-  } else {
-    recordsHtml = [...recs].reverse().map((rec, idx) => {
-      const isPdf = rec.fileType === 'pdf';
-      const exp   = rec.expiry ? expiryStatus(rec.expiry) : {status:'gray',label:'No expiry set'};
-      const isNew = idx === 0;
-      return `<div class="txn-record">
-        <div class="txn-record-icon ${isPdf?'pdf':'img'}"><i class="ti ${isPdf?'ti-file-type-pdf':'ti-photo'}"></i></div>
-        <div class="txn-record-meta">
-          <button class="txn-id-btn" onclick='previewDoc(${JSON.stringify(rec)}, "${dt.label}", "${mode}")'>
-            <i class="ti ti-eye" style="font-size:13px;"></i> ${rec.txnId}
-            ${isNew?'<span class="txn-badge-latest">Latest</span>':''}
-          </button>
-          <div class="txn-record-date">Uploaded ${fmtDate(rec.uploadedAt)}</div>
-          <div class="txn-record-expiry ${exp.status}"><i class="ti ti-calendar-event" style="font-size:11px;"></i> ${rec.expiry?fmtDate(rec.expiry):'—'} · ${exp.label}</div>
+  }else{
+    histHtml=sorted.map((rec,idx)=>{
+      const exp=rec.expiry?expiryStatus(rec.expiry):{status:'gray',label:'No expiry set'};
+      const isLatest=idx===0;
+      const hasLink=rec.docLink&&rec.docLink.startsWith('http');
+      return `<div class="hist-rec">
+        <div class="hist-icon ${hasLink?'link':'local'}">
+          <i class="ti ${hasLink?'ti-brand-google-drive':'ti-file'}"></i>
+        </div>
+        <div class="hist-meta">
+          <div class="hist-txn">
+            <span>${rec.txnId}</span>
+            ${isLatest?'<span class="hist-badge-latest">Latest</span>':''}
+            <span class="hist-badge-sheet">Sheet</span>
+          </div>
+          <div class="hist-date">Cached ${fmtTs(rec.ts)}</div>
+          <div class="hist-exp ${exp.status}"><i class="ti ti-calendar-event" style="font-size:10px;"></i> ${rec.expiry?fmtDate(rec.expiry):'—'} · ${exp.label}</div>
+        </div>
+        <div class="hist-actions">
+          ${hasLink?`<a class="btn btn-ghost btn-sm" href="${rec.docLink}" target="_blank" rel="noopener" title="Open in Drive"><i class="ti ti-external-link"></i></a>`:''}
         </div>
       </div>`;
     }).join('');
@@ -953,543 +925,356 @@ function buildCenterPanel(dt, recs, mode) {
   return `
     <div class="doc-center-header">
       <h3><i class="ti ${dt.icon}"></i> ${dt.label}</h3>
-      ${recs.length ? `<span class="badge purple" style="margin-left:auto;">${recs.length} record${recs.length!==1?'s':''}</span>` : ''}
+      ${recs.length?`<span class="badge purple">${recs.length} record${recs.length!==1?'s':''}</span>`:''}
     </div>
     <div class="doc-center-body">
-      ${recordsHtml}
+      ${histHtml}
       <div class="txn-new-row">
-        <div class="txn-new-label"><i class="ti ti-plus"></i> Upload a new ${dt.label} version</div>
-        <button class="btn-new-upload" onclick="toggleNewUpload('${uploadId}')"><i class="ti ti-upload"></i> New</button>
+        <div class="txn-new-label"><i class="ti ti-plus"></i> Upload new ${dt.label}</div>
+        <button class="btn-new-upload" onclick="toggleUpload('${up}')"><i class="ti ti-upload"></i> Upload</button>
       </div>
-      <div class="upload-inline" id="${uploadId}">
+      <div class="upload-inline" id="${up}">
         <div class="upload-inline-title"><i class="ti ti-cloud-upload"></i> Upload ${dt.label}</div>
         <div class="upload-row">
           <div class="field" style="flex:2;">
             <label>File (Image or PDF) <span class="req">*</span></label>
-            <div class="file-upload-zone" id="${fileZone}">
-              <input type="file" id="${fileInput}" accept="image/*,.pdf" onchange="handleFileSelect(this, '${fileZone}', '${chosenFile}')"/>
+            <div class="file-upload-zone" id="${fz}">
+              <input type="file" id="${fi}" accept="image/*,.pdf" onchange="handleFile(this,'${fz}','${fc}')"/>
               <i class="ti ti-cloud-upload"></i>
-              <p id="${chosenFile}">Click to browse or drag & drop<br><span style="font-size:10px;opacity:.6;">JPG, PNG, WEBP, PDF</span></p>
+              <p id="${fc}">Click or drag & drop<br><span style="font-size:9.5px;opacity:.6;">JPG, PNG, WEBP, PDF</span></p>
             </div>
           </div>
           <div class="field">
             <label>Expiry Date <span class="req">*</span></label>
-            <input type="date" class="date-input" id="${dateId}"/>
+            <input type="date" class="date-input" id="${di}"/>
           </div>
         </div>
-        <div id="${gsStatusId}" style="display:none;"></div>
+        <div id="${gs}" style="display:none;"></div>
         <div class="upload-actions">
-          <button class="btn btn-ghost btn-sm" onclick="toggleNewUpload('${uploadId}')"><i class="ti ti-x"></i> Cancel</button>
-          <button class="btn btn-primary btn-sm" onclick="submitDoc('${mode}','${dt.key}','${dt.label}')"><i class="ti ti-upload"></i> Upload & Save</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleUpload('${up}')"><i class="ti ti-x"></i> Cancel</button>
+          <button class="btn btn-primary btn-sm" onclick="submitDoc('${mode}','${dt.key}','${dt.label}')"><i class="ti ti-upload"></i> Upload & Save to Sheet</button>
         </div>
       </div>
     </div>`;
 }
 
-function toggleNewUpload(id) {
-  const el = document.getElementById(id);
-  if(!el) return;
+function toggleUpload(id){
+  const el=document.getElementById(id);if(!el)return;
   el.classList.toggle('open');
   if(el.classList.contains('open')) el.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function initFileUploadZone(zoneId, inputId, labelId) {
-  const zone = document.getElementById(zoneId);
-  if(!zone) return;
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
-  zone.addEventListener('drop', e => {
-    e.preventDefault(); zone.classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    if(file) { document.getElementById(inputId).files = e.dataTransfer.files; handleFileSelect({files:[file]}, zoneId, labelId); }
+function initDropZone(zoneId,inputId,labelId){
+  const z=document.getElementById(zoneId);if(!z)return;
+  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('dragover');});
+  z.addEventListener('dragleave',()=>z.classList.remove('dragover'));
+  z.addEventListener('drop',e=>{
+    e.preventDefault();z.classList.remove('dragover');
+    const f=e.dataTransfer.files[0];
+    if(f){document.getElementById(inputId).files=e.dataTransfer.files;handleFile({files:[f]},zoneId,labelId);}
   });
 }
 
-function handleFileSelect(input, zoneId, labelId) {
-  const file = input.files?.[0];
-  const zone = document.getElementById(zoneId);
-  const label= document.getElementById(labelId);
-  if(!file || !zone || !label) return;
-  zone.classList.add('has-file');
-  label.innerHTML = `<strong style="font-size:12.5px;">${file.name}</strong><br><span style="font-size:10.5px;">${(file.size/1024).toFixed(1)} KB</span>`;
+function handleFile(input,zoneId,labelId){
+  const f=input.files?.[0];const z=document.getElementById(zoneId);const l=document.getElementById(labelId);
+  if(!f||!z||!l)return;
+  z.classList.add('has-file');
+  l.innerHTML=`<strong style="font-size:12px;">${f.name}</strong><br><span style="font-size:10px;">${(f.size/1024).toFixed(1)} KB</span>`;
 }
 
-async function submitDoc(mode, docType, docLabel) {
-  const fileInput = document.getElementById(mode+'-file-input');
-  const dateEl    = document.getElementById(mode+'-exp-date');
-  const gsStatus  = document.getElementById(mode+'-gs-status');
-  const file = fileInput?.files?.[0];
-  const expiry = dateEl?.value;
-  if(!file)   { toast('Please select a file to upload','error'); return; }
-  if(!expiry) { toast('Expiry date is mandatory','error'); return; }
-  const entityId = mode==='emp' ? selEmpId : selBikeId;
-  if(!entityId)  { toast('No entity selected','error'); return; }
+/* ═══════════════════════════════════════════════════════
+ *  SUBMIT DOC — upload file + sync to Sheets
+ *  No local IDB doc cache. Sheets is the only store.
+ * ═══════════════════════════════════════════════════════ */
+async function submitDoc(mode,docType,docLabel){
+  const fi=document.getElementById(mode+'-file-input');
+  const de=document.getElementById(mode+'-exp-date');
+  const gs=document.getElementById(mode+'-gs-status');
+  const file=fi?.files?.[0];
+  const expiry=de?.value;
+  if(!file){toast('Select a file','error');return;}
+  if(!expiry){toast('Expiry date is required','error');return;}
+  const entityId=mode==='emp'?selEmpId:selBikeId;
+  if(!entityId){toast('No entity selected','error');return;}
 
-  const MAX_BYTES = 8 * 1024 * 1024; // 8 MB guard — large files can blow IDB quotas on some browsers
-  if (file.size > MAX_BYTES) {
-    toast(`File too large (${(file.size/1024/1024).toFixed(1)} MB) — please use a file under 8 MB`, 'error');
+  const MAX=8*1024*1024;
+  if(file.size>MAX){toast(`File too large (${(file.size/1024/1024).toFixed(1)} MB) — max 8 MB`,'error');return;}
+
+  gs.style.display='flex';gs.className='gs-status loading';
+  gs.innerHTML=`<i class="ti ti-loader spinner"></i> Reading file…`;
+
+  let base64,txnId,record;
+  try{
+    base64=await fileToBase64(file);
+    txnId=genTxnId();
+    record={txnId,entityId,docType,fileName:file.name,
+            fileType:file.type==='application/pdf'?'pdf':'image',
+            mimeType:file.type,fileData:base64,
+            expiry,uploadedAt:new Date().toISOString()};
+  }catch(err){
+    gs.className='gs-status error';
+    gs.innerHTML=`<i class="ti ti-alert-circle"></i> File read failed: ${err.message}`;
+    toast('File read failed','error');return;
+  }
+
+  if(!SHEETS_ON){
+    gs.className='gs-status error';
+    gs.innerHTML=`<i class="ti ti-alert-circle"></i> Sheets sync URL not configured — upload not saved`;
+    toast('Configure SHEETS_URL to save documents','error');
     return;
   }
 
-  gsStatus.style.display='flex';
-  gsStatus.className='gs-status loading';
-  gsStatus.innerHTML=`<i class="ti ti-loader spinner"></i> Reading file…`;
-
-  let txnId, record, targetStoreKey, localSaveOk = false;
-
-  try {
-    const base64 = await fileToBase64(file);
-    const isPdf  = file.type === 'application/pdf';
-    txnId  = genTxnId();
-    record = { txnId, entityId, docType, fileName: file.name, fileType: isPdf?'pdf':'image', mimeType: file.type, fileData: base64, expiry, uploadedAt: new Date().toISOString() };
-
-    gsStatus.innerHTML=`<i class="ti ti-loader spinner"></i> Saving to local store…`;
-
-    targetStoreKey = mode === 'emp' ? 'portal_emp_docs' : 'portal_bike_docs';
-    const targetMap = mode === 'emp' ? empDocs : bikeDocs;
-
-    if(!targetMap[entityId]) targetMap[entityId] = {};
-    if(!targetMap[entityId][docType]) targetMap[entityId][docType] = [];
-    targetMap[entityId][docType].push(record);
-
-    await idbSet(targetStoreKey, targetMap);
-
-    // ── Verify the local write actually persisted by reading it back ──
-    gsStatus.innerHTML=`<i class="ti ti-loader spinner"></i> Verifying local save…`;
-    const verify = await idbGet(targetStoreKey);
-    const verifyRecs = verify?.[entityId]?.[docType] || [];
-    const found = verifyRecs.find(r => r.txnId === txnId);
-    if (!found) {
-      throw new Error('Write completed but verification read-back did not find the record — storage may be full or restricted (e.g. private/incognito mode)');
-    }
-    localSaveOk = true;
-  } catch(err) {
-    gsStatus.className='gs-status error';
-    gsStatus.innerHTML=`<i class="ti ti-alert-circle"></i> Local save failed: ${err.message}`;
-    toast('Upload failed: '+err.message,'error');
-    console.error('[docPortal] local save error:', err);
-    return;
+  gs.innerHTML=`<i class="ti ti-loader spinner"></i> Uploading to Google Sheets…`;
+  try{
+    await syncToSheets(mode,record);
+    gs.className='gs-status success';
+    gs.innerHTML=`<i class="ti ti-circle-check"></i> Saved to Sheet · TXN: ${txnId} — refresh Doc Log to see it`;
+    toast(`${docLabel} uploaded to Sheets`);
+    // Refresh log after a short delay
+    setTimeout(async()=>{await loadDocLog();buildSidebar(mode);openDocType(mode,docType);},2000);
+  }catch(err){
+    gs.className='gs-status error';
+    gs.innerHTML=`<i class="ti ti-alert-circle"></i> Sheets sync failed: ${err.message}`;
+    toast('Sheets sync failed: '+err.message,'error');
+    console.error('[portal] sheets sync:',err);
   }
-
-  // ── Local save succeeded. Now attempt Google Sheets sync. ──
-  if (!SHEETS_SYNC_ENABLED) {
-    gsStatus.className='gs-status success';
-    gsStatus.innerHTML=`<i class="ti ti-circle-check"></i> Saved locally · TXN: ${txnId} <span style="opacity:.75;font-weight:500;">— Sheets sync not configured (see SHEETS_WEBAPP_URL in code)</span>`;
-    toast(`${docLabel} saved locally (Sheets sync off)`);
-    setTimeout(() => { if(mode==='emp') openEmpDocType(docType); else openBikeDocType(docType); }, 1200);
-    return;
-  }
-
-  gsStatus.className='gs-status loading';
-  gsStatus.innerHTML=`<i class="ti ti-loader spinner"></i> Syncing to Google Sheets…`;
-
-  try {
-    await syncDocToSheets(mode, record);
-    gsStatus.className='gs-status success';
-    gsStatus.innerHTML=`<i class="ti ti-circle-check"></i> Saved & synced to Sheets · TXN: ${txnId}`;
-    toast(`${docLabel} uploaded and synced to Google Sheets`);
-  } catch(err) {
-    // Local copy is safe even though Sheets sync failed — say so clearly.
-    gsStatus.className='gs-status error';
-    gsStatus.innerHTML=`<i class="ti ti-alert-circle"></i> Saved locally, but Sheets sync failed: ${err.message}`;
-    toast('Saved locally — Sheets sync failed: '+err.message, 'error');
-    console.error('[docPortal] sheets sync error:', err);
-  }
-
-  setTimeout(() => { if(mode==='emp') openEmpDocType(docType); else openBikeDocType(docType); }, 1200);
 }
 
-/* ══ GOOGLE SHEETS SYNC ══
- *  POSTs the document record (including base64 file data) to the Apps Script
- *  Web App, which decodes it, saves the file to Drive, and logs a row in the
- *  EmpDocuments / BikeDocuments sheet. See appsScript.gs for the receiving code.
- * ═══════════════════════════════════════════════════════════════════════ */
-async function syncDocToSheets(mode, record) {
-  if (!SHEETS_SYNC_ENABLED) throw new Error('Sheets sync URL not configured');
-
-  const payload = {
-    action:     'saveDoc',
-    sheetName:  mode === 'emp' ? 'EmpDocuments' : 'BikeDocuments',
-    txnId:      record.txnId,
-    entityId:   record.entityId,
-    docType:    record.docType,
-    fileName:   record.fileName,
-    fileType:   record.fileType,
-    mimeType:   record.mimeType,
-    fileData:   record.fileData,
-    expiry:     record.expiry,
-    uploadedAt: record.uploadedAt,
+async function syncToSheets(mode,rec){
+  const payload={
+    action:'saveDoc',
+    sheetName:mode==='emp'?'EmpDocuments':'BikeDocuments',
+    txnId:rec.txnId,entityId:rec.entityId,docType:rec.docType,
+    fileName:rec.fileName,fileType:rec.fileType,mimeType:rec.mimeType,
+    fileData:rec.fileData,expiry:rec.expiry,uploadedAt:rec.uploadedAt,
   };
-
-  let res;
-  try {
-    res = await fetch(SHEETS_WEBAPP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
-      body: JSON.stringify(payload),
-    });
-  } catch(networkErr) {
-    throw new Error('Network error reaching Apps Script — check the URL and your internet connection');
-  }
-
-  if (!res.ok) {
-    throw new Error(`Apps Script responded with HTTP ${res.status}`);
-  }
-
-  let data;
-  try {
-    data = await res.json();
-  } catch(parseErr) {
-    throw new Error('Apps Script returned a non-JSON response — check the deployment is set to "Anyone" access and redeployed after edits');
-  }
-
-  if (data.status !== 'ok') {
-    throw new Error(data.message || 'Apps Script returned an error status');
-  }
-
+  const res=await fetch(SHEETS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload),
+  });
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data=await res.json();
+  if(data.status!=='ok') throw new Error(data.message||'Script error');
   return data;
 }
 
-function previewDoc(rec, docLabel, mode) {
-  if(typeof rec === 'string') { try { rec = JSON.parse(rec); } catch(e) { toast('Cannot parse record','error'); return; } }
-  const panel = document.getElementById(mode+'-preview-panel');
-  document.getElementById(mode+'-preview-title').textContent = `${docLabel} — ${rec.txnId}`;
-  const body = document.getElementById(mode+'-preview-body');
-  let mediaHtml = '';
-  if(rec.fileType === 'pdf' || rec.mimeType === 'application/pdf') {
-    mediaHtml = `<iframe class="preview-pdf" src="${rec.fileData}" title="PDF Preview"></iframe>`;
-  } else {
-    mediaHtml = `<img class="preview-img" src="${rec.fileData}" alt="Document preview"/>`;
+/* ═══════════════════════════════════════════════════════
+ *  PREVIEW PANEL — only for Drive-linked docs (open link)
+ *  Local base64 preview removed (no local store)
+ * ═══════════════════════════════════════════════════════ */
+function previewDoc(rec,docLabel,mode){
+  // For Drive links: open in new tab (no base64 available)
+  if(rec.docLink&&rec.docLink.startsWith('http')){
+    window.open(rec.docLink,'_blank','noopener');return;
   }
-  const exp = rec.expiry ? expiryStatus(rec.expiry) : {status:'gray',label:'Not set'};
-  body.innerHTML = `
-    ${mediaHtml}
+  // For local base64 (uploaded this session before page reload)
+  if(!rec.fileData){toast('No preview available','error');return;}
+  const panel=document.getElementById(mode+'-preview-panel');
+  document.getElementById(mode+'-preview-title').textContent=`${docLabel} — ${rec.txnId}`;
+  const body=document.getElementById(mode+'-preview-body');
+  const mediaHtml=rec.fileType==='pdf'||rec.mimeType==='application/pdf'
+    ?`<iframe class="pf" src="${rec.fileData}" title="PDF"></iframe>`
+    :`<img class="pi" src="${rec.fileData}" alt="Document"/>`;
+  const exp=rec.expiry?expiryStatus(rec.expiry):{status:'gray',label:'Not set'};
+  body.innerHTML=`${mediaHtml}
     <div class="preview-meta">
-      <div class="preview-meta-item"><span class="key">Transaction ID</span><span class="val">${rec.txnId}</span></div>
-      <div class="preview-meta-item"><span class="key">Entity ID</span><span class="val">${rec.entityId}</span></div>
-      <div class="preview-meta-item"><span class="key">File Name</span><span class="val" style="text-align:right;word-break:break-all;">${rec.fileName}</span></div>
-      <div class="preview-meta-item"><span class="key">Uploaded</span><span class="val">${fmtDate(rec.uploadedAt)}</span></div>
-      <div class="preview-meta-item"><span class="key">Expiry</span><span class="val" style="color:var(--${exp.status})">${fmtDate(rec.expiry)}</span></div>
-      <div class="preview-meta-item"><span class="key">Status</span><span class="val" style="color:var(--${exp.status})">${exp.label}</span></div>
+      <div class="pmi"><span class="k">TXN ID</span><span class="v">${rec.txnId}</span></div>
+      <div class="pmi"><span class="k">Entity ID</span><span class="v">${rec.entityId}</span></div>
+      <div class="pmi"><span class="k">File</span><span class="v" style="word-break:break-all;text-align:right;">${rec.fileName}</span></div>
+      <div class="pmi"><span class="k">Expiry</span><span class="v" style="color:var(--${exp.status})">${fmtDate(rec.expiry)}</span></div>
+      <div class="pmi"><span class="k">Status</span><span class="v" style="color:var(--${exp.status})">${exp.label}</span></div>
     </div>`;
-  const dlBtn = document.getElementById(mode+'-preview-download');
-  dlBtn.href = rec.fileData;
-  dlBtn.download = rec.fileName || 'document';
+  const dlBtn=document.getElementById(mode+'-preview-download');
+  dlBtn.href=rec.fileData;dlBtn.download=rec.fileName||'document';
   panel.classList.add('open');
 }
+function closePreview(mode){document.getElementById(mode+'-preview-panel').classList.remove('open');}
 
-function closePreview(mode) { document.getElementById(mode+'-preview-panel').classList.remove('open'); }
-
-/* ══════════════════════════════════════════════════════════════════════
- *  DOC LOG — reads from ap2_docLog cache (same IDB as fleet cache)
- *  and also merges in locally-stored portal_emp_docs / portal_bike_docs.
- *  Columns: Transaction ID | Portal | ID | Doc Type | Doc Link | Exp Date
- * ════════════════════════════════════════════════════════════════════════ */
-const FLEET_KEY_DOC_LOG = 'ap2_docLog';
-
-let logRows      = [];      // flat array of all log records
-let logSortKey   = 'uploadedAt';
-let logSortAsc   = false;
-let logPortal    = 'all';   // 'emp' | 'bike' | 'all'
-let logSelId     = '';      // '' = all IDs
-
-/* ── Load the ap2_docLog cache from IDB ── */
-async function loadDocLog() {
-  let cached = [];
-  try {
-    const rows = await _fleetRead(FLEET_KEY_DOC_LOG);
-    cached = rows.map(r => normaliseLogRow(r)).filter(Boolean);
-  } catch(e) {
-    // Cache miss — will fall back to locally stored docs only
-    console.warn('[docLog] ap2_docLog cache not found:', e.message);
-  }
-  return cached;
+/* ═══════════════════════════════════════════════════════
+ *  DOC LOG TAB
+ * ═══════════════════════════════════════════════════════ */
+function buildLogDocTypeOptions(){
+  const sel=document.getElementById('log-doctype-filter');
+  const prev=sel.value;
+  const types=logPortal==='emp'?EMP_DOC_TYPES:logPortal==='bike'?BIKE_DOC_TYPES:ALL_DOC_TYPES;
+  sel.innerHTML='<option value="">All Types</option>'+types.map(t=>`<option value="${t.key}">${t.label}</option>`).join('');
+  if(prev) sel.value=prev;
 }
 
-function normaliseLogRow(r) {
-  if (!r) return null;
-  const _s = v => (v !== null && v !== undefined && v !== '') ? String(v).trim() : '';
-  if (Array.isArray(r)) {
-    // Skip header rows
-    const first = _s(r[0]).toLowerCase();
-    if (first === 'transaction id' || first === 'txnid' || first === 'txn id') return null;
-    const txnId = _s(r[0]); if (!txnId) return null;
-    return { txnId, portal: _s(r[1]).toLowerCase() || 'emp', entityId: _s(r[2]), docType: _s(r[3]), docLink: _s(r[4]), expiry: _s(r[5]), uploadedAt: _s(r[6]) || '' };
-  }
-  // Object row
-  const txnId = _s(r['Transaction ID'] || r['txnId'] || r['TxnId'] || r['txn_id']); if (!txnId) return null;
-  const portal = (_s(r['Portal'] || r['portal'] || '')).toLowerCase() || 'emp';
-  return {
-    txnId,
-    portal: portal.includes('bike') ? 'bike' : 'emp',
-    entityId: _s(r['ID'] || r['entityId'] || r['entity_id'] || r['Emp ID'] || r['Bike ID'] || ''),
-    docType:  _s(r['Doc Type'] || r['docType'] || r['doc_type'] || ''),
-    docLink:  _s(r['Doc Link'] || r['docLink'] || r['doc_link'] || r['File Link'] || ''),
-    expiry:   _s(r['Exp Date']  || r['expiry'] || r['Expiry Date'] || r['ExpiryDate'] || ''),
-    uploadedAt: _s(r['Uploaded'] || r['uploadedAt'] || r['Upload Date'] || ''),
-  };
+function setLogPortal(p){
+  logPortal=p;logSelId='';
+  document.getElementById('log-id-search').value='';
+  document.getElementById('log-id-sdw').classList.remove('has-val');
+  ['all','emp','bike'].forEach(k=>document.getElementById('log-filter-'+k).classList.toggle('active',k===p));
+  const lbl=document.getElementById('log-id-label');
+  lbl.textContent=p==='bike'?'Filter by Bike':'Filter by Employee';
+  document.getElementById('log-id-field').style.display=p==='all'?'none':'flex';
+  buildLogDocTypeOptions();renderLogTable();
 }
 
-/* Build log rows from BOTH the cache AND local portal docs */
-async function buildLogRows() {
-  const cached = await loadDocLog();
-
-  // Also flatten local docs into the same format
-  const local = [];
-
-  Object.entries(empDocs).forEach(([empId, byType]) => {
-    Object.entries(byType).forEach(([docType, recs]) => {
-      recs.forEach(rec => {
-        local.push({
-          txnId:     rec.txnId,
-          portal:    'emp',
-          entityId:  empId,
-          docType:   docType,
-          docLink:   null, // local base64 — use preview
-          _localRec: rec,
-          expiry:    rec.expiry || '',
-          uploadedAt: rec.uploadedAt || '',
-        });
-      });
-    });
-  });
-
-  Object.entries(bikeDocs).forEach(([bikeId, byType]) => {
-    Object.entries(byType).forEach(([docType, recs]) => {
-      recs.forEach(rec => {
-        local.push({
-          txnId:     rec.txnId,
-          portal:    'bike',
-          entityId:  bikeId,
-          docType:   docType,
-          docLink:   null,
-          _localRec: rec,
-          expiry:    rec.expiry || '',
-          uploadedAt: rec.uploadedAt || '',
-        });
-      });
-    });
-  });
-
-  // Merge: cached takes priority; deduplicate by txnId
-  const seen = new Set();
-  const merged = [];
-  [...cached, ...local].forEach(r => {
-    if (seen.has(r.txnId)) return;
-    seen.add(r.txnId);
-    merged.push(r);
-  });
-
-  logRows = merged;
-}
-
-async function refreshLogCache() {
-  toast('Refreshing log…');
-  await buildLogRows();
-  buildLogDocTypeOptions();
-  renderLogTable();
-  toast('Log refreshed');
-}
-
-/* ── Friendly doc type label ── */
-function docTypeLabel(key) {
-  const all = [...EMP_DOC_TYPES, ...BIKE_DOC_TYPES];
-  const found = all.find(d => d.key === key);
-  return found ? found.label : key.replace(/_/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
-}
-
-/* ── Build doc-type filter dropdown from current portal filter ── */
-function buildLogDocTypeOptions() {
-  const sel = document.getElementById('log-doctype-filter');
-  const prev = sel.value;
-  const types = logPortal === 'emp'  ? EMP_DOC_TYPES :
-                logPortal === 'bike' ? BIKE_DOC_TYPES :
-                [...EMP_DOC_TYPES, ...BIKE_DOC_TYPES];
-  sel.innerHTML = '<option value="">All Types</option>' +
-    types.map(t => `<option value="${t.key}">${t.label}</option>`).join('');
-  if (prev) sel.value = prev;
-}
-
-/* ── Portal filter buttons ── */
-function setLogPortal(p) {
-  logPortal = p;
-  logSelId = '';
-  document.getElementById('log-id-search').value = '';
-  ['emp','bike','all'].forEach(k => document.getElementById('log-filter-'+k).classList.toggle('active', k===p));
-  // Update ID label
-  const lbl = document.getElementById('log-id-label');
-  lbl.textContent = p==='bike' ? 'Bike' : 'Employee';
-  document.getElementById('log-id-field').style.display = p==='all' ? 'none' : 'flex';
-  buildLogDocTypeOptions();
-  renderLogTable();
-}
-
-/* ── Log ID search dropdown ── */
-function filterLogIdDropdown(q) {
-  const list = document.getElementById('log-id-dropdown');
-  const lq = q.toLowerCase().trim();
-  if (!lq) { logSelId=''; list.classList.remove('open'); renderLogTable(); return; }
-  const source = logPortal === 'bike' ? bikes : employees;
-  const hits = source.filter(e => String(e.id).toLowerCase().includes(lq) || (e.name||e.plate||'').toLowerCase().includes(lq)).slice(0,12);
-  if (!hits.length) {
-    list.innerHTML = '<div class="dropdown-item" style="color:var(--text3);">No matches</div>';
-  } else {
-    list.innerHTML = hits.map(e => {
-      const label = e.name || e.plate || e.id;
-      const hl = v => String(v).replace(new RegExp(`(${lq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<em>$1</em>');
-      return `<div class="dropdown-item" onmousedown="selectLogId('${e.id}')">
-        <div class="dname">${hl(label)}</div><div class="did">ID: ${hl(String(e.id))}</div>
-      </div>`;
-    }).join('');
-  }
+function filterLogIdDrop(q){
+  const list=document.getElementById('log-id-dropdown');
+  const lq=q.toLowerCase().trim();
+  if(!lq){logSelId='';closeLogIdDrop();renderLogTable();return;}
+  const source=logPortal==='bike'?bikes:employees;
+  const hits=source.filter(e=>String(e.id).toLowerCase().includes(lq)||(e.name||e.plate||'').toLowerCase().includes(lq)).slice(0,12);
+  const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const hl=v=>String(v).replace(new RegExp(`(${esc(lq)})`,'gi'),'<em>$1</em>');
+  if(!hits.length){list.innerHTML='<div class="di no-match">No matches</div>';}
+  else{list.innerHTML=hits.map(e=>`<div class="di" data-log-id="${e.id}"><div class="dn">${hl(e.name||e.plate||e.id)}</div><div class="ds">ID: ${hl(String(e.id))}</div></div>`).join('');}
   list.classList.add('open');
+  document.getElementById('log-id-sdw').classList.add('has-val');
 }
-function openLogIdDropdown() { filterLogIdDropdown(document.getElementById('log-id-search').value); }
-function closeLogIdDropdown() { document.getElementById('log-id-dropdown').classList.remove('open'); }
-function selectLogId(id) {
-  logSelId = String(id);
-  const source = logPortal==='bike' ? bikes : employees;
-  const e = source.find(x => String(x.id) === logSelId);
-  document.getElementById('log-id-search').value = e ? `${e.id} — ${e.name||e.plate||''}` : id;
-  closeLogIdDropdown();
+function openLogIdDrop(){filterLogIdDrop(document.getElementById('log-id-search').value);}
+function closeLogIdDrop(){document.getElementById('log-id-dropdown').classList.remove('open');}
+function clearLogId(){
+  logSelId='';
+  document.getElementById('log-id-search').value='';
+  document.getElementById('log-id-sdw').classList.remove('has-val');
+  closeLogIdDrop();renderLogTable();
+}
+function selectLogId(id){
+  logSelId=String(id);
+  const source=logPortal==='bike'?bikes:employees;
+  const e=source.find(x=>String(x.id)===logSelId);
+  document.getElementById('log-id-search').value=e?`${e.id} — ${e.name||e.plate||e.id}`:id;
+  document.getElementById('log-id-sdw').classList.add('has-val');
+  closeLogIdDrop();renderLogTable();
+}
+
+function sortLog(key){
+  if(logSortKey===key) logSortAsc=!logSortAsc;
+  else{logSortKey=key;logSortAsc=false;}
   renderLogTable();
 }
 
-/* ── Sort ── */
-let _logSortDir = {};
-function sortLog(key) {
-  if (logSortKey === key) { logSortAsc = !logSortAsc; }
-  else { logSortKey = key; logSortAsc = true; }
+async function refreshLog(){
+  toast('Refreshing doc log…');
+  await loadDocLog();
+  buildLogDocTypeOptions();
   renderLogTable();
+  toast('Doc log refreshed');
 }
 
-/* ── Resolve entity name from employees/bikes arrays ── */
-function entityName(row) {
-  if (row.portal === 'emp') {
-    const e = employees.find(x => String(x.id) === String(row.entityId));
-    return e ? e.name : '—';
-  } else {
-    const b = bikes.find(x => String(x.id) === String(row.entityId));
-    return b ? (b.plate || b.id) : '—';
-  }
-}
+function renderLogTable(){
+  const tbody=document.getElementById('log-tbody');
+  const footer=document.getElementById('log-footer');
+  const summary=document.getElementById('log-summary');
+  if(!tbody)return;
 
-/* ── Render the table ── */
-function renderLogTable() {
-  const tbody = document.getElementById('log-tbody');
-  const footer = document.getElementById('log-footer');
-  const summary = document.getElementById('log-summary');
-  if (!tbody) return;
+  const dtF=document.getElementById('log-doctype-filter')?.value||'';
+  const exF=document.getElementById('log-expiry-filter')?.value||'';
 
-  const dtFilter  = document.getElementById('log-doctype-filter')?.value || '';
-  const expFilter = document.getElementById('log-expiry-filter')?.value  || '';
-
-  let rows = logRows.filter(r => {
-    if (logPortal !== 'all' && r.portal !== logPortal) return false;
-    if (logSelId  && String(r.entityId) !== logSelId)  return false;
-    if (dtFilter  && r.docType !== dtFilter)            return false;
-    if (expFilter) {
-      const s = r.expiry ? expiryStatus(r.expiry).status : 'gray';
-      if (s !== expFilter) return false;
-    }
+  let rows=logRows.filter(r=>{
+    if(logPortal!=='all'&&r.portal!==logPortal)return false;
+    if(logSelId&&String(r.entityId)!==logSelId)return false;
+    if(dtF&&r.docType!==dtF)return false;
+    if(exF){const s=r.expiry?expiryStatus(r.expiry).status:'gray';if(s!==exF)return false;}
     return true;
   });
 
-  // Sort
-  rows = [...rows].sort((a, b) => {
-    let va = a[logSortKey] || '', vb = b[logSortKey] || '';
-    if (logSortKey === 'expiry' || logSortKey === 'uploadedAt') {
-      va = va ? new Date(va).getTime() : 0;
-      vb = vb ? new Date(vb).getTime() : 0;
-    }
-    if (va < vb) return logSortAsc ? -1 : 1;
-    if (va > vb) return logSortAsc ?  1 : -1;
+  rows=[...rows].sort((a,b)=>{
+    let va=a[logSortKey]||'',vb=b[logSortKey]||'';
+    if(logSortKey==='expiry'){va=va?new Date(va).getTime():0;vb=vb?new Date(vb).getTime():0;}
+    if(logSortKey==='ts'){va=va||0;vb=vb||0;}
+    if(va<vb)return logSortAsc?-1:1;
+    if(va>vb)return logSortAsc?1:-1;
     return 0;
   });
 
-  // Summary chips
-  const total   = rows.length;
-  const expired = rows.filter(r => r.expiry && expiryStatus(r.expiry).status==='red').length;
-  const expiring= rows.filter(r => r.expiry && expiryStatus(r.expiry).status==='amber').length;
-  const valid   = rows.filter(r => r.expiry && expiryStatus(r.expiry).status==='teal').length;
-  summary.innerHTML = `
+  const total=rows.length;
+  const exp=rows.filter(r=>r.expiry&&expiryStatus(r.expiry).status==='red').length;
+  const expiring=rows.filter(r=>r.expiry&&expiryStatus(r.expiry).status==='amber').length;
+  const valid=rows.filter(r=>r.expiry&&expiryStatus(r.expiry).status==='teal').length;
+
+  summary.innerHTML=`
     <div class="log-stat-chip"><i class="ti ti-files" style="color:var(--accent);"></i> ${total} record${total!==1?'s':''}</div>
-    ${expired  ? `<div class="log-stat-chip" style="color:var(--red);border-color:rgba(248,81,73,.3);background:var(--red-dim);"><i class="ti ti-alert-circle"></i> ${expired} Expired</div>`:''}
-    ${expiring ? `<div class="log-stat-chip" style="color:var(--amber);border-color:rgba(227,179,65,.3);background:var(--amber-dim);"><i class="ti ti-clock-alert"></i> ${expiring} Expiring Soon</div>`:''}
-    ${valid    ? `<div class="log-stat-chip" style="color:var(--teal);border-color:rgba(57,211,83,.3);background:var(--teal-dim);"><i class="ti ti-circle-check"></i> ${valid} Valid</div>`:''}
+    ${exp?`<div class="log-stat-chip" style="color:var(--red);border-color:rgba(248,81,73,.3);background:var(--red-dim);"><i class="ti ti-alert-circle"></i> ${exp} Expired</div>`:''}
+    ${expiring?`<div class="log-stat-chip" style="color:var(--amber);border-color:rgba(227,179,65,.3);background:var(--amber-dim);"><i class="ti ti-clock-alert"></i> ${expiring} Expiring Soon</div>`:''}
+    ${valid?`<div class="log-stat-chip" style="color:var(--teal);border-color:rgba(57,211,83,.3);background:var(--teal-dim);"><i class="ti ti-circle-check"></i> ${valid} Valid</div>`:''}
   `;
 
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text3);font-size:13px;"><i class="ti ti-search-off" style="font-size:26px;display:block;margin-bottom:8px;opacity:.4;"></i> No records match the current filters</td></tr>`;
-    footer.textContent = '';
-    return;
+  if(!rows.length){
+    tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:36px;color:var(--text3);font-size:12.5px;"><i class="ti ti-search-off" style="font-size:24px;display:block;margin-bottom:6px;opacity:.35;"></i> No records match the current filters</td></tr>`;
+    footer.textContent='';return;
   }
 
-  tbody.innerHTML = rows.map(r => {
-    const portalBadge = r.portal === 'bike'
-      ? `<span class="portal-badge bike"><i class="ti ti-motorbike" style="font-size:10px;"></i> Bike</span>`
-      : `<span class="portal-badge emp"><i class="ti ti-user-check" style="font-size:10px;"></i> Employee</span>`;
-
-    const name = entityName(r);
-
-    const dtLabel = docTypeLabel(r.docType);
-
-    let linkHtml;
-    if (r._localRec) {
-      // Local doc — open preview
-      linkHtml = `<button class="doc-link-btn local" onclick='previewDoc(${JSON.stringify(r._localRec)}, "${dtLabel}", "${r.portal}")'><i class="ti ti-eye" style="font-size:12px;"></i> Preview</button>`;
-    } else if (r.docLink && r.docLink.startsWith('http')) {
-      linkHtml = `<a class="doc-link-btn" href="${r.docLink}" target="_blank" rel="noopener"><i class="ti ti-external-link" style="font-size:12px;"></i> Open</a>`;
-    } else {
-      linkHtml = `<span style="color:var(--text3);font-size:11px;">—</span>`;
-    }
-
-    const exp = r.expiry ? expiryStatus(r.expiry) : {status:'gray',label:'—'};
-    const expHtml = r.expiry
-      ? `<span style="color:var(--${exp.status});font-size:12px;font-weight:600;">${fmtDate(r.expiry)}</span><br><span style="font-size:10px;color:var(--${exp.status});opacity:.8;">${exp.label}</span>`
-      : `<span style="color:var(--text3);font-size:11px;">—</span>`;
-
+  tbody.innerHTML=rows.map(r=>{
+    const portal=r.portal==='bike'
+      ?`<span class="portal-badge bike"><i class="ti ti-motorbike" style="font-size:9px;"></i> Bike</span>`
+      :`<span class="portal-badge emp"><i class="ti ti-user-check" style="font-size:9px;"></i> Employee</span>`;
+    const name=entityName(r);
+    const dtLbl=docTypeLabel(r.docType);
+    const link=r.docLink&&r.docLink.startsWith('http')
+      ?`<a class="doc-link-btn" href="${r.docLink}" target="_blank" rel="noopener"><i class="ti ti-external-link" style="font-size:11px;"></i> Open</a>`
+      :`<span style="color:var(--text3);font-size:11px;">—</span>`;
+    const exp=r.expiry?expiryStatus(r.expiry):{status:'gray',label:'—'};
+    const expHtml=r.expiry
+      ?`<span style="color:var(--${exp.status});font-size:11.5px;font-weight:600;">${fmtDate(r.expiry)}</span><br><span style="font-size:9.5px;color:var(--${exp.status});opacity:.8;">${exp.label}</span>`
+      :`<span style="color:var(--text3);font-size:11px;">—</span>`;
     return `<tr>
       <td><span class="txn-mono">${r.txnId}</span></td>
-      <td>${portalBadge}</td>
-      <td><span style="font-family:var(--mono);font-size:11.5px;">${r.entityId}</span></td>
-      <td style="font-weight:600;font-size:12.5px;">${name}</td>
-      <td>${dtLabel}</td>
-      <td>${linkHtml}</td>
+      <td>${portal}</td>
+      <td><span style="font-family:var(--mono);font-size:11px;">${r.entityId}</span></td>
+      <td style="font-weight:600;font-size:12px;">${name}</td>
+      <td style="font-size:12px;">${dtLbl}</td>
+      <td>${link}</td>
       <td>${expHtml}</td>
-      <td style="color:var(--text3);font-size:11px;">${fmtDate(r.uploadedAt)}</td>
+      <td style="color:var(--text3);font-size:10.5px;white-space:nowrap;">${fmtTs(r.ts)}</td>
     </tr>`;
   }).join('');
 
-  footer.innerHTML = `<i class="ti ti-table" style="font-size:14px;"></i> Showing <strong>${rows.length}</strong> of <strong>${logRows.length}</strong> total records`;
+  footer.innerHTML=`<i class="ti ti-table" style="font-size:13px;"></i> Showing <strong>${rows.length}</strong> of <strong>${logRows.length}</strong> log records`;
 }
 
-async function init() {
-  await loadInitialData();
-  window.addEventListener('message', e => {
-    if (!e.data) return;
-    if (e.data.type === 'ap-theme' && e.data.theme) document.documentElement.setAttribute('data-theme', e.data.theme);
-    if (e.data.type === 'ap-cache-updated') loadInitialData();
+/* ═══════════════════════════════════════════════════════
+ *  EVENT DELEGATION — all clicks on dropdowns and sidebars
+ * ═══════════════════════════════════════════════════════ */
+function wireDelegation(){
+  // Emp dropdown
+  document.getElementById('emp-dropdown').addEventListener('mousedown',e=>{
+    const item=e.target.closest('[data-emp-id]');
+    if(item) selectEmployee(item.dataset.empId);
   });
-
-  // ── Background poll — re-read the real employee cache every 30s ──
-  setInterval(async () => {
-    try {
-      const empRows = await _fleetRead(FLEET_KEY_EMP);
-      const parsed = empRows.map((r,i) => normaliseEmp(r,i)).filter(Boolean);
-      if (parsed.length) {
-        employees = parsed;
-        const statusEl = document.getElementById('cache-status');
-        if (statusEl) {
-          statusEl.style.color = 'var(--teal)';
-          statusEl.innerHTML = `<i class="ti ti-circle-check" style="font-size:13px;"></i> ${employees.length} employees · ${bikes.length} bikes registered`;
-        }
-      }
-    } catch(e) { /* cache may still be empty — leave last known state */ }
-  }, 30000);
+  // Bike dropdown
+  document.getElementById('bike-dropdown').addEventListener('mousedown',e=>{
+    const item=e.target.closest('[data-bike-id]');
+    if(item) selectBike(item.dataset.bikeId);
+  });
+  // Log ID dropdown
+  document.getElementById('log-id-dropdown').addEventListener('mousedown',e=>{
+    const item=e.target.closest('[data-log-id]');
+    if(item) selectLogId(item.dataset.logId);
+  });
+  // Emp sidebar
+  document.getElementById('emp-doc-sidebar').addEventListener('click',e=>{
+    const btn=e.target.closest('[data-mode][data-doctype]');
+    if(btn) openDocType(btn.dataset.mode,btn.dataset.doctype);
+  });
+  // Bike sidebar
+  document.getElementById('bike-doc-sidebar').addEventListener('click',e=>{
+    const btn=e.target.closest('[data-mode][data-doctype]');
+    if(btn) openDocType(btn.dataset.mode,btn.dataset.doctype);
+  });
 }
 
-document.addEventListener('DOMContentLoaded', init);
+/* ═══════════════════════════════════════════════════════
+ *  INIT
+ * ═══════════════════════════════════════════════════════ */
+async function init(){
+  wireDelegation();
+  await loadInitialData();
+  window.addEventListener('message',e=>{
+    if(!e.data)return;
+    if(e.data.type==='ap-theme'&&e.data.theme) document.documentElement.setAttribute('data-theme',e.data.theme);
+    if(e.data.type==='ap-cache-updated') loadInitialData();
+  });
+  // Default log portal = all, show ID field hidden
+  document.getElementById('log-filter-all').classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
