@@ -115,9 +115,12 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .doc-count-badge{position:absolute;top:4px;right:4px;background:var(--teal);color:#fff;font-size:8.5px;font-weight:700;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .doc-count-badge.red{background:var(--red);}
 .doc-count-badge.amber{background:var(--amber);}
+.sidebar-sep{height:1px;background:var(--border);margin:3px 2px;}
+.others-btn{border-style:dashed;opacity:.85;}
+.others-btn:hover{opacity:1;}
 
 /* ═══ DOC CENTER ═══ */
-.doc-center{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;}
+.doc-center{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;position:relative;}
 .doc-center-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;}
 .doc-center-header h3{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:7px;}
 .doc-center-header h3 i{color:var(--accent);font-size:17px;}
@@ -126,23 +129,32 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .doc-center-placeholder i{font-size:34px;opacity:.3;}
 .doc-center-placeholder span{font-size:12.5px;}
 
-/* ═══ HISTORY RECORD (from ap2_docLog) ═══ */
-.hist-rec{display:flex;gap:10px;padding:10px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:7px;transition:border .12s;align-items:center;}
-.hist-rec:hover{border-color:var(--border2);}
-.hist-icon{width:32px;height:32px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+/* ═══ HISTORY RECORDS — wrap layout, dynamic width ═══ */
+.hist-list{display:flex;flex-direction:column;gap:7px;}
+.hist-rec{display:inline-flex;gap:9px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);transition:border .12s;align-items:flex-start;cursor:pointer;width:100%;max-width:560px;}
+.hist-rec:hover{border-color:var(--accent);}
+.hist-rec.active{border-color:var(--accent);background:var(--accent-dim);box-shadow:0 0 0 1px var(--accent);}
+.hist-icon{width:30px;height:30px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;margin-top:1px;}
 .hist-icon.link{background:var(--accent-dim);color:var(--accent);}
-.hist-icon.local{background:var(--teal-dim);color:var(--teal);}
+.hist-icon.other{background:var(--purple-dim);color:var(--purple);}
 .hist-meta{flex:1;min-width:0;}
-.hist-txn{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-.hist-badge-latest{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:20px;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);}
-.hist-badge-sheet{font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:20px;background:var(--purple-dim);color:var(--purple);border:1px solid rgba(163,113,247,.3);}
-.hist-date{font-size:11px;color:var(--text2);margin-top:1px;}
-.hist-exp{font-size:10.5px;margin-top:1px;}
+.hist-txn{font-family:var(--mono);font-size:10.5px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.hist-badge-latest{font-size:8px;font-weight:700;padding:1px 5px;border-radius:20px;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);}
+.hist-badge-sheet{font-size:8px;font-weight:700;padding:1px 5px;border-radius:20px;background:var(--purple-dim);color:var(--purple);border:1px solid rgba(163,113,247,.3);}
+.hist-date{font-size:10.5px;color:var(--text2);margin-top:2px;}
+.hist-exp{font-size:10px;margin-top:2px;display:flex;align-items:center;gap:3px;}
 .hist-exp.red{color:var(--red);}
 .hist-exp.amber{color:var(--amber);}
 .hist-exp.teal{color:var(--teal);}
 .hist-exp.gray{color:var(--text3);}
-.hist-actions{display:flex;gap:5px;flex-shrink:0;}
+.hist-note{font-size:10.5px;color:var(--text2);margin-top:2px;font-style:italic;}
+
+/* ═══ UPLOAD MODAL (overlays preview area) ═══ */
+.upload-modal{display:none;position:absolute;inset:0;background:var(--surface);border-radius:var(--radius-xl);z-index:10;flex-direction:column;overflow:hidden;}
+.upload-modal.open{display:flex;}
+.upload-modal-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.upload-modal-header h3{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;flex:1;}
+.upload-modal-body{flex:1;overflow-y:auto;padding:16px;}
 
 /* ═══ UPLOAD SECTION ═══ */
 .txn-new-row{display:flex;align-items:center;gap:9px;padding:11px 13px;border:1.5px dashed var(--border2);border-radius:var(--radius-lg);margin-top:4px;background:var(--bg2);}
@@ -228,30 +240,35 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .spinner{animation:spin 1s linear infinite;display:inline-flex;}
 
 /* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){
+  .doc-preview-panel.open{width:340px;}
+}
 @media(max-width:900px){
   .doc-sidebar{width:86px;}
   .doc-side-btn span{font-size:9px;}
-  .doc-preview-panel.open{width:320px;}
+  .doc-preview-panel.open{width:100%;position:fixed;inset:0;z-index:300;border-radius:0;width:100%!important;}
   .portal-title p{display:none;}
 }
 @media(max-width:700px){
   .portal-wrap{padding:8px;gap:7px;}
   .tab-btn span{display:none;}
-  .tab-btn{padding:8px;}
+  .tab-btn{padding:8px 10px;}
   .main-split{flex-direction:column;}
-  .doc-sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:6px;}
-  .doc-preview-panel.open{width:100%;}
+  .doc-sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:6px;flex-wrap:nowrap;height:auto;max-height:none;}
+  .doc-sidebar .doc-side-btn{min-width:70px;flex-shrink:0;}
   .doc-preview-panel{position:fixed;inset:0;z-index:300;border-radius:0;width:0!important;}
   .doc-preview-panel.open{width:100%!important;}
   .selector-bar{gap:8px;padding:10px 12px;}
   .sdw{width:100%!important;}
-  .sdw input{width:100%!important;}
+  .confirm-strip{flex-wrap:wrap;}
+  .hist-rec{max-width:100%;}
   .log-table td:nth-child(8),.log-table th:nth-child(8){display:none;}
+  .log-table td:nth-child(1),.log-table th:nth-child(1){display:none;}
 }
 @media(max-width:480px){
-  .portal-header{flex-wrap:wrap;gap:8px;}
+  .portal-header{flex-wrap:wrap;}
   #cache-status{font-size:10px;}
-  .doc-sidebar{flex-wrap:wrap;}
+  .doc-center-header{flex-wrap:wrap;gap:6px;}
 }
 </style>
 </head>
@@ -441,28 +458,31 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 /* ═══════════════════════════════════════════════════════
  *  SHEETS URL
  * ═══════════════════════════════════════════════════════ */
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwntsEIiazooS7HtD4qF85OvBgePqsa85rldQ3sUdfXRtCQFqgHwc3mrXwS-RFFUoW6kg/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyhdEeSqKnsV_EANDHxjXBlpx9PjFYL1UQpD77PQ7bEWcCiohuD45Rp9Fd3tu-s0DeMTQ/exec';
 const SHEETS_ON  = SHEETS_URL.startsWith('https://script.google.com/');
 
 /* ═══════════════════════════════════════════════════════
  *  DOC TYPE DEFINITIONS
  * ═══════════════════════════════════════════════════════ */
 const EMP_DOC_TYPES = [
-  {key:'contract',    label:'Contract',        icon:'ti-file-text'},
-  {key:'visa',        label:'Visa',            icon:'ti-globe'},
-  {key:'labour_card', label:'Labour Card',     icon:'ti-briefcase'},
-  {key:'eid_card',    label:'EID Card',        icon:'ti-id-badge-2'},
-  {key:'rta_card',    label:'RTA Card',        icon:'ti-steering-wheel'},
-  {key:'driving_lic', label:'Driving License', icon:'ti-license'},
-  {key:'health_card', label:'Health Card',     icon:'ti-heart-plus'},
-  {key:'passport',    label:'Passport',        icon:'ti-passport'},
+  {key:'contract',    label:'Contract',        icon:'ti-file-text',  expiryRequired:true },
+  {key:'visa',        label:'Visa',            icon:'ti-globe',      expiryRequired:true },
+  {key:'labour_card', label:'Labour Card',     icon:'ti-briefcase',  expiryRequired:true },
+  {key:'eid_card',    label:'EID Card',        icon:'ti-id-badge-2', expiryRequired:true },
+  {key:'rta_card',    label:'RTA Card',        icon:'ti-steering-wheel', expiryRequired:true },
+  {key:'driving_lic', label:'Driving License', icon:'ti-license',    expiryRequired:true },
+  {key:'health_card', label:'Health Card',     icon:'ti-heart-plus', expiryRequired:true },
+  {key:'passport',    label:'Passport',        icon:'ti-passport',   expiryRequired:true },
+  {key:'others_emp',  label:'Others',          icon:'ti-paperclip',  expiryRequired:false},
 ];
 const BIKE_DOC_TYPES = [
-  {key:'mulkia', label:'Mulkia',  icon:'ti-certificate'},
-  {key:'passing',label:'Passing', icon:'ti-check-badge'},
+  {key:'mulkia',     label:'Mulkia',  icon:'ti-certificate', expiryRequired:true },
+  {key:'passing',    label:'Passing', icon:'ti-check-badge', expiryRequired:true },
+  {key:'others_bike',label:'Others',  icon:'ti-paperclip',   expiryRequired:false},
 ];
 const ALL_DOC_TYPES = [...EMP_DOC_TYPES, ...BIKE_DOC_TYPES];
 function docTypeLabel(k){const f=ALL_DOC_TYPES.find(d=>d.key===k);return f?f.label:k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}
+function isExpiryRequired(k){const f=ALL_DOC_TYPES.find(d=>d.key===k);return f?f.expiryRequired:true;}
 
 /* ═══════════════════════════════════════════════════════
  *  IDB — FLEET CACHE (READ-ONLY, mirrors allEmp.html)
@@ -847,11 +867,11 @@ function buildSidebar(mode){
   const entityId=mode==='emp'?selEmpId:selBikeId;
   const activeType=mode==='emp'?activeEmpDocType:activeBikeDocType;
   sb.innerHTML=types.map(dt=>{
+    const isOthers=dt.key.startsWith('others_');
     const recs=getEntityDocs(entityId,dt.key,mode);
-    // latest = highest ts record
     const latest=recs.length?recs.reduce((a,b)=>(b.ts>a.ts?b:a)):null;
     const exp=latest?.expiry?expiryStatus(latest.expiry):null;
-    let cls='doc-side-btn';
+    let cls='doc-side-btn'+(isOthers?' others-btn':'');
     if(dt.key===activeType) cls+=' selected';
     let badge='';
     if(recs.length){
@@ -861,12 +881,15 @@ function buildSidebar(mode){
       else cls+=' has-docs';
       badge=`<div class="doc-count-badge ${bClass}">${recs.length}</div>`;
     }
-    return `<button class="${cls}" data-mode="${mode}" data-doctype="${dt.key}">${badge}<i class="ti ${dt.icon}"></i><span>${dt.label}</span></button>`;
+    const sep=isOthers?'<div class="sidebar-sep"></div>':'';
+    return sep+`<button class="${cls}" data-mode="${mode}" data-doctype="${dt.key}">${badge}<i class="ti ${dt.icon}"></i><span>${dt.label}</span></button>`;
   }).join('');
 }
 
 function resetCenter(mode){
-  document.getElementById(mode+'-doc-center').innerHTML=`<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>`;
+  const dc=document.getElementById(mode+'-doc-center');
+  dc.style.position='';
+  dc.innerHTML=`<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>`;
 }
 
 function openDocType(mode,docType){
@@ -877,91 +900,136 @@ function openDocType(mode,docType){
   const dt=types.find(d=>d.key===docType);
   const entityId=mode==='emp'?selEmpId:selBikeId;
   const recs=getEntityDocs(entityId,docType,mode);
-  document.getElementById(mode+'-doc-center').innerHTML=buildCenterPanel(dt,recs,mode);
+  const dc=document.getElementById(mode+'-doc-center');
+  dc.style.position='relative';
+  dc.innerHTML=buildCenterPanel(dt,recs,mode);
   initDropZone(mode+'-file-zone',mode+'-file-input',mode+'-chosen-file');
+  // wire preview buttons via delegation — handled in wireDelegation
 }
 
 /* ═══════════════════════════════════════════════════════
- *  CENTER PANEL — history from ap2_docLog + upload form
+ *  CENTER PANEL
+ *  Upload button in header → overlay modal replaces right panel
+ *  hist-rec: dynamic width, click → in-app right panel preview
+ *  Others: category required, expiry optional
  * ═══════════════════════════════════════════════════════ */
 function buildCenterPanel(dt,recs,mode){
-  const fz=mode+'-file-zone',fi=mode+'-file-input',fc=mode+'-chosen-file';
-  const di=mode+'-exp-date',gs=mode+'-gs-status',up=mode+'-upload-inline';
-
-  // Sort by ts descending (latest first)
+  const fz=mode+'-file-zone', fi=mode+'-file-input', fc=mode+'-chosen-file';
+  const di=mode+'-exp-date', gs=mode+'-gs-status';
+  const isOthers=dt.key.startsWith('others_');
+  const expiryReq=dt.expiryRequired;
   const sorted=[...recs].sort((a,b)=>b.ts-a.ts);
 
+  /* history rows */
   let histHtml='';
   if(!sorted.length){
-    histHtml=`<div style="text-align:center;padding:18px 0;color:var(--text3);font-size:12px;">
-      <i class="ti ti-file-off" style="font-size:24px;display:block;margin-bottom:6px;opacity:.35;"></i>
-      No records in ap2_docLog for this category.
+    histHtml=`<div style="text-align:center;padding:28px 0;color:var(--text3);font-size:12px;">
+      <i class="ti ti-file-off" style="font-size:30px;display:block;margin-bottom:8px;opacity:.28;"></i>
+      No records yet in ap2_docLog for this category
     </div>`;
-  }else{
-    histHtml=sorted.map((rec,idx)=>{
-      const exp=rec.expiry?expiryStatus(rec.expiry):{status:'gray',label:'No expiry set'};
+  } else {
+    histHtml='<div class="hist-list">'+sorted.map((rec,idx)=>{
+      const exp=rec.expiry?expiryStatus(rec.expiry):{status:'gray',label:'No expiry'};
       const isLatest=idx===0;
       const hasLink=rec.docLink&&rec.docLink.startsWith('http');
-      return `<div class="hist-rec">
-        <div class="hist-icon ${hasLink?'link':'local'}">
-          <i class="ti ${hasLink?'ti-brand-google-drive':'ti-file'}"></i>
+      const catBadge=rec.category?`<span style="font-size:8.5px;color:var(--purple);background:var(--purple-dim);padding:1px 5px;border-radius:10px;border:1px solid rgba(163,113,247,.25);white-space:nowrap;">${rec.category}</span>`:'';
+      return `<div class="hist-rec" data-preview-idx="${idx}" data-preview-mode="${mode}" data-preview-doctype="${dt.key}">
+        <div class="hist-icon ${hasLink?'link':'other'}">
+          <i class="ti ${hasLink?'ti-brand-google-drive':'ti-file-unknown'}"></i>
         </div>
         <div class="hist-meta">
           <div class="hist-txn">
-            <span>${rec.txnId}</span>
             ${isLatest?'<span class="hist-badge-latest">Latest</span>':''}
             <span class="hist-badge-sheet">Sheet</span>
+            ${catBadge}
           </div>
-          <div class="hist-date">Cached ${fmtTs(rec.ts)}</div>
-          <div class="hist-exp ${exp.status}"><i class="ti ti-calendar-event" style="font-size:10px;"></i> ${rec.expiry?fmtDate(rec.expiry):'—'} · ${exp.label}</div>
+          <div class="hist-txn" style="margin-top:2px;font-size:9.5px;opacity:.7;">${rec.txnId||'—'}</div>
+          <div class="hist-date"><i class="ti ti-clock" style="font-size:9px;"></i> ${fmtTs(rec.ts)||'—'}</div>
+          <div class="hist-exp ${exp.status}">
+            <i class="ti ti-calendar-event" style="font-size:9px;"></i>
+            ${rec.expiry?fmtDate(rec.expiry):'No expiry'} &nbsp;·&nbsp; ${exp.label}
+          </div>
         </div>
-        <div class="hist-actions">
-          ${hasLink?`<a class="btn btn-ghost btn-sm" href="${rec.docLink}" target="_blank" rel="noopener" title="Open in Drive"><i class="ti ti-external-link"></i></a>`:''}
+        <div style="flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+          <button class="btn btn-ghost btn-sm" style="padding:4px 7px;" title="Preview document" data-preview-idx="${idx}" data-preview-mode="${mode}" data-preview-doctype="${dt.key}"><i class="ti ti-eye" style="font-size:13px;"></i></button>
+          ${hasLink?`<a class="btn btn-ghost btn-sm" style="padding:4px 7px;" href="${rec.docLink}" target="_blank" rel="noopener" title="Open in Drive"><i class="ti ti-external-link" style="font-size:13px;"></i></a>`:''}
         </div>
       </div>`;
-    }).join('');
+    }).join('')+'</div>';
   }
+
+  /* expiry field — optional label for Others */
+  const expiryField=`<div class="field" style="flex:1;min-width:140px;">
+    <label>Expiry Date ${expiryReq?'<span class="req">*</span>':'<span style="font-size:9px;color:var(--text3);font-weight:400;">(optional)</span>'}</label>
+    <input type="date" class="date-input" id="${di}"/>
+  </div>`;
+
+  /* category field — only for Others */
+  const catField=isOthers?`<div class="field" style="flex:1;min-width:160px;">
+    <label>Category / Label <span class="req">*</span></label>
+    <input type="text" class="date-input" id="${mode}-cat-input" placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
+  </div>`:'';
 
   return `
     <div class="doc-center-header">
-      <h3><i class="ti ${dt.icon}"></i> ${dt.label}</h3>
+      <h3><i class="ti ${dt.icon}"></i> ${dt.label}${isOthers?'<span style="font-size:10px;color:var(--text3);font-weight:400;margin-left:6px;">(expiry optional)</span>':''}</h3>
       ${recs.length?`<span class="badge purple">${recs.length} record${recs.length!==1?'s':''}</span>`:''}
+      <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="openUploadModal('${mode}')">
+        <i class="ti ti-upload"></i> Upload
+      </button>
     </div>
     <div class="doc-center-body">
       ${histHtml}
-      <div class="txn-new-row">
-        <div class="txn-new-label"><i class="ti ti-plus"></i> Upload new ${dt.label}</div>
-        <button class="btn-new-upload" onclick="toggleUpload('${up}')"><i class="ti ti-upload"></i> Upload</button>
+    </div>
+
+    <!-- Upload Modal — absolute overlay on doc-center -->
+    <div class="upload-modal" id="${mode}-upload-modal">
+      <div class="upload-modal-header">
+        <h3><i class="ti ti-cloud-upload" style="color:var(--accent);"></i> Upload ${dt.label}</h3>
+        <button class="pph-close" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i></button>
       </div>
-      <div class="upload-inline" id="${up}">
-        <div class="upload-inline-title"><i class="ti ti-cloud-upload"></i> Upload ${dt.label}</div>
-        <div class="upload-row">
-          <div class="field" style="flex:2;">
-            <label>File (Image or PDF) <span class="req">*</span></label>
+      <div class="upload-modal-body">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="field">
+            <label>File — Image or PDF <span class="req">*</span></label>
             <div class="file-upload-zone" id="${fz}">
               <input type="file" id="${fi}" accept="image/*,.pdf" onchange="handleFile(this,'${fz}','${fc}')"/>
               <i class="ti ti-cloud-upload"></i>
-              <p id="${fc}">Click or drag & drop<br><span style="font-size:9.5px;opacity:.6;">JPG, PNG, WEBP, PDF</span></p>
+              <p id="${fc}">Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span></p>
             </div>
           </div>
-          <div class="field">
-            <label>Expiry Date <span class="req">*</span></label>
-            <input type="date" class="date-input" id="${di}"/>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            ${catField}
+            ${expiryField}
           </div>
-        </div>
-        <div id="${gs}" style="display:none;"></div>
-        <div class="upload-actions">
-          <button class="btn btn-ghost btn-sm" onclick="toggleUpload('${up}')"><i class="ti ti-x"></i> Cancel</button>
-          <button class="btn btn-primary btn-sm" onclick="submitDoc('${mode}','${dt.key}','${dt.label}')"><i class="ti ti-upload"></i> Upload & Save to Sheet</button>
+          <div id="${gs}" style="display:none;"></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);">
+            <button class="btn btn-ghost btn-sm" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i> Cancel</button>
+            <button class="btn btn-primary btn-sm" onclick="submitDoc('${mode}','${dt.key}','${dt.label}')">
+              <i class="ti ti-upload"></i> Save to Sheet
+            </button>
+          </div>
         </div>
       </div>
     </div>`;
 }
 
-function toggleUpload(id){
-  const el=document.getElementById(id);if(!el)return;
-  el.classList.toggle('open');
-  if(el.classList.contains('open')) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+function openUploadModal(mode){
+  const m=document.getElementById(mode+'-upload-modal');
+  if(m){m.classList.add('open');closePreview(mode);}
+}
+function closeUploadModal(mode){
+  const m=document.getElementById(mode+'-upload-modal');
+  if(!m)return;
+  m.classList.remove('open');
+  const fz=document.getElementById(mode+'-file-zone');
+  const fc=document.getElementById(mode+'-chosen-file');
+  if(fz){fz.classList.remove('has-file','dragover');}
+  if(fc){fc.innerHTML='Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span>';}
+  const fi=document.getElementById(mode+'-file-input');
+  if(fi) fi.value='';
+  const gs=document.getElementById(mode+'-gs-status');
+  if(gs){gs.style.display='none';gs.className='gs-status';}
 }
 
 function initDropZone(zoneId,inputId,labelId){
@@ -976,24 +1044,33 @@ function initDropZone(zoneId,inputId,labelId){
 }
 
 function handleFile(input,zoneId,labelId){
-  const f=input.files?.[0];const z=document.getElementById(zoneId);const l=document.getElementById(labelId);
+  const f=input.files?.[0];
+  const z=document.getElementById(zoneId);
+  const l=document.getElementById(labelId);
   if(!f||!z||!l)return;
   z.classList.add('has-file');
-  l.innerHTML=`<strong style="font-size:12px;">${f.name}</strong><br><span style="font-size:10px;">${(f.size/1024).toFixed(1)} KB</span>`;
+  l.innerHTML=`<strong style="font-size:12px;">${f.name}</strong><br><span style="font-size:10px;">${(f.size/1024).toFixed(1)} KB · ${f.type||'unknown type'}</span>`;
 }
 
 /* ═══════════════════════════════════════════════════════
- *  SUBMIT DOC — upload file + sync to Sheets
- *  No local IDB doc cache. Sheets is the only store.
+ *  SUBMIT DOC
+ *  Expiry required for all types EXCEPT others_*
+ *  Category required for others_*
  * ═══════════════════════════════════════════════════════ */
 async function submitDoc(mode,docType,docLabel){
   const fi=document.getElementById(mode+'-file-input');
   const de=document.getElementById(mode+'-exp-date');
   const gs=document.getElementById(mode+'-gs-status');
+  const catEl=document.getElementById(mode+'-cat-input');
   const file=fi?.files?.[0];
-  const expiry=de?.value;
-  if(!file){toast('Select a file','error');return;}
-  if(!expiry){toast('Expiry date is required','error');return;}
+  const expiry=de?.value||'';
+  const category=catEl?.value?.trim()||'';
+  const isOthers=docType.startsWith('others_');
+  const expiryReq=isExpiryRequired(docType);
+
+  if(!file){toast('Select a file first','error');return;}
+  if(expiryReq&&!expiry){toast('Expiry date is required for '+docLabel,'error');return;}
+  if(isOthers&&!category){toast('Category / label is required for Others','error');return;}
   const entityId=mode==='emp'?selEmpId:selBikeId;
   if(!entityId){toast('No entity selected','error');return;}
 
@@ -1007,7 +1084,7 @@ async function submitDoc(mode,docType,docLabel){
   try{
     base64=await fileToBase64(file);
     txnId=genTxnId();
-    record={txnId,entityId,docType,fileName:file.name,
+    record={txnId,entityId,docType,category,fileName:file.name,
             fileType:file.type==='application/pdf'?'pdf':'image',
             mimeType:file.type,fileData:base64,
             expiry,uploadedAt:new Date().toISOString()};
@@ -1019,77 +1096,103 @@ async function submitDoc(mode,docType,docLabel){
 
   if(!SHEETS_ON){
     gs.className='gs-status error';
-    gs.innerHTML=`<i class="ti ti-alert-circle"></i> Sheets sync URL not configured — upload not saved`;
-    toast('Configure SHEETS_URL to save documents','error');
-    return;
+    gs.innerHTML=`<i class="ti ti-alert-circle"></i> Sheets URL not configured — document not saved`;
+    toast('Configure SHEETS_URL first','error');return;
   }
 
   gs.innerHTML=`<i class="ti ti-loader spinner"></i> Uploading to Google Sheets…`;
   try{
     await syncToSheets(mode,record);
     gs.className='gs-status success';
-    gs.innerHTML=`<i class="ti ti-circle-check"></i> Saved to Sheet · TXN: ${txnId} — refresh Doc Log to see it`;
-    toast(`${docLabel} uploaded to Sheets`);
-    // Refresh log after a short delay
-    setTimeout(async()=>{await loadDocLog();buildSidebar(mode);openDocType(mode,docType);},2000);
+    gs.innerHTML=`<i class="ti ti-circle-check"></i> Saved · TXN: ${txnId}`;
+    toast(`${docLabel} uploaded successfully`);
+    setTimeout(async()=>{
+      await loadDocLog();
+      buildSidebar(mode);
+      openDocType(mode,docType);
+      closeUploadModal(mode);
+    },1800);
   }catch(err){
     gs.className='gs-status error';
-    gs.innerHTML=`<i class="ti ti-alert-circle"></i> Sheets sync failed: ${err.message}`;
-    toast('Sheets sync failed: '+err.message,'error');
+    gs.innerHTML=`<i class="ti ti-alert-circle"></i> Upload failed: ${err.message}`;
+    toast('Upload failed: '+err.message,'error');
     console.error('[portal] sheets sync:',err);
   }
 }
 
-async function syncToSheets(mode,rec){
-  const payload={
-    action:'saveDoc',
-    sheetName:mode==='emp'?'EmpDocuments':'BikeDocuments',
-    txnId:rec.txnId,entityId:rec.entityId,docType:rec.docType,
-    fileName:rec.fileName,fileType:rec.fileType,mimeType:rec.mimeType,
-    fileData:rec.fileData,expiry:rec.expiry,uploadedAt:rec.uploadedAt,
-  };
-  const res=await fetch(SHEETS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify(payload),
-  });
-  if(!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data=await res.json();
-  if(data.status!=='ok') throw new Error(data.message||'Script error');
-  return data;
+/* ═══════════════════════════════════════════════════════
+ *  PREVIEW PANEL — right-side slide panel
+ *  Drive links: Google Drive /preview embed
+ *  hist-rec click or preview button opens this panel
+ * ═══════════════════════════════════════════════════════ */
+function previewDocByIdx(mode,docType,idx){
+  const types=mode==='emp'?EMP_DOC_TYPES:BIKE_DOC_TYPES;
+  const dt=types.find(d=>d.key===docType);
+  const entityId=mode==='emp'?selEmpId:selBikeId;
+  const recs=getEntityDocs(entityId,docType,mode).sort((a,b)=>b.ts-a.ts);
+  const rec=recs[parseInt(idx,10)];
+  if(!rec){toast('Record not found','error');return;}
+  previewDoc(rec,dt?dt.label:docTypeLabel(docType),mode);
 }
 
-/* ═══════════════════════════════════════════════════════
- *  PREVIEW PANEL — only for Drive-linked docs (open link)
- *  Local base64 preview removed (no local store)
- * ═══════════════════════════════════════════════════════ */
 function previewDoc(rec,docLabel,mode){
-  // For Drive links: open in new tab (no base64 available)
-  if(rec.docLink&&rec.docLink.startsWith('http')){
-    window.open(rec.docLink,'_blank','noopener');return;
-  }
-  // For local base64 (uploaded this session before page reload)
-  if(!rec.fileData){toast('No preview available','error');return;}
   const panel=document.getElementById(mode+'-preview-panel');
-  document.getElementById(mode+'-preview-title').textContent=`${docLabel} — ${rec.txnId}`;
+  const titleEl=document.getElementById(mode+'-preview-title');
   const body=document.getElementById(mode+'-preview-body');
-  const mediaHtml=rec.fileType==='pdf'||rec.mimeType==='application/pdf'
-    ?`<iframe class="pf" src="${rec.fileData}" title="PDF"></iframe>`
-    :`<img class="pi" src="${rec.fileData}" alt="Document"/>`;
-  const exp=rec.expiry?expiryStatus(rec.expiry):{status:'gray',label:'Not set'};
-  body.innerHTML=`${mediaHtml}
-    <div class="preview-meta">
-      <div class="pmi"><span class="k">TXN ID</span><span class="v">${rec.txnId}</span></div>
-      <div class="pmi"><span class="k">Entity ID</span><span class="v">${rec.entityId}</span></div>
-      <div class="pmi"><span class="k">File</span><span class="v" style="word-break:break-all;text-align:right;">${rec.fileName}</span></div>
-      <div class="pmi"><span class="k">Expiry</span><span class="v" style="color:var(--${exp.status})">${fmtDate(rec.expiry)}</span></div>
-      <div class="pmi"><span class="k">Status</span><span class="v" style="color:var(--${exp.status})">${exp.label}</span></div>
-    </div>`;
   const dlBtn=document.getElementById(mode+'-preview-download');
-  dlBtn.href=rec.fileData;dlBtn.download=rec.fileName||'document';
+  const exp=rec.expiry?expiryStatus(rec.expiry):{status:'gray',label:'No expiry set'};
+
+  titleEl.textContent=docLabel+(rec.category?' · '+rec.category:'');
+
+  let mediaHtml='';
+  let dlHref='', dlDownload='', dlTarget='';
+  if(rec.docLink&&rec.docLink.startsWith('http')){
+    let previewUrl=rec.docLink;
+    const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
+    if(driveMatch) previewUrl=`https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+    mediaHtml=`<iframe class="pf" src="${previewUrl}" title="Document" allow="autoplay" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`;
+    dlHref=rec.docLink; dlDownload=''; dlTarget='_blank';
+  } else if(rec.fileData){
+    const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
+    mediaHtml=isPdf
+      ?`<iframe class="pf" src="${rec.fileData}" title="PDF" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`
+      :`<img class="pi" src="${rec.fileData}" alt="Document" style="max-width:100%;border-radius:var(--radius-lg);display:block;"/>`;
+    dlHref=rec.fileData; dlDownload=rec.fileName||'document'; dlTarget='';
+  } else {
+    mediaHtml=`<div style="padding:40px 16px;text-align:center;color:var(--text3);background:var(--bg3);border-radius:var(--radius-lg);">
+      <i class="ti ti-file-unknown" style="font-size:38px;display:block;margin-bottom:10px;opacity:.35;"></i>
+      <div style="font-size:12px;">No preview available</div>
+      <div style="font-size:11px;margin-top:4px;opacity:.6;">Open in Drive to view this document</div>
+    </div>`;
+  }
+
+  const catRow=rec.category?`<div class="pmi"><span class="k">Category</span><span class="v">${rec.category}</span></div>`:'';
+
+  body.innerHTML=`${mediaHtml}
+    <div class="preview-meta" style="margin-top:12px;">
+      <div class="pmi"><span class="k">TXN ID</span><span class="v" style="font-size:9.5px;word-break:break-all;">${rec.txnId||'—'}</span></div>
+      <div class="pmi"><span class="k">Entity</span><span class="v">${rec.entityId||'—'}</span></div>
+      ${catRow}
+      <div class="pmi"><span class="k">Expiry</span><span class="v" style="color:var(--${exp.status});">${rec.expiry?fmtDate(rec.expiry):'—'}</span></div>
+      <div class="pmi"><span class="k">Status</span><span class="v" style="color:var(--${exp.status});">${exp.label}</span></div>
+      <div class="pmi"><span class="k">Cached</span><span class="v" style="font-size:9.5px;">${fmtTs(rec.ts)||'—'}</span></div>
+    </div>
+    ${rec.docLink&&rec.docLink.startsWith('http')?`<a class="btn btn-ghost btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener" style="margin-top:10px;"><i class="ti ti-external-link"></i> Open in Drive</a>`:''}`;
+
+  if(dlBtn){
+    if(dlHref){dlBtn.href=dlHref;if(dlDownload)dlBtn.download=dlDownload;dlBtn.target=dlTarget;dlBtn.style.display='';}
+    else dlBtn.style.display='none';
+  }
+
   panel.classList.add('open');
+  closeUploadModal(mode);
 }
-function closePreview(mode){document.getElementById(mode+'-preview-panel').classList.remove('open');}
+
+function closePreview(mode){
+  document.getElementById(mode+'-preview-panel').classList.remove('open');
+}
+
+
 
 /* ═══════════════════════════════════════════════════════
  *  DOC LOG TAB
@@ -1247,15 +1350,25 @@ function wireDelegation(){
     const item=e.target.closest('[data-log-id]');
     if(item) selectLogId(item.dataset.logId);
   });
-  // Emp sidebar
+  // Emp sidebar doc type buttons
   document.getElementById('emp-doc-sidebar').addEventListener('click',e=>{
     const btn=e.target.closest('[data-mode][data-doctype]');
     if(btn) openDocType(btn.dataset.mode,btn.dataset.doctype);
   });
-  // Bike sidebar
+  // Bike sidebar doc type buttons
   document.getElementById('bike-doc-sidebar').addEventListener('click',e=>{
     const btn=e.target.closest('[data-mode][data-doctype]');
     if(btn) openDocType(btn.dataset.mode,btn.dataset.doctype);
+  });
+  // Emp doc-center: preview button or hist-rec row click
+  document.getElementById('emp-doc-center').addEventListener('click',e=>{
+    const btn=e.target.closest('[data-preview-idx]');
+    if(btn) previewDocByIdx(btn.dataset.previewMode,btn.dataset.previewDoctype,btn.dataset.previewIdx);
+  });
+  // Bike doc-center: preview button or hist-rec row click
+  document.getElementById('bike-doc-center').addEventListener('click',e=>{
+    const btn=e.target.closest('[data-preview-idx]');
+    if(btn) previewDocByIdx(btn.dataset.previewMode,btn.dataset.previewDoctype,btn.dataset.previewIdx);
   });
 }
 
