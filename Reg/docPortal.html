@@ -946,6 +946,7 @@ function buildSidebar(mode){
 
 function resetCenter(mode){
   const dc=document.getElementById(mode+'-doc-center');
+  dc.style.position='';
   dc.innerHTML=`<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>`;
 }
 
@@ -958,16 +959,11 @@ function openDocType(mode,docType){
   const entityId=mode==='emp'?selEmpId:selBikeId;
   const recs=getEntityDocs(entityId,docType,mode);
   const dc=document.getElementById(mode+'-doc-center');
+  dc.style.position='relative';
   dc.innerHTML=buildCenterPanel(dt,recs,mode);
-  // upload panel wires its own drop zone when opened
+  initDropZone(mode+'-file-zone',mode+'-file-input',mode+'-chosen-file');
 }
 
-/* ═══════════════════════════════════════════════════════
- *  CENTER PANEL
- *  Upload button in header → overlay modal replaces right panel
- *  hist-rec: dynamic width, click → in-app right panel preview
- *  Others: category required, expiry optional
- * ═══════════════════════════════════════════════════════ */
 function buildCenterPanel(dt,recs,mode){
   const fz=mode+'-file-zone', fi=mode+'-file-input', fc=mode+'-chosen-file';
   const di=mode+'-exp-date', gs=mode+'-gs-status';
@@ -1025,99 +1021,66 @@ function buildCenterPanel(dt,recs,mode){
     <input type="text" class="date-input" id="${mode}-cat-input" placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
   </div>`:'';
 
-  // Store dt on the button via data attrs so openUploadPanel can read them
   return `
     <div class="doc-center-header">
       <h3><i class="ti ${dt.icon}"></i> ${dt.label}${isOthers?'<span style="font-size:10px;color:var(--text3);font-weight:400;margin-left:6px;">(expiry optional)</span>':''}</h3>
       ${recs.length?`<span class="badge purple">${recs.length} record${recs.length!==1?'s':''}</span>`:''}
-      <button class="btn btn-primary btn-sm" style="margin-left:auto;"
-        data-upload-mode="${mode}" data-upload-key="${dt.key}" data-upload-label="${dt.label}"
-        data-upload-others="${isOthers}" data-upload-expiry-req="${expiryReq}"
-        onclick="openUploadPanel(this)">
+      <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="openUploadModal('${mode}')">
         <i class="ti ti-upload"></i> Upload
       </button>
     </div>
     <div class="doc-center-body">
       ${histHtml}
-    </div>`;
-}
+    </div>
 
-/* ── openUploadPanel: builds upload form INTO the doc-preview-panel
- *  doc-center is NEVER touched — history stays visible underneath.
- *  Reads doc type info from data-* attrs on the Upload button.
- * ────────────────────────────────────────────────────────────────── */
-function openUploadPanel(btn){
-  const mode      = btn.dataset.uploadMode;
-  const key       = btn.dataset.uploadKey;
-  const label     = btn.dataset.uploadLabel;
-  const isOthers  = btn.dataset.uploadOthers === 'true';
-  const expiryReq = btn.dataset.uploadExpiryReq !== 'false';
-
-  const panel   = document.getElementById(mode+'-preview-panel');
-  const titleEl = document.getElementById(mode+'-preview-title');
-  const body    = document.getElementById(mode+'-preview-body');
-  const dlBtn   = document.getElementById(mode+'-preview-download');
-
-  // Retitle the panel header
-  titleEl.textContent = 'Upload ' + label;
-  if(dlBtn) dlBtn.style.display = 'none';
-
-  const fz = mode+'-file-zone';
-  const fi = mode+'-file-input';
-  const fc = mode+'-chosen-file';
-  const di = mode+'-exp-date';
-  const gs = mode+'-gs-status';
-
-  const catField = isOthers ? `
-    <div class="field">
-      <label>Category / Label <span class="req">*</span></label>
-      <input type="text" class="date-input" id="${mode}-cat-input"
-        placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
-    </div>` : '';
-
-  const expiryField = `
-    <div class="field">
-      <label>Expiry Date ${expiryReq
-        ? '<span class="req">*</span>'
-        : '<span style="font-size:9px;color:var(--text3);font-weight:400;">(optional)</span>'}</label>
-      <input type="date" class="date-input" id="${di}"/>
-    </div>`;
-
-  body.innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      <div class="field">
-        <label>File — Image or PDF <span class="req">*</span></label>
-        <div class="file-upload-zone" id="${fz}">
-          <input type="file" id="${fi}" accept="image/*,.pdf"
-            onchange="handleFile(this,'${fz}','${fc}')"/>
-          <i class="ti ti-cloud-upload"></i>
-          <p id="${fc}">Click or drag &amp; drop<br>
-            <span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF · max 8 MB</span></p>
+    <!-- Upload Modal — absolute overlay on doc-center -->
+    <div class="upload-modal" id="${mode}-upload-modal">
+      <div class="upload-modal-header">
+        <h3><i class="ti ti-cloud-upload" style="color:var(--accent);"></i> Upload ${dt.label}</h3>
+        <button class="pph-close" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="upload-modal-body">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="field">
+            <label>File — Image or PDF <span class="req">*</span></label>
+            <div class="file-upload-zone" id="${fz}">
+              <input type="file" id="${fi}" accept="image/*,.pdf" onchange="handleFile(this,'${fz}','${fc}')"/>
+              <i class="ti ti-cloud-upload"></i>
+              <p id="${fc}">Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span></p>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            ${catField}
+            ${expiryField}
+          </div>
+          <div id="${gs}" style="display:none;"></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);">
+            <button class="btn btn-ghost btn-sm" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i> Cancel</button>
+            <button class="btn btn-primary btn-sm" onclick="submitDoc('${mode}','${dt.key}','${dt.label}')">
+              <i class="ti ti-upload"></i> Save to Sheet
+            </button>
+          </div>
         </div>
       </div>
-      ${catField}
-      ${expiryField}
-      <div id="${gs}" style="display:none;"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);">
-        <button class="btn btn-ghost btn-sm" onclick="closePreview('${mode}')">
-          <i class="ti ti-x"></i> Cancel
-        </button>
-        <button class="btn btn-primary btn-sm"
-          onclick="submitDoc('${mode}','${key}','${label}')">
-          <i class="ti ti-upload"></i> Save to Sheet
-        </button>
-      </div>
     </div>`;
-
-  panel.classList.add('open');
-  initDropZone(fz, fi, fc);
 }
 
-function closeUploadPanel(mode){
-  // alias — just close the preview panel and restore its download button
-  const dlBtn = document.getElementById(mode+'-preview-download');
-  if(dlBtn) dlBtn.style.display = '';
-  closePreview(mode);
+function openUploadModal(mode){
+  const m=document.getElementById(mode+'-upload-modal');
+  if(m){m.classList.add('open');closePreview(mode);}
+}
+function closeUploadModal(mode){
+  const m=document.getElementById(mode+'-upload-modal');
+  if(!m)return;
+  m.classList.remove('open');
+  const fz=document.getElementById(mode+'-file-zone');
+  const fc=document.getElementById(mode+'-chosen-file');
+  if(fz){fz.classList.remove('has-file','dragover');}
+  if(fc){fc.innerHTML='Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span>';}
+  const fi=document.getElementById(mode+'-file-input');
+  if(fi) fi.value='';
+  const gs=document.getElementById(mode+'-gs-status');
+  if(gs){gs.style.display='none';gs.className='gs-status';}
 }
 
 function initDropZone(zoneId,inputId,labelId){
@@ -1198,7 +1161,7 @@ async function submitDoc(mode,docType,docLabel){
       await loadDocLog();
       buildSidebar(mode);
       openDocType(mode,docType);
-      closeUploadPanel(mode);
+      closeUploadModal(mode);
     },1800);
   }catch(err){
     gs.className='gs-status error';
@@ -1281,48 +1244,66 @@ function previewDoc(rec,docLabel,mode){
 
   titleEl.textContent=docLabel+(rec.category?' · '+rec.category:'');
 
-  let mediaHtml='';
-  let dlHref='', dlDownload='', dlTarget='';
-  if(rec.docLink&&rec.docLink.startsWith('http')){
-    let previewUrl=rec.docLink;
-    const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
-    if(driveMatch) previewUrl=`https://drive.google.com/file/d/${driveMatch[1]}/preview`;
-    mediaHtml=`<iframe class="pf" src="${previewUrl}" title="Document" allow="autoplay" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`;
-    dlHref=rec.docLink; dlDownload=''; dlTarget='_blank';
-  } else if(rec.fileData){
-    const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
-    mediaHtml=isPdf
-      ?`<iframe class="pf" src="${rec.fileData}" title="PDF" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`
-      :`<img class="pi" src="${rec.fileData}" alt="Document" style="max-width:100%;border-radius:var(--radius-lg);display:block;"/>`;
-    dlHref=rec.fileData; dlDownload=rec.fileName||'document'; dlTarget='';
-  } else {
-    mediaHtml=`<div style="padding:40px 16px;text-align:center;color:var(--text3);background:var(--bg3);border-radius:var(--radius-lg);">
-      <i class="ti ti-file-unknown" style="font-size:38px;display:block;margin-bottom:10px;opacity:.35;"></i>
-      <div style="font-size:12px;">No preview available</div>
-      <div style="font-size:11px;margin-top:4px;opacity:.6;">Open in Drive to view this document</div>
-    </div>`;
-  }
-
   const catRow=rec.category?`<div class="pmi"><span class="k">Category</span><span class="v">${rec.category}</span></div>`:'';
-
-  body.innerHTML=`${mediaHtml}
-    <div class="preview-meta" style="margin-top:12px;">
+  const metaHtml=`
+    <div class="preview-meta">
       <div class="pmi"><span class="k">TXN ID</span><span class="v" style="font-size:9.5px;word-break:break-all;">${rec.txnId||'—'}</span></div>
       <div class="pmi"><span class="k">Entity</span><span class="v">${rec.entityId||'—'}</span></div>
       ${catRow}
       <div class="pmi"><span class="k">Expiry</span><span class="v" style="color:var(--${exp.status});">${rec.expiry?fmtDate(rec.expiry):'—'}</span></div>
       <div class="pmi"><span class="k">Status</span><span class="v" style="color:var(--${exp.status});">${exp.label}</span></div>
       <div class="pmi"><span class="k">Cached</span><span class="v" style="font-size:9.5px;">${fmtTs(rec.ts)||'—'}</span></div>
-    </div>
-    ${rec.docLink&&rec.docLink.startsWith('http')?`<a class="btn btn-ghost btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener" style="margin-top:10px;"><i class="ti ti-external-link"></i> Open in Drive</a>`:''}`;
+    </div>`;
 
-  if(dlBtn){
-    if(dlHref){dlBtn.href=dlHref;if(dlDownload)dlBtn.download=dlDownload;dlBtn.target=dlTarget;dlBtn.style.display='';}
-    else dlBtn.style.display='none';
+  let mediaHtml='';
+
+  if(rec.docLink&&rec.docLink.startsWith('http')){
+    /* ── Drive link: no iframe, no thumbnail, no external requests.
+     *   Show a static card with doc type icon + metadata + Open button only. ── */
+    const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
+    const fileId=driveMatch?driveMatch[1]:'';
+
+    mediaHtml=`
+      <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg3);">
+        <div style="padding:28px 16px;text-align:center;border-bottom:1px solid var(--border);">
+          <i class="ti ti-brand-google-drive" style="font-size:48px;color:#4285f4;display:block;margin-bottom:10px;"></i>
+          <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;">Google Drive Document</div>
+          ${fileId?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);word-break:break-all;padding:0 8px;">${fileId}</div>`:''}
+        </div>
+        <div style="padding:12px;">
+          <a class="btn btn-primary btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener">
+            <i class="ti ti-external-link"></i> Open in Drive
+          </a>
+        </div>
+      </div>`;
+
+    if(dlBtn){dlBtn.href=rec.docLink;dlBtn.removeAttribute('download');dlBtn.target='_blank';dlBtn.style.display='';}
+    dlBtn && (dlBtn.innerHTML='<i class="ti ti-external-link"></i> Open in Drive');
+
+  }else if(rec.fileData){
+    /* ── Local base64: image or PDF — safe to embed ── */
+    const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
+    mediaHtml=isPdf
+      ?`<iframe src="${rec.fileData}" title="PDF"
+           style="width:100%;height:320px;border:none;border-radius:var(--radius-lg);"></iframe>`
+      :`<img src="${rec.fileData}" alt="Document"
+           style="max-width:100%;border-radius:var(--radius-lg);display:block;"/>`;
+    if(dlBtn){dlBtn.href=rec.fileData;dlBtn.download=rec.fileName||'document';dlBtn.target='';dlBtn.style.display='';}
+
+  }else{
+    /* ── No link, no local data ── */
+    mediaHtml=`
+      <div style="padding:36px 16px;text-align:center;color:var(--text3);background:var(--bg3);border-radius:var(--radius-lg);">
+        <i class="ti ti-file-unknown" style="font-size:36px;display:block;margin-bottom:8px;opacity:.35;"></i>
+        <div style="font-size:12px;">No file available</div>
+        <div style="font-size:10.5px;margin-top:4px;opacity:.6;">This record has no attached link or file</div>
+      </div>`;
+    if(dlBtn) dlBtn.style.display='none';
   }
 
+  body.innerHTML=mediaHtml+metaHtml;
   panel.classList.add('open');
-  closeUploadPanel(mode);
+  closeUploadModal(mode);
 }
 
 function closePreview(mode){
