@@ -946,7 +946,6 @@ function buildSidebar(mode){
 
 function resetCenter(mode){
   const dc=document.getElementById(mode+'-doc-center');
-  dc.style.position='';
   dc.innerHTML=`<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>`;
 }
 
@@ -959,15 +958,14 @@ function openDocType(mode,docType){
   const entityId=mode==='emp'?selEmpId:selBikeId;
   const recs=getEntityDocs(entityId,docType,mode);
   const dc=document.getElementById(mode+'-doc-center');
-  dc.style.position='relative';
   dc.innerHTML=buildCenterPanel(dt,recs,mode);
-  initDropZone(mode+'-file-zone',mode+'-file-input',mode+'-chosen-file');
+  // upload panel wires its own drop zone when opened
 }
 
 /* ═══════════════════════════════════════════════════════
  *  CENTER PANEL
- *  Upload button in header → overlay modal inside doc-center
- *  hist-rec: click → right-side preview panel
+ *  Upload button in header → overlay modal replaces right panel
+ *  hist-rec: dynamic width, click → in-app right panel preview
  *  Others: category required, expiry optional
  * ═══════════════════════════════════════════════════════ */
 function buildCenterPanel(dt,recs,mode){
@@ -1015,76 +1013,110 @@ function buildCenterPanel(dt,recs,mode){
     }).join('')+'</div>';
   }
 
+  /* expiry field — optional label for Others */
   const expiryField=`<div class="field" style="flex:1;min-width:140px;">
     <label>Expiry Date ${expiryReq?'<span class="req">*</span>':'<span style="font-size:9px;color:var(--text3);font-weight:400;">(optional)</span>'}</label>
     <input type="date" class="date-input" id="${di}"/>
   </div>`;
 
+  /* category field — only for Others */
   const catField=isOthers?`<div class="field" style="flex:1;min-width:160px;">
     <label>Category / Label <span class="req">*</span></label>
     <input type="text" class="date-input" id="${mode}-cat-input" placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
   </div>`:'';
 
+  // Store dt on the button via data attrs so openUploadPanel can read them
   return `
     <div class="doc-center-header">
       <h3><i class="ti ${dt.icon}"></i> ${dt.label}${isOthers?'<span style="font-size:10px;color:var(--text3);font-weight:400;margin-left:6px;">(expiry optional)</span>':''}</h3>
       ${recs.length?`<span class="badge purple">${recs.length} record${recs.length!==1?'s':''}</span>`:''}
-      <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="openUploadModal('${mode}')">
+      <button class="btn btn-primary btn-sm" style="margin-left:auto;"
+        data-upload-mode="${mode}" data-upload-key="${dt.key}" data-upload-label="${dt.label}"
+        data-upload-others="${isOthers}" data-upload-expiry-req="${expiryReq}"
+        onclick="openUploadPanel(this)">
         <i class="ti ti-upload"></i> Upload
       </button>
     </div>
     <div class="doc-center-body">
       ${histHtml}
-    </div>
-
-    <!-- Upload Modal — absolute overlay on doc-center -->
-    <div class="upload-modal" id="${mode}-upload-modal">
-      <div class="upload-modal-header">
-        <h3><i class="ti ti-cloud-upload" style="color:var(--accent);"></i> Upload ${dt.label}</h3>
-        <button class="pph-close" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i></button>
-      </div>
-      <div class="upload-modal-body">
-        <div style="display:flex;flex-direction:column;gap:14px;">
-          <div class="field">
-            <label>File — Image or PDF <span class="req">*</span></label>
-            <div class="file-upload-zone" id="${fz}">
-              <input type="file" id="${fi}" accept="image/*,.pdf" onchange="handleFile(this,'${fz}','${fc}')"/>
-              <i class="ti ti-cloud-upload"></i>
-              <p id="${fc}">Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span></p>
-            </div>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            ${catField}
-            ${expiryField}
-          </div>
-          <div id="${gs}" style="display:none;"></div>
-          <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);">
-            <button class="btn btn-ghost btn-sm" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i> Cancel</button>
-            <button class="btn btn-primary btn-sm" onclick="submitDoc('${mode}','${dt.key}','${dt.label}')">
-              <i class="ti ti-upload"></i> Save to Sheet
-            </button>
-          </div>
-        </div>
-      </div>
     </div>`;
 }
 
-function openUploadModal(mode){
-  const m=document.getElementById(mode+'-upload-modal');
-  if(m){m.classList.add('open');closePreview(mode);}
+/* ── openUploadPanel: builds upload form INTO the doc-preview-panel
+ *  doc-center is NEVER touched — history stays visible underneath.
+ *  Reads doc type info from data-* attrs on the Upload button.
+ * ────────────────────────────────────────────────────────────────── */
+function openUploadPanel(btn){
+  const mode      = btn.dataset.uploadMode;
+  const key       = btn.dataset.uploadKey;
+  const label     = btn.dataset.uploadLabel;
+  const isOthers  = btn.dataset.uploadOthers === 'true';
+  const expiryReq = btn.dataset.uploadExpiryReq !== 'false';
+
+  const panel   = document.getElementById(mode+'-preview-panel');
+  const titleEl = document.getElementById(mode+'-preview-title');
+  const body    = document.getElementById(mode+'-preview-body');
+  const dlBtn   = document.getElementById(mode+'-preview-download');
+
+  // Retitle the panel header
+  titleEl.textContent = 'Upload ' + label;
+  if(dlBtn) dlBtn.style.display = 'none';
+
+  const fz = mode+'-file-zone';
+  const fi = mode+'-file-input';
+  const fc = mode+'-chosen-file';
+  const di = mode+'-exp-date';
+  const gs = mode+'-gs-status';
+
+  const catField = isOthers ? `
+    <div class="field">
+      <label>Category / Label <span class="req">*</span></label>
+      <input type="text" class="date-input" id="${mode}-cat-input"
+        placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
+    </div>` : '';
+
+  const expiryField = `
+    <div class="field">
+      <label>Expiry Date ${expiryReq
+        ? '<span class="req">*</span>'
+        : '<span style="font-size:9px;color:var(--text3);font-weight:400;">(optional)</span>'}</label>
+      <input type="date" class="date-input" id="${di}"/>
+    </div>`;
+
+  body.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field">
+        <label>File — Image or PDF <span class="req">*</span></label>
+        <div class="file-upload-zone" id="${fz}">
+          <input type="file" id="${fi}" accept="image/*,.pdf"
+            onchange="handleFile(this,'${fz}','${fc}')"/>
+          <i class="ti ti-cloud-upload"></i>
+          <p id="${fc}">Click or drag &amp; drop<br>
+            <span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF · max 8 MB</span></p>
+        </div>
+      </div>
+      ${catField}
+      ${expiryField}
+      <div id="${gs}" style="display:none;"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);">
+        <button class="btn btn-ghost btn-sm" onclick="closePreview('${mode}')">
+          <i class="ti ti-x"></i> Cancel
+        </button>
+        <button class="btn btn-primary btn-sm"
+          onclick="submitDoc('${mode}','${key}','${label}')">
+          <i class="ti ti-upload"></i> Save to Sheet
+        </button>
+      </div>
+    </div>`;
+
+  panel.classList.add('open');
+  initDropZone(fz, fi, fc);
 }
-function closeUploadModal(mode){
-  const m=document.getElementById(mode+'-upload-modal');
-  if(!m)return;
-  m.classList.remove('open');
-  const fz=document.getElementById(mode+'-file-zone');
-  const fc=document.getElementById(mode+'-chosen-file');
-  if(fz){fz.classList.remove('has-file','dragover');}
-  if(fc){fc.innerHTML='Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span>';}
-  const fi=document.getElementById(mode+'-file-input');
-  if(fi) fi.value='';
-  const gs=document.getElementById(mode+'-gs-status');
-  if(gs){gs.style.display='none';gs.className='gs-status';}
+
+function closeUploadPanel(mode){
+  const dlBtn=document.getElementById(mode+'-preview-download');
+  if(dlBtn){dlBtn.style.display='';dlBtn.innerHTML='<i class="ti ti-download"></i> Download';dlBtn.removeAttribute('download');dlBtn.href='';dlBtn.target='';}
+  closePreview(mode);
 }
 
 function initDropZone(zoneId,inputId,labelId){
@@ -1165,7 +1197,7 @@ async function submitDoc(mode,docType,docLabel){
       await loadDocLog();
       buildSidebar(mode);
       openDocType(mode,docType);
-      closeUploadModal(mode);
+      closeUploadPanel(mode);
     },1800);
   }catch(err){
     gs.className='gs-status error';
@@ -1252,12 +1284,14 @@ function previewDoc(rec,docLabel,mode){
   let dlHref='', dlDownload='', dlTarget='';
 
   if(rec.docLink&&rec.docLink.startsWith('http')){
+    /* ── Drive link → embed with /preview URL ── */
     let previewUrl=rec.docLink;
     const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
     if(driveMatch) previewUrl=`https://drive.google.com/file/d/${driveMatch[1]}/preview`;
     mediaHtml=`<iframe class="pf" src="${previewUrl}" title="Document" allow="autoplay" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`;
     dlHref=rec.docLink; dlDownload=''; dlTarget='_blank';
   } else if(rec.fileData){
+    /* ── Local base64: image or PDF ── */
     const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
     mediaHtml=isPdf
       ?`<iframe class="pf" src="${rec.fileData}" title="PDF" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`
@@ -1285,12 +1319,18 @@ function previewDoc(rec,docLabel,mode){
     ${rec.docLink&&rec.docLink.startsWith('http')?`<a class="btn btn-ghost btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener" style="margin-top:10px;"><i class="ti ti-external-link"></i> Open in Drive</a>`:''}`;
 
   if(dlBtn){
-    if(dlHref){dlBtn.href=dlHref;if(dlDownload)dlBtn.download=dlDownload;dlBtn.target=dlTarget;dlBtn.style.display='';}
-    else dlBtn.style.display='none';
+    if(dlHref){
+      dlBtn.href=dlHref;
+      if(dlDownload) dlBtn.download=dlDownload; else dlBtn.removeAttribute('download');
+      dlBtn.target=dlTarget;
+      dlBtn.innerHTML='<i class="ti ti-download"></i> Download';
+      dlBtn.style.display='';
+    } else {
+      dlBtn.style.display='none';
+    }
   }
 
   panel.classList.add('open');
-  closeUploadModal(mode);
 }
 
 function closePreview(mode){
@@ -1465,15 +1505,13 @@ function wireDelegation(){
     const btn=e.target.closest('[data-mode][data-doctype]');
     if(btn) openDocType(btn.dataset.mode,btn.dataset.doctype);
   });
-  // Emp doc-center: preview button or hist-rec row click (skip if inside upload modal)
+  // Emp doc-center: preview button or hist-rec row click
   document.getElementById('emp-doc-center').addEventListener('click',e=>{
-    if(e.target.closest('.upload-modal')) return;
     const btn=e.target.closest('[data-preview-idx]');
     if(btn) previewDocByIdx(btn.dataset.previewMode,btn.dataset.previewDoctype,btn.dataset.previewIdx);
   });
-  // Bike doc-center: preview button or hist-rec row click (skip if inside upload modal)
+  // Bike doc-center: preview button or hist-rec row click
   document.getElementById('bike-doc-center').addEventListener('click',e=>{
-    if(e.target.closest('.upload-modal')) return;
     const btn=e.target.closest('[data-preview-idx]');
     if(btn) previewDocByIdx(btn.dataset.previewMode,btn.dataset.previewDoctype,btn.dataset.previewIdx);
   });
