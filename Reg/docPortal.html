@@ -1120,6 +1120,32 @@ async function submitDoc(mode,docType,docLabel){
   }
 }
 
+async function syncToSheets(mode,rec){
+  const payload={
+    action:'saveDoc',
+    sheetName:mode==='emp'?'EmpDocuments':'BikeDocuments',
+    txnId:rec.txnId,
+    entityId:rec.entityId,
+    docType:rec.docType,
+    category:rec.category||'',
+    fileName:rec.fileName,
+    fileType:rec.fileType,
+    mimeType:rec.mimeType,
+    fileData:rec.fileData,
+    expiry:rec.expiry||'',
+    uploadedAt:rec.uploadedAt,
+  };
+  const res=await fetch(SHEETS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload),
+  });
+  if(!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+  const data=await res.json();
+  if(data.status!=='ok') throw new Error(data.message||'Apps Script returned an error');
+  return data;
+}
+
 /* ═══════════════════════════════════════════════════════
  *  PREVIEW PANEL — right-side slide panel
  *  Drive links: Google Drive /preview embed
