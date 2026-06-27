@@ -458,71 +458,78 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 /* ═══════════════════════════════════════════════════════
  *  SHEETS URL
  * ═══════════════════════════════════════════════════════ */
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyhdEeSqKnsV_EANDHxjXBlpx9PjFYL1UQpD77PQ7bEWcCiohuD45Rp9Fd3tu-s0DeMTQ/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwntsEIiazooS7HtD4qF85OvBgePqsa85rldQ3sUdfXRtCQFqgHwc3mrXwS-RFFUoW6kg/exec';
 const SHEETS_ON  = SHEETS_URL.startsWith('https://script.google.com/');
 
 /* ═══════════════════════════════════════════════════════
  *  DOC TYPE DEFINITIONS
  * ═══════════════════════════════════════════════════════ */
 const EMP_DOC_TYPES = [
-  {key:'contract',    label:'Contract',        icon:'ti-file-text',  expiryRequired:true },
-  {key:'visa',        label:'Visa',            icon:'ti-globe',      expiryRequired:true },
-  {key:'labour_card', label:'Labour Card',     icon:'ti-briefcase',  expiryRequired:true },
-  {key:'eid_card',    label:'EID Card',        icon:'ti-id-badge-2', expiryRequired:true },
+  {key:'contract',    label:'Contract',        icon:'ti-file-text',      expiryRequired:true },
+  {key:'visa',        label:'Visa',            icon:'ti-globe',          expiryRequired:true },
+  {key:'labour_card', label:'Labour Card',     icon:'ti-briefcase',      expiryRequired:true },
+  {key:'eid_card',    label:'EID Card',        icon:'ti-id-badge-2',     expiryRequired:true },
   {key:'rta_card',    label:'RTA Card',        icon:'ti-steering-wheel', expiryRequired:true },
-  {key:'driving_lic', label:'Driving License', icon:'ti-license',    expiryRequired:true },
-  {key:'health_card', label:'Health Card',     icon:'ti-heart-plus', expiryRequired:true },
-  {key:'passport',    label:'Passport',        icon:'ti-passport',   expiryRequired:true },
-  {key:'others_emp',  label:'Others',          icon:'ti-paperclip',  expiryRequired:false},
+  {key:'driving_lic', label:'Driving License', icon:'ti-license',        expiryRequired:true },
+  {key:'health_card', label:'Health Card',     icon:'ti-heart-plus',     expiryRequired:true },
+  {key:'passport',    label:'Passport',        icon:'ti-passport',       expiryRequired:true },
+  {key:'others_emp',  label:'Others',          icon:'ti-paperclip',      expiryRequired:false},
 ];
 const BIKE_DOC_TYPES = [
-  {key:'mulkia',     label:'Mulkia',  icon:'ti-certificate', expiryRequired:true },
-  {key:'passing',    label:'Passing', icon:'ti-check-badge', expiryRequired:true },
-  {key:'others_bike',label:'Others',  icon:'ti-paperclip',   expiryRequired:false},
+  {key:'mulkia',      label:'Mulkia',  icon:'ti-certificate', expiryRequired:true },
+  {key:'passing',     label:'Passing', icon:'ti-check-badge', expiryRequired:true },
+  {key:'others_bike', label:'Others',  icon:'ti-paperclip',   expiryRequired:false},
 ];
 const ALL_DOC_TYPES = [...EMP_DOC_TYPES, ...BIKE_DOC_TYPES];
-function docTypeLabel(k){const f=ALL_DOC_TYPES.find(d=>d.key===k);return f?f.label:k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());}
-function isExpiryRequired(k){const f=ALL_DOC_TYPES.find(d=>d.key===k);return f?f.expiryRequired:true;}
+function docTypeLabel(k){ const f=ALL_DOC_TYPES.find(d=>d.key===k); return f?f.label:k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); }
+function isExpiryRequired(k){ const f=ALL_DOC_TYPES.find(d=>d.key===k); return f?f.expiryRequired:true; }
 
 /* ═══════════════════════════════════════════════════════
- *  IDB — FLEET CACHE (READ-ONLY, mirrors allEmp.html)
- *  DB: ap2_fleet_cache  Store: datasets
- *  Keys: ap2_employee | ap2_bike | ap2_docLog
+ *  IDB — FLEET CACHE (READ-ONLY)
+ *  Mirrors allEmp.html EXACTLY:
+ *    _getDB()        — indexedDB.open('ap2_fleet_cache'), no version
+ *    _readCache(key) — returns full rec {ts,data,fingerprint} or null
+ *  Store: 'datasets'
+ *  Keys : ap2_employee | ap2_bike | ap2_docLog
  * ═══════════════════════════════════════════════════════ */
-const FLEET_IDB   = 'ap2_fleet_cache';
-const FLEET_STORE = 'datasets';
-const KEY_EMP  = 'ap2_employee';
-const KEY_BIKE = 'ap2_bike';
-const KEY_LOG  = 'ap2_docLog';
+const _AP2_CACHE_KEY_EMP  = 'ap2_employee';
+const _AP2_CACHE_KEY_BIKE = 'ap2_bike';
+const _AP2_CACHE_KEY_LOG  = 'ap2_docLog';
 
-let _fdb = null;
-function _getFleetDB(){
-  if(_fdb) return Promise.resolve(_fdb);
+const _IDB_NAME  = 'ap2_fleet_cache';
+const _IDB_STORE = 'datasets';
+
+let _idbConn = null;
+
+/* Identical to allEmp._getDB() */
+function _getDB(){
+  if(_idbConn) return Promise.resolve(_idbConn);
   return new Promise((res,rej)=>{
-    const r = indexedDB.open(FLEET_IDB); // no version — open as-is
-    r.onsuccess = e=>{_fdb=e.target.result;res(_fdb);};
-    r.onerror   = e=>rej(e.target.error);
+    const req = indexedDB.open(_IDB_NAME); // no version — open existing DB as-is
+    req.onsuccess = e => { _idbConn = e.target.result; res(_idbConn); };
+    req.onerror   = e => rej(e.target.error);
   });
 }
-async function _fleetRead(key){
-  const db = await _getFleetDB();
-  if(!db.objectStoreNames.contains(FLEET_STORE))
-    throw new Error(`Store "${FLEET_STORE}" not found — open fleet app first`);
+
+/* Identical to allEmp._readCache() — returns {ts,data,fingerprint} or null */
+async function _readCache(cacheKey){
+  const db  = await _getDB();
   const rec = await new Promise((res,rej)=>{
-    const r = db.transaction(FLEET_STORE,'readonly').objectStore(FLEET_STORE).get(key);
-    r.onsuccess=()=>res(r.result||null);
-    r.onerror=()=>rej(r.error);
+    const req = db.transaction(_IDB_STORE,'readonly')
+                  .objectStore(_IDB_STORE).get(cacheKey);
+    req.onsuccess = () => res(req.result || null);
+    req.onerror   = () => rej(req.error);
   });
-  if(!rec||!Array.isArray(rec.data)) return null; // not an error — just empty
-  return rec; // return full record: { ts, data, fingerprint }
+  if(!rec || !Array.isArray(rec.data) || !rec.data.length) return null;
+  return rec; // { ts, data[], fingerprint }
 }
 
 /* ═══════════════════════════════════════════════════════
- *  STATE
+ *  STATE — memory-hoisted, mirrors allEmp pattern
  * ═══════════════════════════════════════════════════════ */
-let employees = [];   // [{id,name,eid,mobile,...}]
-let bikes     = [];   // [{id,plate,make,...}]
-let logRows   = [];   // normalised rows from ap2_docLog
+let employees = [];  // normalised emp objects in RAM
+let bikes     = [];  // normalised bike objects in RAM
+let logRows   = [];  // normalised ap2_docLog rows in RAM
 
 let selEmpId  = null;
 let selBikeId = null;
@@ -534,140 +541,149 @@ let logSortKey = 'ts';
 let logSortAsc = false;
 
 /* ═══════════════════════════════════════════════════════
- *  NORMALISE HELPERS
+ *  NORMALISE — mirrors allEmp.normaliseRow() column map
+ *  [0]EmpID [1]Name [2]EID  [3]DOB    [4]Mobile [5]Emergency
+ *  [6]Ref   [7]TS   [8]HR   [9]COExc
+ *  [10]EIDExp [11]LicExp [12]LabourExp [13]InsuranceExp
  * ═══════════════════════════════════════════════════════ */
 const _s = v => (v!==null&&v!==undefined&&v!=='') ? String(v).trim() : '';
 
-/* allEmp.html column map (0-based):
-   [0]EmpID [1]Name [2]EID [3]DOB [4]Mobile [5]Emergency [6]Ref
-   [7]Timestamp [8]HR_Status [9]Checkout_Exc
-   [10]EID_Exp [11]Lic_Exp [12]Labour_Exp [13]Insurance_Exp */
 function normaliseEmp(r,i){
   if(!r) return null;
   if(!Array.isArray(r)){
     if(!r['Name']) return null;
-    return {id:r['Emp ID']||(i+1),name:r['Name'],eid:_s(r['EID Number']),
-            mobile:_s(r['UAE Mobile No']),status:_s(r['HR_Status'])||'Active'};
+    return { id:r['Emp ID']||(i+1), name:r['Name'],
+             eid:_s(r['EID Number']), mobile:_s(r['UAE Mobile No']),
+             status:_s(r['HR_Status'])||'Active' };
   }
   if(_s(r[0])==='Emp ID') return null;
-  const empId=(r[0]!==null&&r[0]!==''&&r[0]!==undefined)?r[0]:(i+1);
-  const name=_s(r[1]); if(!name) return null;
-  return {id:empId,name,eid:_s(r[2]),dob:_s(r[3]),mobile:_s(r[4]),
-          emergency:_s(r[5]),hrStatus:_s(r[8]),status:_s(r[8])||'Active'};
+  const rawId = r[0];
+  const empId = (rawId!==null&&rawId!==undefined&&rawId!=='') ? rawId : (i+1);
+  const name  = _s(r[1]); if(!name) return null;
+  const coExc = _s(r[9]);
+  const isCoExc = coExc.toLowerCase().replace(/[^a-z]/g,'').includes('checkout');
+  return {
+    id: empId, name, eid: _s(r[2]), dob: _s(r[3]), mobile: _s(r[4]),
+    emergency: _s(r[5]), hrStatus: _s(r[8]), status: _s(r[8])||'Active',
+    checkoutException: isCoExc ? coExc : '',
+  };
 }
 
 function normaliseBike(r,i){
   if(!r) return null;
   if(!Array.isArray(r)){
     const id=_s(r['Bike ID']||r['id']); if(!id) return null;
-    return {id,plate:_s(r['Plate Number']||r['plate']||''),
-            make:_s(r['Make']||''),model:_s(r['Model']||''),
-            year:_s(r['Year']||''),status:_s(r['Status']||'')};
+    return { id, plate:_s(r['Plate Number']||r['plate']||''),
+             make:_s(r['Make']||''), model:_s(r['Model']||''),
+             year:_s(r['Year']||''), status:_s(r['Status']||'') };
   }
   const first=_s(r[0]);
   if(first==='Bike ID'||first==='id'||!first) return null;
-  return {id:first,plate:_s(r[1]),make:_s(r[2]),model:_s(r[3]),year:_s(r[4]),status:_s(r[6])};
+  return { id:first, plate:_s(r[1]), make:_s(r[2]),
+           model:_s(r[3]), year:_s(r[4]), status:_s(r[6]) };
 }
 
-/* ap2_docLog row format (from the actual cache data provided):
-   ['', 'Employee', 'EMP-TEST-001', 'eid_card',
-    'https://drive.google.com/...', '31122026000000']
-   col[0]: TxnId (may be empty)
-   col[1]: Portal ('Employee'|'Bike')
-   col[2]: Entity ID
-   col[3]: Doc type key
-   col[4]: Google Drive link
-   col[5]: Expiry as DDMMYYYY000000 timestamp string */
+/* ═══════════════════════════════════════════════════════
+ *  NORMALISE ap2_docLog ROW
+ *  rec  = { ts:1782553091169, data:Array, fingerprint:'...' }
+ *  row  = [ txnId, Portal, EntityId, docType, link, expiry ]
+ *  col[0] TxnId  (may be empty string)
+ *  col[1] Portal ('Employee' | 'Bike')
+ *  col[2] Entity ID
+ *  col[3] Doc type key  (e.g. 'eid_card', 'contract')
+ *  col[4] Drive URL  OR  'View File' (stored in sheet, no direct link)
+ *  col[5] Expiry as DDMMYYYY000000  (e.g. '31122026000000' = 31 Dec 2026)
+ * ═══════════════════════════════════════════════════════ */
 function parseDocLogExpiry(raw){
-  // Format: DDMMYYYY000000 → e.g. '31122026000000' = 31 Dec 2026
   if(!raw) return '';
-  const s=String(raw).trim();
-  if(s.length>=8){
-    // Try DDMMYYYY prefix
-    const dd=s.substring(0,2),mm=s.substring(2,4),yyyy=s.substring(4,8);
-    const d=parseInt(dd,10),mo=parseInt(mm,10),y=parseInt(yyyy,10);
-    if(d>=1&&d<=31&&mo>=1&&mo<=12&&y>=2000&&y<=2099){
-      return `${yyyy}-${mm.padStart(2,'0')}-${dd.padStart(2,'0')}`; // ISO
-    }
+  const s = String(raw).trim();
+  if(s.length >= 8){
+    const dd=s.slice(0,2), mm=s.slice(2,4), yyyy=s.slice(4,8);
+    const d=+dd, mo=+mm, y=+yyyy;
+    if(d>=1&&d<=31&&mo>=1&&mo<=12&&y>=2000&&y<=2099)
+      return `${yyyy}-${mm}-${dd}`;
   }
-  // Fallback: try direct date parse
-  const dt=new Date(s);
+  const dt = new Date(s);
   if(!isNaN(dt.getTime())) return dt.toISOString().slice(0,10);
   return '';
 }
 
-function normaliseLogRow(r,recTs){
+function _cleanDocLink(raw){
+  // 'View File' means the file lives only in Google Sheets — no direct URL
+  const v = _s(raw);
+  return (v.toLowerCase()==='view file' || !v) ? '' : v;
+}
+
+function normaliseLogRow(r, recTs){
   if(!r) return null;
   if(Array.isArray(r)){
-    // Skip header rows
-    const f=_s(r[1]).toLowerCase();
-    if(f==='portal'||f==='portal type') return null;
-    const portal=_s(r[1]); if(!portal) return null;
-    const entityId=_s(r[2]); if(!entityId) return null;
-    const isEmp = portal.toLowerCase().includes('emp');
+    const col1 = _s(r[1]).toLowerCase();
+    if(col1==='portal'||col1==='portal type') return null; // header row
+    if(!col1) return null;                                  // blank row
+    const entityId = _s(r[2]); if(!entityId) return null;
     return {
-      txnId:    _s(r[0])||('LOG-'+Math.random().toString(36).slice(2,8).toUpperCase()),
-      portal:   isEmp?'emp':'bike',
+      txnId:    _s(r[0]) || ('LOG-'+Math.random().toString(36).slice(2,8).toUpperCase()),
+      portal:   col1.includes('emp') ? 'emp' : 'bike',
       entityId,
       docType:  _s(r[3]),
-      docLink:  _s(r[4]),
+      docLink:  _cleanDocLink(r[4]),
       expiry:   parseDocLogExpiry(_s(r[5])),
-      ts:       recTs||0,
+      ts:       recTs || 0,
     };
   }
-  // Object row
-  const p=_s(r['Portal']||r['portal']||'emp');
-  const eId=_s(r['ID']||r['entityId']||r['Emp ID']||r['Bike ID']||'');
+  // Object-keyed row (future-proof)
+  const p   = _s(r['Portal']||r['portal']||'emp');
+  const eId = _s(r['ID']||r['entityId']||r['Emp ID']||r['Bike ID']||'');
   if(!eId) return null;
   return {
     txnId:    _s(r['Transaction ID']||r['txnId'])||('LOG-'+Math.random().toString(36).slice(2,8).toUpperCase()),
-    portal:   p.toLowerCase().includes('bike')?'bike':'emp',
+    portal:   p.toLowerCase().includes('bike') ? 'bike' : 'emp',
     entityId: eId,
     docType:  _s(r['Doc Type']||r['docType']||''),
-    docLink:  _s(r['Doc Link']||r['docLink']||r['File Link']||''),
+    docLink:  _cleanDocLink(r['Doc Link']||r['docLink']||r['File Link']||''),
     expiry:   parseDocLogExpiry(_s(r['Exp Date']||r['expiry']||'')),
-    ts:       recTs||0,
+    ts:       recTs || 0,
   };
 }
 
 /* ═══════════════════════════════════════════════════════
  *  DATE / EXPIRY UTILS
  * ═══════════════════════════════════════════════════════ */
-const WARN_DAYS=45;
-function daysUntil(d){if(!d)return Infinity;return Math.ceil((new Date(d)-new Date())/86400000);}
+const WARN_DAYS = 45;
+function daysUntil(d){ if(!d) return Infinity; return Math.ceil((new Date(d)-new Date())/86400000); }
 function expiryStatus(d){
-  if(!d)return{status:'gray',label:'No expiry'};
-  const n=daysUntil(d);
-  if(n<0)return{status:'red',label:`Expired ${Math.abs(n)}d ago`};
-  if(n<=WARN_DAYS)return{status:'amber',label:`Expires in ${n}d`};
-  return{status:'teal',label:`Valid · ${n}d left`};
+  if(!d) return {status:'gray', label:'No expiry'};
+  const n = daysUntil(d);
+  if(n<0)         return {status:'red',   label:`Expired ${Math.abs(n)}d ago`};
+  if(n<=WARN_DAYS)return {status:'amber', label:`Expires in ${n}d`};
+  return               {status:'teal',  label:`Valid \xB7 ${n}d left`};
 }
-function fmtDate(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
-function fmtTs(ts){if(!ts)return'—';return new Date(ts).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
-function genTxnId(){return'TXN-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();}
-function fileToBase64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>rej(new Error('Read failed'));r.readAsDataURL(f);});}
+function fmtDate(d){ if(!d) return '\u2014'; return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function fmtTs(ts){ if(!ts) return '\u2014'; return new Date(ts).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+function genTxnId(){ return 'TXN-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase(); }
+function fileToBase64(f){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=()=>rej(new Error('Read failed')); r.readAsDataURL(f); }); }
 
 /* ═══════════════════════════════════════════════════════
- *  AVATAR
+ *  AVATAR — mirrors allEmp palette
  * ═══════════════════════════════════════════════════════ */
-const AV_FG=['#58a6ff','#3fb950','#e3b341','#d2a8ff','#ffa198','#22d3ee'];
-const AV_BG=['rgba(31,111,235,.2)','rgba(26,127,55,.2)','rgba(154,103,0,.2)','rgba(110,64,201,.2)','rgba(191,69,66,.2)','rgba(14,116,144,.2)'];
+const AV_FG = ['#58a6ff','#3fb950','#e3b341','#d2a8ff','#ffa198','#22d3ee'];
+const AV_BG = ['rgba(31,111,235,.2)','rgba(26,127,55,.2)','rgba(154,103,0,.2)','rgba(110,64,201,.2)','rgba(191,69,66,.2)','rgba(14,116,144,.2)'];
 function avatarStyle(name,idx){
-  const i=(idx!==undefined?idx:(_s(name).charCodeAt(0)))%AV_BG.length;
-  return{bg:AV_BG[i],fg:AV_FG[i],initials:(_s(name).split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase())||'?'};
+  const i = (idx!==undefined ? idx : (_s(name).charCodeAt(0))) % AV_BG.length;
+  return { bg:AV_BG[i], fg:AV_FG[i], initials:(_s(name).split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase())||'?' };
 }
 
 /* ═══════════════════════════════════════════════════════
- *  TOAST
+ *  TOAST — mirrors allEmp.toast()
  * ═══════════════════════════════════════════════════════ */
 let _tt;
 function toast(msg,type='success'){
-  const el=document.getElementById('toast'),mi=document.getElementById('toast-msg'),ic=document.getElementById('toast-icon');
-  clearTimeout(_tt);el.className='toast';
+  const el=document.getElementById('toast'), mi=document.getElementById('toast-msg'), ic=document.getElementById('toast-icon');
+  clearTimeout(_tt); el.className='toast';
   mi.textContent=msg;
-  ic.className=type==='error'?'ti ti-x-circle':'ti ti-circle-check';
+  ic.className = type==='error' ? 'ti ti-x-circle' : 'ti ti-circle-check';
   requestAnimationFrame(()=>el.classList.add('show',type));
-  _tt=setTimeout(()=>el.classList.remove('show'),3500);
+  _tt = setTimeout(()=>el.classList.remove('show'), 3500);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -675,82 +691,117 @@ function toast(msg,type='success'){
  * ═══════════════════════════════════════════════════════ */
 function switchTab(t){
   ['emp','bike','log'].forEach(k=>{
-    document.getElementById(`tab-${k}`).style.display       = k===t?'flex':'none';
-    document.getElementById(`tab-${k}-btn`).classList.toggle('active',k===t);
+    document.getElementById(`tab-${k}`).style.display = k===t ? 'flex' : 'none';
+    document.getElementById(`tab-${k}-btn`).classList.toggle('active', k===t);
   });
-  if(t==='log'){buildLogDocTypeOptions();renderLogTable();}
+  if(t==='log'){ buildLogDocTypeOptions(); renderLogTable(); }
 }
 
 /* ═══════════════════════════════════════════════════════
- *  LOAD DATA — reads ap2_employee, ap2_bike, ap2_docLog
+ *  LOAD — mirrors allEmp.loadEmployees() exactly
+ *  _readCache() → Memory-Hoist → render
  * ═══════════════════════════════════════════════════════ */
 async function loadInitialData(){
-  const statusEl=document.getElementById('cache-status');
-  const setStatus=(icon,msg,color,title)=>{
-    if(!statusEl)return;
-    statusEl.style.color=color||'var(--text3)';
-    statusEl.title=title||'';
-    statusEl.innerHTML=`<i class="ti ${icon}" style="font-size:12px;${icon.includes('loader')?'animation:spin 1s linear infinite;':''}"></i> ${msg}`;
+  const statusEl = document.getElementById('cache-status');
+  const setStatus = (icon,msg,color,title) => {
+    if(!statusEl) return;
+    statusEl.style.color = color || 'var(--text3)';
+    statusEl.title = title || '';
+    statusEl.innerHTML = `<i class="ti ${icon}" style="font-size:12px;${icon.includes('loader')?'animation:spin 1s linear infinite;':''}"></i> ${msg}`;
   };
-  setStatus('ti-loader','Loading…');
-  let empOk=false,bikeOk=false;
+  setStatus('ti-loader','Reading cache\u2026');
 
+  let empOk=false, bikeOk=false;
+
+  /* ── ap2_employee \u2192 Memory-Hoist into employees[] ── */
   try{
-    const rec=await _fleetRead(KEY_EMP);
-    if(rec&&rec.data.length){
-      employees=rec.data.map((r,i)=>normaliseEmp(r,i)).filter(Boolean);
-      empOk=employees.length>0;
+    const rec = await _readCache(_AP2_CACHE_KEY_EMP);
+    if(rec && rec.data.length){
+      const fresh = rec.data.map((r,i)=>normaliseEmp(r,i)).filter(Boolean);
+      if(fresh.length){ employees=fresh; empOk=true; }
     }
-  }catch(e){console.warn('[portal] emp cache:',e.message);}
+  }catch(e){ console.warn('[docPortal] emp cache:',e.message); }
 
+  /* ── ap2_bike \u2192 Memory-Hoist into bikes[] ── */
   try{
-    const rec=await _fleetRead(KEY_BIKE);
-    if(rec&&rec.data.length){
-      bikes=rec.data.map((r,i)=>normaliseBike(r,i)).filter(Boolean);
-      bikeOk=bikes.length>0;
+    const rec = await _readCache(_AP2_CACHE_KEY_BIKE);
+    if(rec && rec.data.length){
+      const fresh = rec.data.map((r,i)=>normaliseBike(r,i)).filter(Boolean);
+      if(fresh.length){ bikes=fresh; bikeOk=true; }
     }
-  }catch(e){console.warn('[portal] bike cache:',e.message);}
+  }catch(e){ console.warn('[docPortal] bike cache:',e.message); }
 
+  /* ── ap2_docLog \u2192 Memory-Hoist into logRows[] ── */
   await loadDocLog();
 
   if(empOk||bikeOk){
-    setStatus('ti-circle-check',`${employees.length} emp · ${bikes.length} bikes · ${logRows.length} docs`,'var(--teal)');
-  }else{
+    setStatus('ti-circle-check',
+      `${employees.length} emp \xB7 ${bikes.length} bikes \xB7 ${logRows.length} docs`,
+      'var(--teal)');
+  } else {
     setStatus('ti-alert-triangle','Fleet cache unavailable','var(--amber)',
-      'Open allEmp.html in this browser first to populate ap2_fleet_cache.');
+      'Open allEmp.html in this browser first to populate ap2_fleet_cache (ap2_employee + ap2_bike + ap2_docLog).');
   }
 }
 
 /* ═══════════════════════════════════════════════════════
- *  BACKGROUND POLL (mirrors allEmp.html IIFE) — 30s
- * ═══════════════════════════════════════════════════════ */
-(function(){
-  let _deb=null;
-  async function _refresh(){
-    try{const r=await _fleetRead(KEY_EMP);if(r&&r.data.length){const p=r.data.map((v,i)=>normaliseEmp(v,i)).filter(Boolean);if(p.length)employees=p;}}catch(e){}
-    try{const r=await _fleetRead(KEY_BIKE);if(r&&r.data.length){const p=r.data.map((v,i)=>normaliseBike(v,i)).filter(Boolean);if(p.length)bikes=p;}}catch(e){}
-    await loadDocLog();
-    const s=document.getElementById('cache-status');
-    if(s&&employees.length){s.style.color='var(--teal)';s.innerHTML=`<i class="ti ti-circle-check" style="font-size:12px;"></i> ${employees.length} emp · ${bikes.length} bikes · ${logRows.length} docs`;}
-  }
-  setInterval(_refresh,30000);
-  window.addEventListener('ap-cache-updated',()=>{if(_deb)clearTimeout(_deb);_deb=setTimeout(_refresh,200);});
-})();
-
-/* ═══════════════════════════════════════════════════════
- *  ap2_docLog — ONLY source for document history
- *  Shape: { ts, data: Array of arrays, fingerprint }
+ *  ap2_docLog loader — single source of truth
+ *  Reads rec.data[] and passes rec.ts to every row
  * ═══════════════════════════════════════════════════════ */
 async function loadDocLog(){
   try{
-    const rec=await _fleetRead(KEY_LOG);
-    if(!rec){logRows=[];return;}
-    logRows=rec.data.map(r=>normaliseLogRow(r,rec.ts)).filter(Boolean);
+    const rec = await _readCache(_AP2_CACHE_KEY_LOG);
+    if(!rec){ logRows=[]; return; }
+    logRows = rec.data.map(r=>normaliseLogRow(r, rec.ts)).filter(Boolean);
   }catch(e){
-    console.warn('[portal] docLog cache:',e.message);
+    console.warn('[docPortal] docLog cache:',e.message);
     logRows=[];
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+ *  BACKGROUND CACHE WATCHER — mirrors allEmp IIFE exactly
+ *  Polls every 30 s + debounces ap-cache-updated messages.
+ *  Refreshes employees[], bikes[] AND logRows[] every tick.
+ * ═══════════════════════════════════════════════════════ */
+(function(){
+  let _debounce = null;
+
+  async function _applyFromIDB(){
+    try{
+      const rec = await _readCache(_AP2_CACHE_KEY_EMP);
+      if(rec && rec.data.length){
+        const fresh = rec.data.map((r,i)=>normaliseEmp(r,i)).filter(Boolean);
+        if(fresh.length) employees = fresh;
+      }
+    }catch(e){ /* keep last known */ }
+
+    try{
+      const rec = await _readCache(_AP2_CACHE_KEY_BIKE);
+      if(rec && rec.data.length){
+        const fresh = rec.data.map((r,i)=>normaliseBike(r,i)).filter(Boolean);
+        if(fresh.length) bikes = fresh;
+      }
+    }catch(e){ /* keep last known */ }
+
+    await loadDocLog();
+
+    const s = document.getElementById('cache-status');
+    if(s && employees.length){
+      s.style.color = 'var(--teal)';
+      s.innerHTML = `<i class="ti ti-circle-check" style="font-size:12px;"></i> ${employees.length} emp \xB7 ${bikes.length} bikes \xB7 ${logRows.length} docs`;
+    }
+  }
+
+  function _debouncedApply(){
+    if(_debounce) clearTimeout(_debounce);
+    _debounce = setTimeout(_applyFromIDB, 200);
+  }
+
+  setInterval(_applyFromIDB, 30000);
+  window.addEventListener('ap-cache-updated', _debouncedApply);
+})();
+
 
 /* get all docs for entity+docType from logRows */
 function getEntityDocs(entityId,docType,portal){
