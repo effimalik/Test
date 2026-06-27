@@ -1172,28 +1172,51 @@ async function submitDoc(mode,docType,docLabel){
 }
 
 async function syncToSheets(mode,rec){
-  const payload={
+  // Log payload (without base64 data) for debugging
+  const debugPayload={
     action:'saveDoc',
+    portal:   mode==='emp'?'Employee':'Bike',
     sheetName:mode==='emp'?'EmpDocuments':'BikeDocuments',
-    txnId:rec.txnId,
-    entityId:rec.entityId,
-    docType:rec.docType,
-    category:rec.category||'',
-    fileName:rec.fileName,
-    fileType:rec.fileType,
-    mimeType:rec.mimeType,
-    fileData:rec.fileData,
-    expiry:rec.expiry||'',
+    txnId:    rec.txnId,
+    entityId: String(rec.entityId),
+    docType:  rec.docType,
+    category: rec.category||'',
+    fileName: rec.fileName,
+    fileType: rec.fileType,
+    mimeType: rec.mimeType,
+    expiry:   rec.expiry||'',
     uploadedAt:rec.uploadedAt,
   };
-  const res=await fetch(SHEETS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify(payload),
-  });
-  if(!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
-  const data=await res.json();
-  if(data.status!=='ok') throw new Error(data.message||'Apps Script returned an error');
+  console.log('[portal] syncToSheets payload (no fileData):', debugPayload);
+
+  const payload={...debugPayload, fileData:rec.fileData};
+
+  let res, rawText;
+  try{
+    res = await fetch(SHEETS_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload),
+    });
+    rawText = await res.text();
+    console.log('[portal] Apps Script raw response:', rawText);
+  }catch(netErr){
+    throw new Error('Network error — '+netErr.message);
+  }
+
+  if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}: ${rawText.slice(0,200)}`);
+
+  let data;
+  try{
+    data = JSON.parse(rawText);
+  }catch(e){
+    throw new Error('Apps Script returned non-JSON: '+rawText.slice(0,300));
+  }
+
+  if(data.status!=='ok'){
+    // Surface the real Apps Script error message
+    throw new Error(data.message || data.error || JSON.stringify(data));
+  }
   return data;
 }
 
