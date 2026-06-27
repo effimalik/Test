@@ -964,6 +964,12 @@ function openDocType(mode,docType){
   initDropZone(mode+'-file-zone',mode+'-file-input',mode+'-chosen-file');
 }
 
+/* ═══════════════════════════════════════════════════════
+ *  CENTER PANEL
+ *  Upload button in header → overlay modal inside doc-center
+ *  hist-rec: click → right-side preview panel
+ *  Others: category required, expiry optional
+ * ═══════════════════════════════════════════════════════ */
 function buildCenterPanel(dt,recs,mode){
   const fz=mode+'-file-zone', fi=mode+'-file-input', fc=mode+'-chosen-file';
   const di=mode+'-exp-date', gs=mode+'-gs-status';
@@ -1009,13 +1015,11 @@ function buildCenterPanel(dt,recs,mode){
     }).join('')+'</div>';
   }
 
-  /* expiry field — optional label for Others */
   const expiryField=`<div class="field" style="flex:1;min-width:140px;">
     <label>Expiry Date ${expiryReq?'<span class="req">*</span>':'<span style="font-size:9px;color:var(--text3);font-weight:400;">(optional)</span>'}</label>
     <input type="date" class="date-input" id="${di}"/>
   </div>`;
 
-  /* category field — only for Others */
   const catField=isOthers?`<div class="field" style="flex:1;min-width:160px;">
     <label>Category / Label <span class="req">*</span></label>
     <input type="text" class="date-input" id="${mode}-cat-input" placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
@@ -1244,64 +1248,47 @@ function previewDoc(rec,docLabel,mode){
 
   titleEl.textContent=docLabel+(rec.category?' · '+rec.category:'');
 
+  let mediaHtml='';
+  let dlHref='', dlDownload='', dlTarget='';
+
+  if(rec.docLink&&rec.docLink.startsWith('http')){
+    let previewUrl=rec.docLink;
+    const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
+    if(driveMatch) previewUrl=`https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+    mediaHtml=`<iframe class="pf" src="${previewUrl}" title="Document" allow="autoplay" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`;
+    dlHref=rec.docLink; dlDownload=''; dlTarget='_blank';
+  } else if(rec.fileData){
+    const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
+    mediaHtml=isPdf
+      ?`<iframe class="pf" src="${rec.fileData}" title="PDF" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`
+      :`<img class="pi" src="${rec.fileData}" alt="Document" style="max-width:100%;border-radius:var(--radius-lg);display:block;"/>`;
+    dlHref=rec.fileData; dlDownload=rec.fileName||'document'; dlTarget='';
+  } else {
+    mediaHtml=`<div style="padding:40px 16px;text-align:center;color:var(--text3);background:var(--bg3);border-radius:var(--radius-lg);">
+      <i class="ti ti-file-unknown" style="font-size:38px;display:block;margin-bottom:10px;opacity:.35;"></i>
+      <div style="font-size:12px;">No preview available</div>
+      <div style="font-size:11px;margin-top:4px;opacity:.6;">Open in Drive to view this document</div>
+    </div>`;
+  }
+
   const catRow=rec.category?`<div class="pmi"><span class="k">Category</span><span class="v">${rec.category}</span></div>`:'';
-  const metaHtml=`
-    <div class="preview-meta">
+
+  body.innerHTML=`${mediaHtml}
+    <div class="preview-meta" style="margin-top:12px;">
       <div class="pmi"><span class="k">TXN ID</span><span class="v" style="font-size:9.5px;word-break:break-all;">${rec.txnId||'—'}</span></div>
       <div class="pmi"><span class="k">Entity</span><span class="v">${rec.entityId||'—'}</span></div>
       ${catRow}
       <div class="pmi"><span class="k">Expiry</span><span class="v" style="color:var(--${exp.status});">${rec.expiry?fmtDate(rec.expiry):'—'}</span></div>
       <div class="pmi"><span class="k">Status</span><span class="v" style="color:var(--${exp.status});">${exp.label}</span></div>
       <div class="pmi"><span class="k">Cached</span><span class="v" style="font-size:9.5px;">${fmtTs(rec.ts)||'—'}</span></div>
-    </div>`;
+    </div>
+    ${rec.docLink&&rec.docLink.startsWith('http')?`<a class="btn btn-ghost btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener" style="margin-top:10px;"><i class="ti ti-external-link"></i> Open in Drive</a>`:''}`;
 
-  let mediaHtml='';
-
-  if(rec.docLink&&rec.docLink.startsWith('http')){
-    /* ── Drive link: no iframe, no thumbnail, no external requests.
-     *   Show a static card with doc type icon + metadata + Open button only. ── */
-    const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
-    const fileId=driveMatch?driveMatch[1]:'';
-
-    mediaHtml=`
-      <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg3);">
-        <div style="padding:28px 16px;text-align:center;border-bottom:1px solid var(--border);">
-          <i class="ti ti-brand-google-drive" style="font-size:48px;color:#4285f4;display:block;margin-bottom:10px;"></i>
-          <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;">Google Drive Document</div>
-          ${fileId?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);word-break:break-all;padding:0 8px;">${fileId}</div>`:''}
-        </div>
-        <div style="padding:12px;">
-          <a class="btn btn-primary btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener">
-            <i class="ti ti-external-link"></i> Open in Drive
-          </a>
-        </div>
-      </div>`;
-
-    if(dlBtn){dlBtn.href=rec.docLink;dlBtn.removeAttribute('download');dlBtn.target='_blank';dlBtn.style.display='';}
-    dlBtn && (dlBtn.innerHTML='<i class="ti ti-external-link"></i> Open in Drive');
-
-  }else if(rec.fileData){
-    /* ── Local base64: image or PDF — safe to embed ── */
-    const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
-    mediaHtml=isPdf
-      ?`<iframe src="${rec.fileData}" title="PDF"
-           style="width:100%;height:320px;border:none;border-radius:var(--radius-lg);"></iframe>`
-      :`<img src="${rec.fileData}" alt="Document"
-           style="max-width:100%;border-radius:var(--radius-lg);display:block;"/>`;
-    if(dlBtn){dlBtn.href=rec.fileData;dlBtn.download=rec.fileName||'document';dlBtn.target='';dlBtn.style.display='';}
-
-  }else{
-    /* ── No link, no local data ── */
-    mediaHtml=`
-      <div style="padding:36px 16px;text-align:center;color:var(--text3);background:var(--bg3);border-radius:var(--radius-lg);">
-        <i class="ti ti-file-unknown" style="font-size:36px;display:block;margin-bottom:8px;opacity:.35;"></i>
-        <div style="font-size:12px;">No file available</div>
-        <div style="font-size:10.5px;margin-top:4px;opacity:.6;">This record has no attached link or file</div>
-      </div>`;
-    if(dlBtn) dlBtn.style.display='none';
+  if(dlBtn){
+    if(dlHref){dlBtn.href=dlHref;if(dlDownload)dlBtn.download=dlDownload;dlBtn.target=dlTarget;dlBtn.style.display='';}
+    else dlBtn.style.display='none';
   }
 
-  body.innerHTML=mediaHtml+metaHtml;
   panel.classList.add('open');
   closeUploadModal(mode);
 }
@@ -1478,13 +1465,15 @@ function wireDelegation(){
     const btn=e.target.closest('[data-mode][data-doctype]');
     if(btn) openDocType(btn.dataset.mode,btn.dataset.doctype);
   });
-  // Emp doc-center: preview button or hist-rec row click
+  // Emp doc-center: preview button or hist-rec row click (skip if inside upload modal)
   document.getElementById('emp-doc-center').addEventListener('click',e=>{
+    if(e.target.closest('.upload-modal')) return;
     const btn=e.target.closest('[data-preview-idx]');
     if(btn) previewDocByIdx(btn.dataset.previewMode,btn.dataset.previewDoctype,btn.dataset.previewIdx);
   });
-  // Bike doc-center: preview button or hist-rec row click
+  // Bike doc-center: preview button or hist-rec row click (skip if inside upload modal)
   document.getElementById('bike-doc-center').addEventListener('click',e=>{
+    if(e.target.closest('.upload-modal')) return;
     const btn=e.target.closest('[data-preview-idx]');
     if(btn) previewDocByIdx(btn.dataset.previewMode,btn.dataset.previewDoctype,btn.dataset.previewIdx);
   });
