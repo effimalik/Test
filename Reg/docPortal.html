@@ -46,39 +46,26 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
 
 /* ═══ LAYOUT ═══ */
-.portal-wrap{display:flex;flex-direction:column;height:100vh;max-width:1600px;margin:0 auto;padding:10px;gap:8px;}
+.portal-wrap{display:flex;flex-direction:column;height:100vh;max-width:1600px;margin:0 auto;padding:14px;gap:10px;}
 
 /* ═══ HEADER ═══ */
-/* ═══ PAGE HEADER — mirrors allEmp .page-header ═══ */
-.page-header{display:flex;align-items:center;flex-wrap:wrap;gap:10px clamp(10px,2vw,20px);flex-shrink:0;padding:clamp(8px,1.4vw,12px) clamp(10px,2vw,20px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);}
-.page-header-text{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 160px;}
-.page-title{font-size:clamp(14px,2vw,20px);font-weight:700;display:flex;align-items:center;gap:8px;color:var(--text);flex-shrink:0;white-space:nowrap;}
-.page-title i{color:var(--accent);font-size:clamp(16px,2.4vw,24px);line-height:1;}
-.page-desc{font-size:clamp(11px,1.1vw,12.5px);color:var(--text3);display:flex;align-items:center;gap:6px;min-width:0;padding-left:12px;border-left:1.5px solid var(--border);overflow:hidden;}
-.page-desc i{color:var(--accent);font-size:14px;flex-shrink:0;}
-.page-desc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-@media(max-width:760px){.page-desc{display:none;}}
-.page-header-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;margin-left:auto;}
+.portal-header{display:flex;align-items:center;gap:12px;padding:11px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);flex-shrink:0;}
+.portal-logo{width:38px;height:38px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.portal-logo i{font-size:19px;color:#fff;}
+.portal-title h1{font-size:16px;font-weight:700;}
+.portal-title p{font-size:11px;color:var(--text3);}
+.portal-header-actions{margin-left:auto;display:flex;align-items:center;gap:8px;}
+#cache-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-family:var(--mono);}
 
-/* ── Cache dot — mirrors allEmp minimal indicator ── */
-.cache-dot{width:10px;height:10px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:background .3s,box-shadow .3s;}
-.cache-dot.ok{background:var(--teal);box-shadow:0 0 6px var(--teal);}
-.cache-dot.warn{background:var(--amber);box-shadow:0 0 6px var(--amber);}
-.cache-dot.loading{background:var(--accent);animation:pulse-dot 1s ease-in-out infinite;}
-@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.35;}}
-#cache-status{display:inline-flex;align-items:center;cursor:default;padding:4px;}
-#cache-status .cache-dot{flex-shrink:0;}
-
-/* ── Tab buttons — in header controls ── */
-.tab-nav{display:flex;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:3px;}
-.tab-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 12px;border-radius:var(--radius);border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;}
-.tab-btn i{font-size:14px;}
-.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 0 10px var(--accent-glow);}
+/* ═══ TABS ═══ */
+.tab-nav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:4px;flex-shrink:0;}
+.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:8px 14px;border-radius:var(--radius);border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;}
+.tab-btn i{font-size:15px;}
+.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 0 12px var(--accent-glow);}
 .tab-btn:not(.active):hover{background:var(--surface2);color:var(--text);}
-@media(max-width:600px){.tab-btn span{display:none;}.tab-btn{padding:6px 9px;}}
 
 /* ═══ SELECTOR BAR ═══ */
-.selector-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:10px 14px;flex-shrink:0;box-shadow:var(--shadow);}
+.selector-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:12px 16px;flex-shrink:0;box-shadow:var(--shadow);}
 .field{display:flex;flex-direction:column;gap:5px;}
 .field label{font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
 .field label span.req{color:var(--red);}
@@ -103,11 +90,11 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .di.no-match:hover{background:none;}
 
 /* ═══ CONFIRM STRIP ═══ */
-.confirm-strip{display:none;align-items:center;gap:7px;background:var(--accent-dim);border:1px solid rgba(88,166,255,.25);border-radius:var(--radius-lg);padding:6px 10px;flex-shrink:0;flex-wrap:wrap;min-width:0;}
-.ca{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0;}
-.cn{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
-.cs{font-size:10px;color:var(--text3);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;}
-.cbadge{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:20px;font-size:8.5px;font-weight:700;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);white-space:nowrap;}
+.confirm-strip{display:none;align-items:center;gap:9px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:8px 14px;flex-shrink:0;}
+.ca{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;}
+.cn{font-size:12.5px;font-weight:700;color:var(--text);}
+.cs{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.cbadge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(57,211,83,.3);white-space:nowrap;}
 
 /* ═══ MAIN SPLIT ═══ */
 .main-split{flex:1;display:flex;gap:10px;min-height:0;}
@@ -162,7 +149,12 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .hist-exp.gray{color:var(--text3);}
 .hist-note{font-size:10.5px;color:var(--text2);margin-top:2px;font-style:italic;}
 
-/* upload form lives in the doc-preview-panel */
+/* ═══ UPLOAD MODAL (overlays preview area) ═══ */
+.upload-modal{display:none;position:absolute;inset:0;background:var(--surface);border-radius:var(--radius-xl);z-index:10;flex-direction:column;overflow:hidden;}
+.upload-modal.open{display:flex;}
+.upload-modal-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.upload-modal-header h3{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;flex:1;}
+.upload-modal-body{flex:1;overflow-y:auto;padding:16px;}
 
 /* ═══ UPLOAD SECTION ═══ */
 .txn-new-row{display:flex;align-items:center;gap:9px;padding:11px 13px;border:1.5px dashed var(--border2);border-radius:var(--radius-lg);margin-top:4px;background:var(--bg2);}
@@ -255,6 +247,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
   .doc-sidebar{width:86px;}
   .doc-side-btn span{font-size:9px;}
   .doc-preview-panel.open{width:100%;position:fixed;inset:0;z-index:300;border-radius:0;width:100%!important;}
+  .portal-title p{display:none;}
 }
 @media(max-width:700px){
   .portal-wrap{padding:8px;gap:7px;}
@@ -273,7 +266,8 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
   .log-table td:nth-child(1),.log-table th:nth-child(1){display:none;}
 }
 @media(max-width:480px){
-  #cache-status{font-size:10px;gap:4px;}
+  .portal-header{flex-wrap:wrap;}
+  #cache-status{font-size:10px;}
   .doc-center-header{flex-wrap:wrap;gap:6px;}
 }
 </style>
@@ -281,30 +275,29 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 <body>
 <div class="portal-wrap">
 
-  <!-- PAGE HEADER — mirrors allEmp structure -->
-  <div class="page-header">
-    <div class="page-header-text">
-      <div class="page-title"><i class="ti ti-file-certificate"></i> Doc Portal</div>
-      <p class="page-desc"><i class="ti ti-info-circle"></i><span>Rider &amp; vehicle document tracking · ap2_docLog</span></p>
+  <!-- HEADER -->
+  <div class="portal-header">
+    <div class="portal-logo"><i class="ti ti-file-certificate"></i></div>
+    <div class="portal-title">
+      <h1>Document Management Portal</h1>
+      <p>Rider & vehicle document tracking · ap2_docLog cache</p>
     </div>
-    <div class="page-header-controls">
-      <!-- Cache dot — dot only, tooltip carries detail -->
-      <div id="cache-status" title="Loading cache…">
-        <div class="cache-dot loading" id="cache-dot"></div>
-      </div>
-      <!-- Tabs live in header controls -->
-      <div class="tab-nav">
-        <button class="tab-btn active" id="tab-emp-btn" onclick="switchTab('emp')">
-          <i class="ti ti-user-check"></i><span>Employee</span>
-        </button>
-        <button class="tab-btn" id="tab-bike-btn" onclick="switchTab('bike')">
-          <i class="ti ti-motorbike"></i><span>Bike</span>
-        </button>
-        <button class="tab-btn" id="tab-log-btn" onclick="switchTab('log')">
-          <i class="ti ti-table"></i><span>Doc Log</span>
-        </button>
-      </div>
+    <div class="portal-header-actions">
+      <div id="cache-status"><i class="ti ti-loader spinner" style="font-size:12px;"></i> Loading…</div>
     </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn active" id="tab-emp-btn" onclick="switchTab('emp')">
+      <i class="ti ti-user-check"></i><span>Employee Docs</span>
+    </button>
+    <button class="tab-btn" id="tab-bike-btn" onclick="switchTab('bike')">
+      <i class="ti ti-motorbike"></i><span>Bike Docs</span>
+    </button>
+    <button class="tab-btn" id="tab-log-btn" onclick="switchTab('log')">
+      <i class="ti ti-table"></i><span>Doc Log</span>
+    </button>
   </div>
 
   <!-- ══ EMPLOYEE TAB ══ -->
@@ -465,7 +458,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 /* ═══════════════════════════════════════════════════════
  *  SHEETS URL
  * ═══════════════════════════════════════════════════════ */
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzDgj2NlHrzV-dsnZMjF-FBm0LvVyt6F2cJhwLDTDq7YZ6vyO0_lYDFHPUTQEaBZPevKw/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwntsEIiazooS7HtD4qF85OvBgePqsa85rldQ3sUdfXRtCQFqgHwc3mrXwS-RFFUoW6kg/exec';
 const SHEETS_ON  = SHEETS_URL.startsWith('https://script.google.com/');
 
 /* ═══════════════════════════════════════════════════════
@@ -946,6 +939,7 @@ function buildSidebar(mode){
 
 function resetCenter(mode){
   const dc=document.getElementById(mode+'-doc-center');
+  dc.style.position='';
   dc.innerHTML=`<div class="doc-center-placeholder"><i class="ti ti-files"></i><span>Select a doc type from the left</span></div>`;
 }
 
@@ -958,8 +952,10 @@ function openDocType(mode,docType){
   const entityId=mode==='emp'?selEmpId:selBikeId;
   const recs=getEntityDocs(entityId,docType,mode);
   const dc=document.getElementById(mode+'-doc-center');
+  dc.style.position='relative';
   dc.innerHTML=buildCenterPanel(dt,recs,mode);
-  // upload panel wires its own drop zone when opened
+  initDropZone(mode+'-file-zone',mode+'-file-input',mode+'-chosen-file');
+  // wire preview buttons via delegation — handled in wireDelegation
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1025,99 +1021,66 @@ function buildCenterPanel(dt,recs,mode){
     <input type="text" class="date-input" id="${mode}-cat-input" placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
   </div>`:'';
 
-  // Store dt on the button via data attrs so openUploadPanel can read them
   return `
     <div class="doc-center-header">
       <h3><i class="ti ${dt.icon}"></i> ${dt.label}${isOthers?'<span style="font-size:10px;color:var(--text3);font-weight:400;margin-left:6px;">(expiry optional)</span>':''}</h3>
       ${recs.length?`<span class="badge purple">${recs.length} record${recs.length!==1?'s':''}</span>`:''}
-      <button class="btn btn-primary btn-sm" style="margin-left:auto;"
-        data-upload-mode="${mode}" data-upload-key="${dt.key}" data-upload-label="${dt.label}"
-        data-upload-others="${isOthers}" data-upload-expiry-req="${expiryReq}"
-        onclick="openUploadPanel(this)">
+      <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="openUploadModal('${mode}')">
         <i class="ti ti-upload"></i> Upload
       </button>
     </div>
     <div class="doc-center-body">
       ${histHtml}
-    </div>`;
-}
+    </div>
 
-/* ── openUploadPanel: builds upload form INTO the doc-preview-panel
- *  doc-center is NEVER touched — history stays visible underneath.
- *  Reads doc type info from data-* attrs on the Upload button.
- * ────────────────────────────────────────────────────────────────── */
-function openUploadPanel(btn){
-  const mode      = btn.dataset.uploadMode;
-  const key       = btn.dataset.uploadKey;
-  const label     = btn.dataset.uploadLabel;
-  const isOthers  = btn.dataset.uploadOthers === 'true';
-  const expiryReq = btn.dataset.uploadExpiryReq !== 'false';
-
-  const panel   = document.getElementById(mode+'-preview-panel');
-  const titleEl = document.getElementById(mode+'-preview-title');
-  const body    = document.getElementById(mode+'-preview-body');
-  const dlBtn   = document.getElementById(mode+'-preview-download');
-
-  // Retitle the panel header
-  titleEl.textContent = 'Upload ' + label;
-  if(dlBtn) dlBtn.style.display = 'none';
-
-  const fz = mode+'-file-zone';
-  const fi = mode+'-file-input';
-  const fc = mode+'-chosen-file';
-  const di = mode+'-exp-date';
-  const gs = mode+'-gs-status';
-
-  const catField = isOthers ? `
-    <div class="field">
-      <label>Category / Label <span class="req">*</span></label>
-      <input type="text" class="date-input" id="${mode}-cat-input"
-        placeholder="e.g. Bank Letter, NOC, Insurance…" style="font-size:12px;"/>
-    </div>` : '';
-
-  const expiryField = `
-    <div class="field">
-      <label>Expiry Date ${expiryReq
-        ? '<span class="req">*</span>'
-        : '<span style="font-size:9px;color:var(--text3);font-weight:400;">(optional)</span>'}</label>
-      <input type="date" class="date-input" id="${di}"/>
-    </div>`;
-
-  body.innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      <div class="field">
-        <label>File — Image or PDF <span class="req">*</span></label>
-        <div class="file-upload-zone" id="${fz}">
-          <input type="file" id="${fi}" accept="image/*,.pdf"
-            onchange="handleFile(this,'${fz}','${fc}')"/>
-          <i class="ti ti-cloud-upload"></i>
-          <p id="${fc}">Click or drag &amp; drop<br>
-            <span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF · max 8 MB</span></p>
+    <!-- Upload Modal — absolute overlay on doc-center -->
+    <div class="upload-modal" id="${mode}-upload-modal">
+      <div class="upload-modal-header">
+        <h3><i class="ti ti-cloud-upload" style="color:var(--accent);"></i> Upload ${dt.label}</h3>
+        <button class="pph-close" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="upload-modal-body">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="field">
+            <label>File — Image or PDF <span class="req">*</span></label>
+            <div class="file-upload-zone" id="${fz}">
+              <input type="file" id="${fi}" accept="image/*,.pdf" onchange="handleFile(this,'${fz}','${fc}')"/>
+              <i class="ti ti-cloud-upload"></i>
+              <p id="${fc}">Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span></p>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            ${catField}
+            ${expiryField}
+          </div>
+          <div id="${gs}" style="display:none;"></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);">
+            <button class="btn btn-ghost btn-sm" onclick="closeUploadModal('${mode}')"><i class="ti ti-x"></i> Cancel</button>
+            <button class="btn btn-primary btn-sm" onclick="submitDoc('${mode}','${dt.key}','${dt.label}')">
+              <i class="ti ti-upload"></i> Save to Sheet
+            </button>
+          </div>
         </div>
       </div>
-      ${catField}
-      ${expiryField}
-      <div id="${gs}" style="display:none;"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);">
-        <button class="btn btn-ghost btn-sm" onclick="closePreview('${mode}')">
-          <i class="ti ti-x"></i> Cancel
-        </button>
-        <button class="btn btn-primary btn-sm"
-          onclick="submitDoc('${mode}','${key}','${label}')">
-          <i class="ti ti-upload"></i> Save to Sheet
-        </button>
-      </div>
     </div>`;
-
-  panel.classList.add('open');
-  initDropZone(fz, fi, fc);
 }
 
-function closeUploadPanel(mode){
-  // alias — just close the preview panel and restore its download button
-  const dlBtn = document.getElementById(mode+'-preview-download');
-  if(dlBtn) dlBtn.style.display = '';
-  closePreview(mode);
+function openUploadModal(mode){
+  const m=document.getElementById(mode+'-upload-modal');
+  if(m){m.classList.add('open');closePreview(mode);}
+}
+function closeUploadModal(mode){
+  const m=document.getElementById(mode+'-upload-modal');
+  if(!m)return;
+  m.classList.remove('open');
+  const fz=document.getElementById(mode+'-file-zone');
+  const fc=document.getElementById(mode+'-chosen-file');
+  if(fz){fz.classList.remove('has-file','dragover');}
+  if(fc){fc.innerHTML='Click or drag &amp; drop<br><span style="font-size:9.5px;opacity:.6;">JPG · PNG · WEBP · PDF &nbsp;·&nbsp; max 8 MB</span>';}
+  const fi=document.getElementById(mode+'-file-input');
+  if(fi) fi.value='';
+  const gs=document.getElementById(mode+'-gs-status');
+  if(gs){gs.style.display='none';gs.className='gs-status';}
 }
 
 function initDropZone(zoneId,inputId,labelId){
@@ -1198,7 +1161,7 @@ async function submitDoc(mode,docType,docLabel){
       await loadDocLog();
       buildSidebar(mode);
       openDocType(mode,docType);
-      closeUploadPanel(mode);
+      closeUploadModal(mode);
     },1800);
   }catch(err){
     gs.className='gs-status error';
@@ -1209,51 +1172,28 @@ async function submitDoc(mode,docType,docLabel){
 }
 
 async function syncToSheets(mode,rec){
-  // Log payload (without base64 data) for debugging
-  const debugPayload={
+  const payload={
     action:'saveDoc',
-    portal:   mode==='emp'?'Employee':'Bike',
     sheetName:mode==='emp'?'EmpDocuments':'BikeDocuments',
-    txnId:    rec.txnId,
-    entityId: String(rec.entityId),
-    docType:  rec.docType,
-    category: rec.category||'',
-    fileName: rec.fileName,
-    fileType: rec.fileType,
-    mimeType: rec.mimeType,
-    expiry:   rec.expiry||'',
+    txnId:rec.txnId,
+    entityId:rec.entityId,
+    docType:rec.docType,
+    category:rec.category||'',
+    fileName:rec.fileName,
+    fileType:rec.fileType,
+    mimeType:rec.mimeType,
+    fileData:rec.fileData,
+    expiry:rec.expiry||'',
     uploadedAt:rec.uploadedAt,
   };
-  console.log('[portal] syncToSheets payload (no fileData):', debugPayload);
-
-  const payload={...debugPayload, fileData:rec.fileData};
-
-  let res, rawText;
-  try{
-    res = await fetch(SHEETS_URL,{
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload),
-    });
-    rawText = await res.text();
-    console.log('[portal] Apps Script raw response:', rawText);
-  }catch(netErr){
-    throw new Error('Network error — '+netErr.message);
-  }
-
-  if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}: ${rawText.slice(0,200)}`);
-
-  let data;
-  try{
-    data = JSON.parse(rawText);
-  }catch(e){
-    throw new Error('Apps Script returned non-JSON: '+rawText.slice(0,300));
-  }
-
-  if(data.status!=='ok'){
-    // Surface the real Apps Script error message
-    throw new Error(data.message || data.error || JSON.stringify(data));
-  }
+  const res=await fetch(SHEETS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload),
+  });
+  if(!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+  const data=await res.json();
+  if(data.status!=='ok') throw new Error(data.message||'Apps Script returned an error');
   return data;
 }
 
@@ -1281,66 +1221,48 @@ function previewDoc(rec,docLabel,mode){
 
   titleEl.textContent=docLabel+(rec.category?' · '+rec.category:'');
 
+  let mediaHtml='';
+  let dlHref='', dlDownload='', dlTarget='';
+  if(rec.docLink&&rec.docLink.startsWith('http')){
+    let previewUrl=rec.docLink;
+    const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
+    if(driveMatch) previewUrl=`https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+    mediaHtml=`<iframe class="pf" src="${previewUrl}" title="Document" allow="autoplay" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`;
+    dlHref=rec.docLink; dlDownload=''; dlTarget='_blank';
+  } else if(rec.fileData){
+    const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
+    mediaHtml=isPdf
+      ?`<iframe class="pf" src="${rec.fileData}" title="PDF" style="width:100%;height:300px;border:none;border-radius:var(--radius-lg);"></iframe>`
+      :`<img class="pi" src="${rec.fileData}" alt="Document" style="max-width:100%;border-radius:var(--radius-lg);display:block;"/>`;
+    dlHref=rec.fileData; dlDownload=rec.fileName||'document'; dlTarget='';
+  } else {
+    mediaHtml=`<div style="padding:40px 16px;text-align:center;color:var(--text3);background:var(--bg3);border-radius:var(--radius-lg);">
+      <i class="ti ti-file-unknown" style="font-size:38px;display:block;margin-bottom:10px;opacity:.35;"></i>
+      <div style="font-size:12px;">No preview available</div>
+      <div style="font-size:11px;margin-top:4px;opacity:.6;">Open in Drive to view this document</div>
+    </div>`;
+  }
+
   const catRow=rec.category?`<div class="pmi"><span class="k">Category</span><span class="v">${rec.category}</span></div>`:'';
-  const metaHtml=`
-    <div class="preview-meta">
+
+  body.innerHTML=`${mediaHtml}
+    <div class="preview-meta" style="margin-top:12px;">
       <div class="pmi"><span class="k">TXN ID</span><span class="v" style="font-size:9.5px;word-break:break-all;">${rec.txnId||'—'}</span></div>
       <div class="pmi"><span class="k">Entity</span><span class="v">${rec.entityId||'—'}</span></div>
       ${catRow}
       <div class="pmi"><span class="k">Expiry</span><span class="v" style="color:var(--${exp.status});">${rec.expiry?fmtDate(rec.expiry):'—'}</span></div>
       <div class="pmi"><span class="k">Status</span><span class="v" style="color:var(--${exp.status});">${exp.label}</span></div>
       <div class="pmi"><span class="k">Cached</span><span class="v" style="font-size:9.5px;">${fmtTs(rec.ts)||'—'}</span></div>
-    </div>`;
+    </div>
+    ${rec.docLink&&rec.docLink.startsWith('http')?`<a class="btn btn-ghost btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener" style="margin-top:10px;"><i class="ti ti-external-link"></i> Open in Drive</a>`:''}`;
 
-  let mediaHtml='';
-
-  if(rec.docLink&&rec.docLink.startsWith('http')){
-    /* ── Drive link: no iframe, no thumbnail, no external requests.
-     *   Show a static card with doc type icon + metadata + Open button only. ── */
-    const driveMatch=rec.docLink.match(/\/file\/d\/([^/?]+)/);
-    const fileId=driveMatch?driveMatch[1]:'';
-
-    mediaHtml=`
-      <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg3);">
-        <div style="padding:28px 16px;text-align:center;border-bottom:1px solid var(--border);">
-          <i class="ti ti-brand-google-drive" style="font-size:48px;color:#4285f4;display:block;margin-bottom:10px;"></i>
-          <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:4px;">Google Drive Document</div>
-          ${fileId?`<div style="font-size:10px;color:var(--text3);font-family:var(--mono);word-break:break-all;padding:0 8px;">${fileId}</div>`:''}
-        </div>
-        <div style="padding:12px;">
-          <a class="btn btn-primary btn-sm btn-block" href="${rec.docLink}" target="_blank" rel="noopener">
-            <i class="ti ti-external-link"></i> Open in Drive
-          </a>
-        </div>
-      </div>`;
-
-    if(dlBtn){dlBtn.href=rec.docLink;dlBtn.removeAttribute('download');dlBtn.target='_blank';dlBtn.style.display='';}
-    dlBtn && (dlBtn.innerHTML='<i class="ti ti-external-link"></i> Open in Drive');
-
-  }else if(rec.fileData){
-    /* ── Local base64: image or PDF — safe to embed ── */
-    const isPdf=rec.fileType==='pdf'||rec.mimeType==='application/pdf';
-    mediaHtml=isPdf
-      ?`<iframe src="${rec.fileData}" title="PDF"
-           style="width:100%;height:320px;border:none;border-radius:var(--radius-lg);"></iframe>`
-      :`<img src="${rec.fileData}" alt="Document"
-           style="max-width:100%;border-radius:var(--radius-lg);display:block;"/>`;
-    if(dlBtn){dlBtn.href=rec.fileData;dlBtn.download=rec.fileName||'document';dlBtn.target='';dlBtn.style.display='';}
-
-  }else{
-    /* ── No link, no local data ── */
-    mediaHtml=`
-      <div style="padding:36px 16px;text-align:center;color:var(--text3);background:var(--bg3);border-radius:var(--radius-lg);">
-        <i class="ti ti-file-unknown" style="font-size:36px;display:block;margin-bottom:8px;opacity:.35;"></i>
-        <div style="font-size:12px;">No file available</div>
-        <div style="font-size:10.5px;margin-top:4px;opacity:.6;">This record has no attached link or file</div>
-      </div>`;
-    if(dlBtn) dlBtn.style.display='none';
+  if(dlBtn){
+    if(dlHref){dlBtn.href=dlHref;if(dlDownload)dlBtn.download=dlDownload;dlBtn.target=dlTarget;dlBtn.style.display='';}
+    else dlBtn.style.display='none';
   }
 
-  body.innerHTML=mediaHtml+metaHtml;
   panel.classList.add('open');
-  closeUploadPanel(mode);
+  closeUploadModal(mode);
 }
 
 function closePreview(mode){
