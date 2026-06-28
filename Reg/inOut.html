@@ -6,7 +6,7 @@
 <title>Rider Asset Management</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<script src="https://effimalik.github.io/Test/shared/dataLayer.js" defer></script>
+<script src="https://effimalik.github.io/Testing/shared/dataLayer.js" defer></script>
 
   
 <style>
@@ -551,40 +551,46 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
     <!-- ROW 1: View Buttons -->
     <div class="toolbar-combined" style="margin-bottom:6px;">
       <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;flex-shrink:0;">View:</span>
+
+      <!-- Available -->
       <button id="av-view-available" class="tab-btn2" onclick="setAssetView('available')">
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Available
-      </button>
-      <button id="av-view-history" class="tab-btn2 active" onclick="setAssetView('history')">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        History
-      </button>
-      <button id="av-view-status" class="tab-btn2" onclick="setAssetView('status')">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Status
+        <span style="margin-left:5px;">Available</span>
       </button>
 
-      <!-- Type pills — hidden for Status view -->
-      <div id="type-pills-wrap" style="display:flex;align-items:center;gap:5px;margin-left:8px;">
+      <!-- History -->
+      <button id="av-view-history" class="tab-btn2 active" onclick="setAssetView('history')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span style="margin-left:5px;">History</span>
+      </button>
+
+      <!-- Type pills — only shown in History & Available views -->
+      <div id="type-pills-wrap" style="display:flex;align-items:center;gap:5px;margin-left:10px;">
         <div class="toolbar-divider-v" style="height:20px;margin-right:4px;"></div>
         <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;flex-shrink:0;">Type:</span>
-        <button id="cio-item-all"       class="tab-btn2 active"  onclick="setViewType('all')">All</button>
-        <button id="cio-item-bike"      class="tab-btn2"         onclick="setViewType('bike')">
+
+        <!-- Employee pill — history only -->
+        <button id="cio-item-employee" class="tab-btn2 active" onclick="setViewType('employee')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <span style="margin-left:4px;">Employee</span>
+        </button>
+
+        <!-- Bike pill -->
+        <button id="cio-item-bike" class="tab-btn2" onclick="setViewType('bike')">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1 1v6h-6l-3.5-5H4"/></svg>
-          Bike
+          <span style="margin-left:4px;">Bike</span>
         </button>
-        <button id="cio-item-sim"       class="tab-btn2"         onclick="setViewType('sim')">
+
+        <!-- SIM pill -->
+        <button id="cio-item-sim" class="tab-btn2" onclick="setViewType('sim')">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-          SIM
+          <span style="margin-left:4px;">SIM</span>
         </button>
-        <button id="cio-item-company"   class="tab-btn2"         onclick="setViewType('company')" id-avail-hide="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-          Company
-        </button>
-        <button id="cio-item-inventory" class="tab-btn2"         onclick="setViewType('inventory')" id-avail-hide="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-          Inventory
-        </button>
+
+        <!-- Hidden stubs for legacy JS that references these IDs -->
+        <button id="cio-item-all"       style="display:none;" onclick="setViewType('all')"></button>
+        <button id="cio-item-company"   style="display:none;" onclick="setViewType('company')"></button>
+        <button id="cio-item-inventory" style="display:none;" onclick="setViewType('inventory')"></button>
       </div>
     </div>
 
@@ -594,19 +600,21 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
 
       <!-- ══ HISTORY VIEW ══ -->
       <div id="cio-view-history-panel">
-        <div class="data-table-card">
+
+        <!-- ── EMPLOYEE sub-view ── -->
+        <div id="hist-sub-employee" class="data-table-card">
           <div class="data-table-header" style="flex-wrap:wrap;gap:8px;">
             <div class="data-table-title">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-              Employee History List
-              <span class="badge purple" id="cio-count-badge">0 records</span>
+              <span style="margin-left:6px;">Employee List</span>
+              <span class="badge purple" style="margin-left:6px;" id="cio-count-badge">0</span>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;flex-wrap:nowrap;">
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;">
               <div class="search-wrap">
                 <svg class="search-ico" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input class="search-input" id="cio-search" type="text" placeholder="Name, Emp ID…" oninput="applyCheckinFilter()" style="width:150px;height:30px;"/>
               </div>
-              <button class="tb-btn sm icon-only" onclick="clearCheckinFilter()" title="Clear" style="height:30px;width:30px;padding:0;">
+              <button class="tb-btn sm icon-only" onclick="clearCheckinFilter()" title="Clear filters" style="height:30px;width:30px;padding:0;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
               <select class="rpp-select" id="cio-rpp" onchange="cioRppChange()" style="height:30px;">
@@ -620,83 +628,186 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width:80px;">Emp ID</th>
-                  <th style="width:180px;">Name</th>
+                  <th style="width:75px;">Emp ID</th>
+                  <th style="width:160px;">Name</th>
                   <th style="width:110px;">Phone</th>
-                  <th style="width:90px;">HR Status</th>
+                  <th style="width:80px;">HR Status</th>
                   <th style="width:100px;">Assigned Bike</th>
                   <th style="width:100px;">Assigned SIM</th>
-                  <th style="width:120px;">Company</th>
-                  <th style="width:140px;">Inventory</th>
-                  <th style="width:70px;">History</th>
+                  <th style="width:90px;">Company</th>
+                  <th style="width:90px;">Inventory</th>
+                  <th style="width:75px;">History</th>
                 </tr>
               </thead>
               <tbody id="cio-card-grid"></tbody>
             </table>
           </div>
           <div class="pagination-bar">
-            <div class="pagination-info" id="cio-page-info">— records</div>
+            <div class="pagination-info" id="cio-page-info">— employees</div>
             <div class="pagination-controls" id="cio-page-ctrl"></div>
           </div>
         </div>
-      </div>
 
-      <!-- ══ INLINE HISTORY MODAL (Employee CIO History) ══ -->
+        <!-- ── BIKE HISTORY sub-view ── -->
+        <div id="hist-sub-bike" class="data-table-card" style="display:none;">
+          <div class="data-table-header" style="flex-wrap:wrap;gap:8px;">
+            <div class="data-table-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1 1v6H8l-3.5-5H4"/></svg>
+              <span style="margin-left:6px;">Bike Check-In / Check-Out History</span>
+              <span class="badge orange" style="margin-left:6px;" id="bike-hist-count">0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;">
+              <div class="search-wrap">
+                <svg class="search-ico" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="search-input" id="bike-hist-search" type="text" placeholder="Bike ID, Rider…" oninput="renderBikeHistTable()" style="width:150px;height:30px;"/>
+              </div>
+              <button class="tb-btn sm icon-only" onclick="document.getElementById('bike-hist-search').value='';renderBikeHistTable();" title="Clear" style="height:30px;width:30px;padding:0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+              <select class="rpp-select" id="bike-hist-rpp" onchange="renderBikeHistTable()" style="height:30px;">
+                <option value="20">20/pg</option>
+                <option value="50" selected>50/pg</option>
+                <option value="100">100/pg</option>
+              </select>
+            </div>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width:40px;">#</th>
+                  <th style="width:100px;">Bike ID</th>
+                  <th style="width:90px;">Plate No</th>
+                  <th style="width:160px;">Rider / Employee</th>
+                  <th style="width:140px;">Check Out</th>
+                  <th style="width:140px;">Check In</th>
+                  <th style="width:80px;">Status</th>
+                  <th style="width:60px;">Detail</th>
+                </tr>
+              </thead>
+              <tbody id="bike-hist-tbody"></tbody>
+            </table>
+          </div>
+          <div class="pagination-bar">
+            <div class="pagination-info" id="bike-hist-info">— records</div>
+            <div class="pagination-controls" id="bike-hist-ctrl"></div>
+          </div>
+        </div>
+
+        <!-- ── SIM HISTORY sub-view ── -->
+        <div id="hist-sub-sim" class="data-table-card" style="display:none;">
+          <div class="data-table-header" style="flex-wrap:wrap;gap:8px;">
+            <div class="data-table-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <span style="margin-left:6px;">SIM Check-In / Check-Out History</span>
+              <span class="badge purple" style="margin-left:6px;" id="sim-hist-count">0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;">
+              <div class="search-wrap">
+                <svg class="search-ico" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="search-input" id="sim-hist-search" type="text" placeholder="SIM ID, Rider…" oninput="renderSimHistTable()" style="width:150px;height:30px;"/>
+              </div>
+              <button class="tb-btn sm icon-only" onclick="document.getElementById('sim-hist-search').value='';renderSimHistTable();" title="Clear" style="height:30px;width:30px;padding:0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+              <select class="rpp-select" id="sim-hist-rpp" onchange="renderSimHistTable()" style="height:30px;">
+                <option value="20">20/pg</option>
+                <option value="50" selected>50/pg</option>
+                <option value="100">100/pg</option>
+              </select>
+            </div>
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width:40px;">#</th>
+                  <th style="width:100px;">SIM ID</th>
+                  <th style="width:110px;">SIM Number</th>
+                  <th style="width:80px;">Network</th>
+                  <th style="width:160px;">Rider / Employee</th>
+                  <th style="width:140px;">Check Out</th>
+                  <th style="width:140px;">Check In</th>
+                  <th style="width:80px;">Status</th>
+                  <th style="width:60px;">Detail</th>
+                </tr>
+              </thead>
+              <tbody id="sim-hist-tbody"></tbody>
+            </table>
+          </div>
+          <div class="pagination-bar">
+            <div class="pagination-info" id="sim-hist-info">— records</div>
+            <div class="pagination-controls" id="sim-hist-ctrl"></div>
+          </div>
+        </div>
+
+      </div><!-- /cio-view-history-panel -->
+
+      <!-- ══ EMPLOYEE HISTORY MODAL (from History button in Employee row) ══ -->
       <div class="modal-backdrop" id="modal-emp-history">
-        <div class="modal" style="max-width:720px;">
+        <div class="modal" style="max-width:740px;">
           <div class="modal-header">
             <h2 style="display:flex;align-items:center;gap:8px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span id="emp-hist-modal-title">Employee History</span>
+              <span id="emp-hist-modal-title" style="margin-left:4px;">Employee History</span>
             </h2>
             <button class="tb-btn icon-only sm" onclick="closeModal('modal-emp-history')">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" style="padding-top:14px;">
             <!-- Employee info strip -->
-            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;" id="emp-hist-strip">
-              <div id="emp-hist-avatar" class="avatar-sm" style="width:38px;height:38px;font-size:14px;"></div>
-              <div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+              <div id="emp-hist-avatar" class="avatar-sm" style="width:40px;height:40px;font-size:15px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;"></div>
+              <div style="flex:1;min-width:0;">
                 <div style="font-weight:700;font-size:14px;color:var(--text);" id="emp-hist-name">—</div>
-                <div style="font-size:11px;color:var(--text3);font-family:var(--mono);" id="emp-hist-id">—</div>
+                <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px;" id="emp-hist-id">—</div>
               </div>
+              <!-- Current assignment badges -->
+              <div id="emp-hist-badges" style="display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0;"></div>
             </div>
-            <!-- History tabs -->
-            <div style="display:flex;gap:6px;margin-bottom:12px;" id="emp-hist-tabs">
-              <button class="tab-btn active" id="ehtab-company" onclick="switchEmpHistTab('company')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                Company / Route
+
+            <!-- Tabs — Bike, SIM, Inventory -->
+            <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+              <button class="tab-btn active" id="ehtab-bike" onclick="switchEmpHistTab('bike')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1 1v6H8l-3.5-5H4"/></svg>
+                <span>Bike History</span>
               </button>
-              <button class="tab-btn" id="ehtab-bike" onclick="switchEmpHistTab('bike')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/></svg>
-                Bike History
+              <button class="tab-btn" id="ehtab-sim" onclick="switchEmpHistTab('sim')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                <span>SIM History</span>
               </button>
-              <button class="tab-btn" id="ehtab-sim" onclick="switchEmpHistTab('sim')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
-                SIM History
+              <button class="tab-btn" id="ehtab-inventory" onclick="switchEmpHistTab('inventory')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                <span>Inventory</span>
               </button>
             </div>
-            <!-- History table -->
-            <div style="overflow-x:auto;max-height:380px;border:1px solid var(--border);border-radius:var(--radius);">
-              <table class="data-table" id="emp-hist-table">
+
+            <!-- History table: shows Bike/SIM records for this employee in check-out → check-in order -->
+            <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);max-height:400px;overflow-y:auto;">
+              <table class="data-table" style="min-width:560px;">
                 <thead id="emp-hist-thead">
                   <tr>
-                    <th style="width:50px;">#</th>
-                    <th>Item</th>
-                    <th>Check Out</th>
-                    <th>Check In</th>
-                    <th style="width:70px;">Detail</th>
+                    <th style="width:36px;">#</th>
+                    <th style="width:110px;">Bike ID</th>
+                    <th style="width:90px;">Plate No</th>
+                    <th style="width:140px;">Check Out</th>
+                    <th style="width:140px;">Check In</th>
+                    <th style="width:80px;">Status</th>
+                    <th style="width:52px;">Detail</th>
                   </tr>
                 </thead>
                 <tbody id="emp-hist-tbody">
-                  <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);">Loading…</td></tr>
+                  <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3);">Select a tab to load history…</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="tb-btn sm" onclick="closeModal('modal-emp-history')">Close</button>
+            <button class="tb-btn sm" onclick="closeModal('modal-emp-history')" style="display:flex;align-items:center;gap:6px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span>Close</span>
+            </button>
           </div>
         </div>
       </div>
@@ -941,10 +1052,12 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
           Select Items to Check Out
         </div>
+        <!-- Existing assigned items (locked) -->
+        <div id="co-existing-list" style="display:none;margin-bottom:8px;"></div>
         <!-- Left: item type buttons, Right: available items dropdown -->
-        <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
           <!-- Type selector -->
-          <div style="display:flex;flex-direction:column;gap:5px;min-width:96px;">
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:110px;width:110px;flex-shrink:0;">
             <button class="asset-type-btn" id="co-type-Bike" onclick="selectCoType('Bike')">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1 1v6H8l-3.5-5H4a1 1 0 0 0 0 2h.5l3.5 5H14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"/></svg>
               Bike
@@ -961,42 +1074,8 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
               Inventory
             </button>
-            <!-- Company panel (inline, shown when Company type selected) -->
-            <div id="co-company-inline" style="display:none;margin-top:6px;">
-              <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Select Company</div>
-              <select class="form-select" id="co-company-select" style="font-size:12px;padding:5px 8px;">
-                <option value="">— Pick Company —</option>
-                <option value="Noon">Noon</option>
-                <option value="Talabat">Talabat</option>
-                <option value="Deliveroo">Deliveroo</option>
-                <option value="NawNaw">NawNaw</option>
-              </select>
-              <button class="tb-btn sm success" onclick="addCompanyItem()" style="width:100%;margin-top:5px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Company
-              </button>
-            </div>
-            <!-- Inventory panel (inline, shown when Inventory type selected) -->
-            <div id="co-inventory-inline" style="display:none;margin-top:6px;">
-              <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Select Inventory</div>
-              <div style="display:flex;flex-direction:column;gap:4px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:7px 9px;">
-                <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;">
-                  <input type="checkbox" id="inv-helmet" value="Helmet" style="accent-color:var(--teal);width:13px;height:13px;"> Helmet
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;">
-                  <input type="checkbox" id="inv-thermalbox" value="ThermalBox" style="accent-color:var(--teal);width:13px;height:13px;"> ThermalBox
-                </label>
-                <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;">
-                  <input type="checkbox" id="inv-uniform" value="Uniform" style="accent-color:var(--teal);width:13px;height:13px;"> Uniform
-                </label>
-              </div>
-              <button class="tb-btn sm success" onclick="addInventoryItems()" style="width:100%;margin-top:5px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Inventory
-              </button>
-            </div>
           </div>
-          <!-- Available items for selected type -->
+          <!-- Available items for selected type (Bike/SIM dropdown, or Company/Inventory pickers) -->
           <div style="flex:1;min-width:0;">
             <div id="co-items-panel" style="display:none;">
               <div id="co-type-label" style="font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;"></div>
@@ -1017,6 +1096,40 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
               <button class="tb-btn sm success" onclick="addCoItem()" style="width:100%;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Add Item
+              </button>
+            </div>
+            <!-- Company panel (shown when Company type selected) -->
+            <div id="co-company-inline" style="display:none;">
+              <div style="font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Select Company</div>
+              <select class="form-select" id="co-company-select" style="margin-bottom:6px;">
+                <option value="">— Pick Company —</option>
+                <option value="Noon">Noon</option>
+                <option value="Talabat">Talabat</option>
+                <option value="Deliveroo">Deliveroo</option>
+                <option value="NawNaw">NawNaw</option>
+              </select>
+              <button class="tb-btn sm success" onclick="addCompanyItem()" style="width:100%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Company
+              </button>
+            </div>
+            <!-- Inventory panel (shown when Inventory type selected) -->
+            <div id="co-inventory-inline" style="display:none;">
+              <div style="font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Select Inventory</div>
+              <div style="display:flex;flex-direction:column;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:9px 11px;margin-bottom:6px;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;">
+                  <input type="checkbox" id="inv-helmet" value="Helmet" style="accent-color:var(--teal);width:13px;height:13px;"> Helmet
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;">
+                  <input type="checkbox" id="inv-thermalbox" value="ThermalBox" style="accent-color:var(--teal);width:13px;height:13px;"> ThermalBox
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;">
+                  <input type="checkbox" id="inv-uniform" value="Uniform" style="accent-color:var(--teal);width:13px;height:13px;"> Uniform
+                </label>
+              </div>
+              <button class="tb-btn sm success" onclick="addInventoryItems()" style="width:100%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Inventory
               </button>
             </div>
             <div id="co-items-empty" style="font-size:12px;color:var(--text3);padding:10px 0;">← Select an item type</div>
@@ -1080,7 +1193,7 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
           <div class="swap-arrow">↓ Replace with ↓</div>
           <div style="font-size:10.5px;color:var(--text3);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Select replacement (available only):</div>
           <!-- Searchable swap replacement dropdown -->
-          <div class="sd-wrap" id="sd-swapnew-wrap" style="margin-bottom:4px;">
+          <div class="sd-wrap" id="sd-swapnew-wrap" style="margin-bottom:8px;">
             <button type="button" class="sd-trigger" id="sd-swapnew-trigger" onclick="sdToggle('swapnew')">
               <span class="sd-trigger-text placeholder" id="sd-swapnew-label">— Select Replacement —</span>
               <svg class="sd-chevron" id="sd-swapnew-chevron" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1490,7 +1603,8 @@ async function loadEmployees(){
       if(!id||seen.has(id))return false;
       seen.add(id);return true;
     });
-    state.employees=parsed;
+    // Sort alphabetically by Name for all dropdowns and tables
+    state.employees=parsed.sort((a,b)=>(a.Name||'').localeCompare(b.Name||''));
   }catch(e){ console.error('[loadEmployees]',e); }
 }
 
@@ -1515,7 +1629,8 @@ async function loadBikes(){
     }
     const seen=new Set();
     parsed=parsed.filter(b=>{ if(seen.has(b.BikeID))return false; seen.add(b.BikeID); return true; });
-    state.bikes=parsed;
+    // Sort by BikeID
+    state.bikes=parsed.sort((a,b)=>(a.BikeID||'').localeCompare(b.BikeID||''));
   }catch(e){ console.error('[loadBikes]',e); }
 }
 
@@ -1549,7 +1664,8 @@ async function loadSims(){
     }
     const seen=new Set();
     parsed=parsed.filter(s=>{ if(seen.has(s.SimID))return false; seen.add(s.SimID); return true; });
-    state.sims=parsed;
+    // Sort by SimID
+    state.sims=parsed.sort((a,b)=>(a.SimID||'').localeCompare(b.SimID||''));
   }catch(e){ console.error('[loadSims]',e); }
 }
 
@@ -1588,79 +1704,106 @@ async function loadCioLogFromIDB(){
   }catch(e){ console.error('[loadCioLogFromIDB]',e); }
 }
 
-// Derive current bike & SIM assignments per rider from ap2_cioLog
+// Build masterMap from ap2_cioView (pre-computed current assignment state)
+// cioView record: {empId, itemType, item, seq, checkOutTs, checkInTs}
+// Currently assigned = checkOutTs is set AND (checkInTs is null OR checkInTs < checkOutTs)
 async function loadMasterAssignments(){
   try{
-    const rows=await _readIDB(IDB_KEYS.cio);
-    if(!rows||!rows.length){
-      // View not ready yet — fall back to deriving from in-memory checkinout
+    const raw=await _readIDB(IDB_KEYS.cioView);
+    if(!raw||!raw.length){
+      // cioView not ready — fall back to deriving from raw log
       _deriveMasterFromLog();
       return;
     }
-    // ap2_cioView has the most recent record per rider per asset type.
-    // Treat any "Check Out" record without a corresponding "Check In" as currently assigned.
-    const parsed=toRows(rows).map(parseCioRow).filter(r=>r.EmpID);
-    // Build assignment maps from parsed view
-    const bikeMap={};   // bikeID → empID
-    const simMap={};    // simID → empID
-    const empAssignMap={}; // empID → {bike,sim,company,inventory,status}
 
-    // Group by empId to find latest state per asset type
-    const byEmp={};
-    parsed.forEach(r=>{
-      const eid=r.EmpID;
-      if(!eid) return;
-      if(!byEmp[eid]) byEmp[eid]={};
-      const at=(r.AssetType||'').toLowerCase();
-      const isOut=(r.Action||'').toLowerCase().includes('out');
-      const ts=r.Timestamp||'';
-      // Track latest record per asset type (sorted desc so first seen is latest)
-      if(!byEmp[eid][at]||ts>(byEmp[eid][at].ts||'')){
-        byEmp[eid][at]={assetId:r.AssetID,isOut,ts};
+    // Unwrap IDB envelope: cioView is stored as [{data:[...rows]}]
+    let records=[];
+    if(Array.isArray(raw)){
+      raw.forEach(entry=>{
+        const rows=entry.data||entry.rows||entry;
+        if(Array.isArray(rows)) records=records.concat(rows);
+        else if(Array.isArray(entry)) records=records.concat(entry);
+      });
+    }
+    if(!records.length){ _deriveMasterFromLog(); return; }
+
+    const bikeMap={};       // bikeID → empId (who currently has it)
+    const simMap={};        // simID  → empId
+    const empAssignMap={};  // empId  → {bike,sim,company,inventory, bikes[],sims[],companies[],inventories[]}
+
+    records.forEach(r=>{
+      const eid=String(r.empId||'').trim(); if(!eid) return;
+      const itemType=String(r.itemType||'').toLowerCase().trim();
+      const item=String(r.item||'').trim(); if(!item||item==='INACTIVE') return;
+
+      // Determine if currently checked out:
+      // checkOutTs is set AND (checkInTs is null/empty OR checkOutTs > checkInTs)
+      const coTs=r.checkOutTs||null;
+      const ciTs=r.checkInTs||null;
+      const isCurrentlyOut=coTs&&(!ciTs||(new Date(coTs)>new Date(ciTs)));
+      if(!isCurrentlyOut) return;
+
+      if(!empAssignMap[eid]){
+        empAssignMap[eid]={bike:'',sim:'',company:'',inventory:'',
+          bikes:[],sims:[],companies:[],inventories:[]};
+      }
+      const a=empAssignMap[eid];
+
+      if(itemType==='bike'){
+        if(!a.bikes.includes(item)){ a.bikes.push(item); if(!a.bike) a.bike=item; }
+        bikeMap[item]=eid;
+      } else if(itemType==='sim'){
+        if(!a.sims.includes(item)){ a.sims.push(item); if(!a.sim) a.sim=item; }
+        simMap[item]=eid;
+      } else if(itemType==='company'){
+        if(!a.companies.includes(item)){ a.companies.push(item); if(!a.company) a.company=item; }
+      } else if(itemType==='inventory'){
+        if(!a.inventories.includes(item)){ a.inventories.push(item); if(!a.inventory) a.inventory=item; }
       }
     });
 
-    Object.entries(byEmp).forEach(([eid,types])=>{
-      const bike=(types['bike']&&types['bike'].isOut)?types['bike'].assetId:'';
-      const sim=(types['sim']&&types['sim'].isOut)?types['sim'].assetId:'';
-      const company=(types['company']&&types['company'].isOut)?types['company'].assetId:'';
-      const inventory=(types['inventory']&&types['inventory'].isOut)?types['inventory'].assetId:'';
-      empAssignMap[eid]={bike,sim,company,inventory,status:''};
-      if(bike) bikeMap[bike]=eid;
-      if(sim) simMap[sim]=eid;
-    });
-
     state.masterMap=empAssignMap;
+    state.cioViewRecords=records;  // keep raw cioView rows for history tables
 
+    // Write back AssignedTo on bike/sim objects for live-state lookups
     (state.bikes||[]).forEach(b=>{
       b.AssignedTo=bikeMap[b.BikeID]||'';
       b.Status=b.AssignedTo?'Assigned':'Available';
     });
     (state.sims||[]).forEach(sm=>{
-      sm.AssignedTo=simMap[sm.SimID||sm.ID]||sm.AssignedTo||'';
+      sm.AssignedTo=simMap[sm.SimID||sm.ID]||'';
     });
     (state.employees||[]).forEach(emp=>{
       const eid=emp.EmpID||emp.EID;
       const a=empAssignMap[eid]||{};
-      emp._hasBike=!!(a.bike&&a.bike.trim());
-      emp._hasSim=!!(a.sim&&a.sim.trim());
-      emp._hasCompany=!!(a.company&&a.company.trim());
-      emp._hasInventory=!!(a.inventory&&a.inventory.trim()&&a.inventory.toLowerCase()!=='no'&&a.inventory!=='0');
+      emp._hasBike=a.bikes&&a.bikes.length>0;
+      emp._hasSim=a.sims&&a.sims.length>0;
+      emp._hasCompany=a.companies&&a.companies.length>0;
+      emp._hasInventory=a.inventories&&a.inventories.length>0;
     });
-  }catch(e){ console.error('[loadMasterAssignments]',e); }
+    console.info('[loadMasterAssignments] cioView loaded:',Object.keys(empAssignMap).length,'riders with assignments');
+  }catch(e){ console.error('[loadMasterAssignments]',e); _deriveMasterFromLog(); }
 }
 
 // Fallback: derive current assignment state from in-memory checkinout log
 function _deriveMasterFromLog(){
   const bikeMap={};
   const simMap={};
-  (state.checkinout||[]).forEach(r=>{
+  // Process oldest→newest (checkinout is stored desc, so reverse)
+  const sorted=[...(state.checkinout||[])].sort((a,b)=>(a.Timestamp||'').localeCompare(b.Timestamp||''));
+  sorted.forEach(r=>{
     const eid=r.EmpID; const action=(r.Action||'').toLowerCase();
-    const assetType=(r.AssetType||'').toLowerCase(); const assetId=r.AssetID;
+    const assetType=(r.AssetType||'').toLowerCase(); const assetId=(r.AssetID||'').trim();
     if(!assetId) return;
-    const isOut=action.includes('out');
-    if(assetType==='bike'){ if(isOut) bikeMap[assetId]=eid; else delete bikeMap[assetId]; }
-    else if(assetType==='sim'){ if(isOut) simMap[assetId]=eid; else delete simMap[assetId]; }
+    const isOut=action.includes('out')&&!action.includes('check in');
+    const isIn=action.includes('in')&&!action.includes('check out');
+    if(assetType==='bike'){
+      if(isOut||action.includes('swap')){ bikeMap[assetId]=eid; }
+      else if(isIn){ delete bikeMap[assetId]; }
+    } else if(assetType==='sim'){
+      if(isOut||action.includes('swap')){ simMap[assetId]=eid; }
+      else if(isIn){ delete simMap[assetId]; }
+    }
   });
   (state.bikes||[]).forEach(b=>{
     b.AssignedTo=bikeMap[b.BikeID]||'';
@@ -1708,7 +1851,8 @@ function updateSummaryCards(){
   const simsAssigned=(state.sims||[]).filter(s=>(s.AssignedTo||'').trim()!=='').length;
 
   // Today's check-ins/outs
-  const todayRec=(state.checkinout||[]).filter(r=>(r.Timestamp||r.Date||'').startsWith(today));
+  const todayStr=new Date().toISOString().slice(0,10);
+  const todayRec=(state.checkinout||[]).filter(r=>(r.Timestamp||r.Date||'').startsWith(todayStr));
   const todayIn=todayRec.filter(r=>(r.Action||'').includes('In')).length;
   const todayOut=todayRec.filter(r=>(r.Action||'').includes('Out')).length;
 
@@ -1767,7 +1911,8 @@ function cioRppChange(){
 
 function renderCheckinTable(){
   const tbody=document.getElementById('cio-card-grid');
-  document.getElementById('cio-count-badge').textContent=ciFiltered.length+' employees';
+  const ciCountBadge=document.getElementById('cio-count-badge');
+  if(ciCountBadge) ciCountBadge.textContent=ciFiltered.length;
   if(!ciFiltered.length){
     tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><p>No employees found</p><small>${(state.employees||[]).length?'Adjust filters.':'Sync sheets or load demo data.'}</small></div></td></tr>`;
     renderPagination('cio-page-ctrl','cio-page-info',0,ciPage,ciRpp,'ciGoToPage');
@@ -1778,11 +1923,24 @@ function renderCheckinTable(){
   tbody.innerHTML=page.map(e=>{
     const eid=e.EmpID||e.EID||'—';
     const master=(state.masterMap||{})[eid]||{};
-    const bike=master.bike||(getAssignedBike(eid)||{}).BikeID||'';
-    const sim=master.sim||((state.sims||[]).find(s=>s.AssignedTo===eid)||{}).SimID||'';
-    const company=master.company||'';
-    const inventory=master.inventory&&master.inventory.toLowerCase()!=='no'&&master.inventory!=='0'?master.inventory:'';
+    // Support multiple items — show all bikes/SIMs as stacked badges
+    const bikeIds=(master.bikes&&master.bikes.length)?master.bikes:[master.bike||(getAssignedBike(eid)||{}).BikeID||''].filter(Boolean);
+    const simIds=(master.sims&&master.sims.length)?master.sims:[master.sim||((state.sims||[]).find(s=>s.AssignedTo===eid)||{}).SimID||''].filter(Boolean);
+    const companyIds=(master.companies&&master.companies.length)?master.companies:[master.company||''].filter(Boolean);
+    const inventoryIds=(master.inventories&&master.inventories.length)?master.inventories:[master.inventory||''].filter(Boolean);
     const st=(e.Status||'Active');
+    const bikeBadges=bikeIds.length
+      ?bikeIds.map(id=>`<span class="badge orange" style="font-size:10px;display:block;margin-bottom:2px;">${esc(id)}</span>`).join('')
+      :'<span style="color:var(--text3);font-size:11px;">—</span>';
+    const simBadges=simIds.length
+      ?simIds.map(id=>`<span class="badge purple" style="font-size:10px;display:block;margin-bottom:2px;">${esc(id)}</span>`).join('')
+      :'<span style="color:var(--text3);font-size:11px;">—</span>';
+    const compBadges=companyIds.length
+      ?companyIds.map(id=>`<span class="badge blue" style="font-size:10px;display:block;margin-bottom:2px;">${esc(id)}</span>`).join('')
+      :'<span style="color:var(--text3);font-size:11px;">—</span>';
+    const invBadges=inventoryIds.length
+      ?inventoryIds.map(id=>`<span class="badge amber" style="font-size:10px;display:block;margin-bottom:2px;">${esc(id)}</span>`).join('')
+      :'<span style="color:var(--text3);font-size:11px;">—</span>';
     return `<tr class="fade-in">
       <td><span class="mono" style="font-size:11.5px;font-weight:700;">${esc(eid)}</span></td>
       <td>
@@ -1793,13 +1951,14 @@ function renderCheckinTable(){
       </td>
       <td><span class="mono" style="font-size:11px;color:var(--text2);">${esc(e.Phone||'—')}</span></td>
       <td><span class="badge ${st.toLowerCase()==='active'?'green':'gray'}" style="font-size:10px;">${esc(st)}</span></td>
-      <td>${bike?`<span class="badge orange" style="font-size:10px;">${esc(bike)}</span>`:'<span style="color:var(--text3);font-size:11px;">—</span>'}</td>
-      <td>${sim?`<span class="badge purple" style="font-size:10px;">${esc(sim)}</span>`:'<span style="color:var(--text3);font-size:11px;">—</span>'}</td>
-      <td>${company?`<span class="badge blue" style="font-size:10px;">${esc(company)}</span>`:'<span style="color:var(--text3);font-size:11px;">—</span>'}</td>
-      <td>${inventory?`<span class="badge amber" style="font-size:10px;">${esc(inventory)}</span>`:'<span style="color:var(--text3);font-size:11px;">—</span>'}</td>
+      <td style="vertical-align:top;">${bikeBadges}</td>
+      <td style="vertical-align:top;">${simBadges}</td>
+      <td style="vertical-align:top;">${compBadges}</td>
+      <td style="vertical-align:top;">${invBadges}</td>
       <td>
-        <button class="tb-btn icon-only sm" onclick='openEmpHistoryModal(${JSON.stringify(JSON.stringify(e))})' title="View History">
-          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <button class="tb-btn sm" onclick='openEmpHistoryModal(${JSON.stringify(JSON.stringify(e))})' title="View History" style="font-size:11px;padding:4px 8px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          History
         </button>
       </td>
     </tr>`;
@@ -1810,28 +1969,36 @@ function renderCheckinTable(){
 function ciGoToPage(p){ciPage=p;renderCheckinTable();}
 
 // ── Employee History Modal ──
-let _empHistTab='company';
+let _empHistTab='bike';
 let _empHistEid='';
 
 function openEmpHistoryModal(eStr){
   const e=typeof eStr==='string'?JSON.parse(eStr):eStr;
   const eid=e.EmpID||e.EID||'';
   _empHistEid=eid;
-  // Set header
+  // Header
   document.getElementById('emp-hist-modal-title').textContent=(e.Name||eid)+' — History';
   const av=document.getElementById('emp-hist-avatar');
-  av.style.background=strColor(e.Name||eid);
-  av.textContent=initials(e.Name||'?');
+  if(av){av.style.background=strColor(e.Name||eid);av.textContent=initials(e.Name||'?');}
   document.getElementById('emp-hist-name').textContent=e.Name||'—';
   document.getElementById('emp-hist-id').textContent='Emp ID: '+eid;
-  // Switch to default tab
-  switchEmpHistTab('company');
+  // Current assignment badges
+  const master=(state.masterMap||{})[eid]||{};
+  const bikeId=master.bike||(getAssignedBike(eid)||{}).BikeID||'';
+  const simId=master.sim||((state.sims||[]).find(s=>s.AssignedTo===eid)||{}).SimID||'';
+  const badgesEl=document.getElementById('emp-hist-badges');
+  if(badgesEl){
+    badgesEl.innerHTML=(bikeId?`<span class="badge orange" style="font-size:11px;">Bike: ${esc(bikeId)}</span>`:'')+
+      (simId?`<span class="badge purple" style="font-size:11px;">SIM: ${esc(simId)}</span>`:'');
+  }
+  // Open on Bike tab by default
+  switchEmpHistTab('bike');
   document.getElementById('modal-emp-history').classList.add('open');
 }
 
 function switchEmpHistTab(tab){
   _empHistTab=tab;
-  ['company','bike','sim'].forEach(t=>{
+  ['bike','sim','inventory'].forEach(t=>{
     const b=document.getElementById('ehtab-'+t);
     if(b) b.classList.toggle('active',t===tab);
   });
@@ -1841,68 +2008,145 @@ function switchEmpHistTab(tab){
 function renderEmpHistoryTable(){
   const tbody=document.getElementById('emp-hist-tbody');
   const thead=document.getElementById('emp-hist-thead');
+  if(!tbody||!thead) return;
   const eid=_empHistEid;
   const tab=_empHistTab;
-  const assetTypeFilter=tab==='company'?'company':tab==='bike'?'bike':'sim';
+  const isBike=tab==='bike', isSim=tab==='sim', isInv=tab==='inventory';
 
-  // Update header
-  const col2Label=tab==='company'?'Company / Route':tab==='bike'?'Bike ID':'SIM ID';
-  thead.innerHTML=`<tr>
-    <th style="width:40px;">#</th>
-    <th style="width:130px;">${col2Label}</th>
-    <th>Check Out</th>
-    <th>Check In</th>
-    <th style="width:60px;">Detail</th>
-  </tr>`;
+  // Header per tab
+  if(isBike){
+    thead.innerHTML=`<tr>
+      <th style="width:36px;">#</th>
+      <th style="width:100px;">Bike ID</th>
+      <th style="width:90px;">Plate No</th>
+      <th style="width:145px;">Check Out</th>
+      <th style="width:145px;">Check In</th>
+      <th style="width:76px;">Status</th>
+      <th style="width:50px;">Detail</th>
+    </tr>`;
+  } else if(isSim){
+    thead.innerHTML=`<tr>
+      <th style="width:36px;">#</th>
+      <th style="width:100px;">SIM ID</th>
+      <th style="width:110px;">SIM Number</th>
+      <th style="width:80px;">Network</th>
+      <th style="width:130px;">Check Out</th>
+      <th style="width:130px;">Check In</th>
+      <th style="width:70px;">Status</th>
+      <th style="width:50px;">Detail</th>
+    </tr>`;
+  } else {
+    thead.innerHTML=`<tr>
+      <th style="width:36px;">#</th>
+      <th style="width:150px;">Item(s)</th>
+      <th style="width:145px;">Check Out</th>
+      <th style="width:145px;">Check In</th>
+      <th style="width:76px;">Status</th>
+      <th style="width:50px;">Detail</th>
+    </tr>`;
+  }
 
-  // Get records for this employee and type
-  const records=(state.checkinout||[]).filter(r=>
-    (r.EmpID||r.EID||'')===(eid)&&(r.AssetType||'').toLowerCase()===assetTypeFilter
-  ).sort((a,b)=>(b.Timestamp||'').localeCompare(a.Timestamp||''));
+  const assetTypeFilter=isBike?'bike':isSim?'sim':'inventory';
 
-  if(!records.length){
-    tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3);font-size:12px;">No ${tab} history found for this employee.</td></tr>`;
+  // Format ISO date nicely: "02 Jun 2026 22:30"
+  function fmtDate(iso){
+    if(!iso) return '<span style="color:var(--text3);">—</span>';
+    try{
+      const d=new Date(iso);
+      if(isNaN(d)) return '<span style="color:var(--text3);">—</span>';
+      const date=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+      const time=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      return `<span class="mono" style="font-size:11px;">${date} ${time}</span>`;
+    }catch(e){return '<span style="color:var(--text3);">—</span>';}
+  }
+
+  // Prefer cioView records (pre-paired, proper ISO dates, has active flag)
+  const cioRecs=(state.cioViewRecords||[]).filter(r=>
+    String(r.empId||'')===(eid)&&(r.itemType||'').toLowerCase()===assetTypeFilter
+  );
+
+  if(cioRecs.length){
+    if(isBike){
+      thead.innerHTML=`<tr>
+        <th style="width:36px;">#</th>
+        <th style="width:110px;">Bike ID</th>
+        <th style="width:40px;">Seq</th>
+        <th style="width:165px;">Check Out</th>
+        <th style="width:165px;">Check In</th>
+        <th style="width:76px;">Status</th>
+      </tr>`;
+    } else if(isSim){
+      thead.innerHTML=`<tr>
+        <th style="width:36px;">#</th>
+        <th style="width:120px;">SIM ID</th>
+        <th style="width:40px;">Seq</th>
+        <th style="width:165px;">Check Out</th>
+        <th style="width:165px;">Check In</th>
+        <th style="width:76px;">Status</th>
+      </tr>`;
+    } else {
+      thead.innerHTML=`<tr>
+        <th style="width:36px;">#</th>
+        <th style="width:150px;">Item</th>
+        <th style="width:40px;">Seq</th>
+        <th style="width:165px;">Check Out</th>
+        <th style="width:165px;">Check In</th>
+        <th style="width:76px;">Status</th>
+      </tr>`;
+    }
+    const sorted=[...cioRecs].sort((a,b)=>{
+      if(a.active&&!b.active) return -1;
+      if(!a.active&&b.active) return 1;
+      return (b.checkOutDate||'').localeCompare(a.checkOutDate||'');
+    });
+    tbody.innerHTML=sorted.map((r,i)=>`<tr class="fade-in">
+      <td style="color:var(--text3);font-size:11px;text-align:center;">${i+1}</td>
+      <td><span class="mono" style="font-size:12px;font-weight:700;color:var(--${isBike?'orange':isSim?'purple':'teal'});">${esc(r.item||'—')}</span></td>
+      <td style="text-align:center;"><span class="badge gray" style="font-size:10px;">#${r.seq||1}</span></td>
+      <td>${fmtDate(r.checkOutDate||null)}</td>
+      <td>${fmtDate(r.checkInDate||null)}</td>
+      <td>${r.active
+        ?'<span class="badge amber" style="font-size:10px;">Still Out</span>'
+        :'<span class="badge green" style="font-size:10px;">Returned</span>'}</td>
+    </tr>`).join('')||`<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text3);font-size:12px;">No ${tab} history found.</td></tr>`;
     return;
   }
 
-  // Pair checkouts with checkins
-  const pairs=[];
+  // Fallback: raw checkinout log
+  const records=(state.checkinout||[]).filter(r=>
+    (r.EmpID||r.EID||'')===(eid)&&(r.AssetType||'').toLowerCase()===assetTypeFilter
+  );
+  if(!records.length){
+    tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text3);font-size:12px;">No ${tab} history found for this employee.</td></tr>`;
+    return;
+  }
   const byAsset={};
-  records.forEach(r=>{
-    const aid=r.AssetID||'';
-    if(!byAsset[aid]) byAsset[aid]=[];
-    byAsset[aid].push(r);
-  });
+  records.forEach(r=>{ const aid=r.AssetID||'misc'; if(!byAsset[aid]) byAsset[aid]=[]; byAsset[aid].push(r); });
+  const pairs=[];
   Object.entries(byAsset).forEach(([assetId,evts])=>{
-    const sorted=evts.sort((a,b)=>(a.Timestamp||'').localeCompare(b.Timestamp||''));
-    let pendingOut=null;
-    sorted.forEach(r=>{
+    const asc=evts.slice().sort((a,b)=>(a.Timestamp||'').localeCompare(b.Timestamp||''));
+    let pending=null;
+    asc.forEach(r=>{
       const act=(r.Action||'').toLowerCase();
-      if(act.includes('out')&&!act.includes('check in')){pendingOut=r;}
-      else if(act.includes('in')&&pendingOut){pairs.push({out:pendingOut,in:r,assetId});pendingOut=null;}
+      if(act.includes('out')){ if(pending) pairs.push({out:pending,in:null,assetId}); pending=r; }
+      else if(act.includes('in')&&pending){ pairs.push({out:pending,in:r,assetId}); pending=null; }
+      else if(act.includes('in')&&!pending){ pairs.push({out:null,in:r,assetId}); }
     });
-    if(pendingOut) pairs.push({out:pendingOut,in:null,assetId});
+    if(pending) pairs.push({out:pending,in:null,assetId});
   });
-  pairs.sort((a,b)=>{
-    const ta=(a.out||a.in||{}).Timestamp||'';
-    const tb=(b.out||b.in||{}).Timestamp||'';
-    return tb.localeCompare(ta);
-  });
-
+  pairs.sort((a,b)=>((b.out||b.in||{}).Timestamp||'').localeCompare((a.out||a.in||{}).Timestamp||''));
   tbody.innerHTML=pairs.map((p,i)=>{
-    const r=p.out||p.in;
-    const outTs=p.out?(p.out.Timestamp||'').slice(0,16):'—';
-    const inTs=p.in?(p.in.Timestamp||'').slice(0,16):'—';
+    const aid=p.assetId||'—';
+    const status=(p.out&&!p.in)
+      ?'<span class="badge amber" style="font-size:10px;">Still Out</span>'
+      :'<span class="badge green" style="font-size:10px;">Returned</span>';
     return `<tr class="fade-in">
-      <td style="color:var(--text3);font-size:11px;">${i+1}</td>
-      <td><span class="mono" style="font-size:12px;font-weight:600;">${esc(p.assetId||'—')}</span></td>
-      <td>${p.out?`<span class="badge green" style="font-size:10px;margin-right:3px;">↗ Out</span><span class="mono" style="font-size:11px;">${outTs}</span>`:'<span style="color:var(--text3);">—</span>'}</td>
-      <td>${p.in?`<span class="badge red" style="font-size:10px;margin-right:3px;">↙ In</span><span class="mono" style="font-size:11px;">${inTs}</span>`:'<span class="badge amber" style="font-size:10px;">Still Out</span>'}</td>
-      <td>
-        <button class="tb-btn icon-only sm" onclick='openCioDetail(${JSON.stringify(JSON.stringify(r))})' title="Detail">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
-      </td>
+      <td style="color:var(--text3);font-size:11px;text-align:center;">${i+1}</td>
+      <td><span class="mono" style="font-size:12px;font-weight:700;">${esc(aid)}</span></td>
+      <td style="text-align:center;">—</td>
+      <td>${p.out?fmtDate(p.out.Timestamp):'<span style="color:var(--text3);">—</span>'}</td>
+      <td>${p.in?fmtDate(p.in.Timestamp):'<span style="color:var(--text3);">—</span>'}</td>
+      <td>${status}</td>
     </tr>`;
   }).join('');
 }
@@ -1938,7 +2182,8 @@ function applyAssetSearch(){
 function clearAssetSearch(){
   document.getElementById('asset-search').value='';
   _assetSearch='';
-  renderAssetPanel();
+  if(_assetView==='available') renderAvailableView();
+  else renderAssetPanel();
 }
 
 // Build paired checkout/checkin groups from CIO log for a given asset type
@@ -2001,7 +2246,7 @@ function renderAssetCard(cfg){
       <div class="avatar-sm" style="background:${strColor(riderName)};width:22px;height:22px;font-size:9px;">${initials(riderName)}</div>
       <div class="cs">
         <span class="cs-main">${esc(riderName)}</span>
-        <span class="cs-sub">${esc(eid)}${cfg.outTs?' · out '+esc(cfg.outTs.slice(0,16)):''}</span>
+        <span class="cs-sub">${esc(eid)}${cfg.outTs?' · '+fmtDT(cfg.outTs).replace(/<[^>]*>/g,''):''}</span>
       </div>
     </div>`:''}
   </div>`;
@@ -2026,8 +2271,6 @@ function renderHistoryRows(pairs, tbodyId, search){
     const r=p.out||p.in;
     const riderName=r.RiderName||r.Name||'';
     const eid=r.EID||r.EmpID||'—';
-    const outTs=p.out?(p.out.Timestamp||'').slice(0,16):'—';
-    const inTs=p.in?(p.in.Timestamp||'').slice(0,16):'—';
     return `<tr class="fade-in">
       <td>
         <div style="display:flex;align-items:center;gap:7px;">
@@ -2039,8 +2282,8 @@ function renderHistoryRows(pairs, tbodyId, search){
         </div>
       </td>
       <td><span class="mono cs-main">${esc(p.assetId||'—')}</span></td>
-      <td>${p.out?`<span class="badge green" style="font-size:10px;margin-right:4px;">↗ Out</span><span class="mono cs-sub">${outTs}</span>`:'<span style="color:var(--text3);">—</span>'}</td>
-      <td>${p.in?`<span class="badge red" style="font-size:10px;margin-right:4px;">↙ In</span><span class="mono cs-sub">${inTs}</span>`:'<span class="badge amber" style="font-size:10px;">Still Out</span>'}</td>
+      <td>${p.out?`<span class="badge green" style="font-size:10px;margin-right:4px;">↗ Out</span>${fmtDT(p.out.Timestamp)}`:'<span style="color:var(--text3);">—</span>'}</td>
+      <td>${p.in?`<span class="badge red" style="font-size:10px;margin-right:4px;">↙ In</span>${fmtDT(p.in.Timestamp)}`:'<span class="badge amber" style="font-size:10px;">Still Out</span>'}</td>
       <td>
         <button class="tb-btn icon-only sm" onclick='openCioDetail(${JSON.stringify(JSON.stringify(r))})' title="View details">
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -2218,117 +2461,456 @@ function renderInvPanel(){
 
 // ── View state
 let _assetView='history';
-let _viewType='all'; // 'all','bike','sim','company','inventory'
+let _viewType='employee';
 let _statusSearch='';
 let _avAvailPage=1; let _avAvailRpp=50;
-let _avStatusRppVal=50;
+let _bikeHistPage=1; let _simHistPage=1;
 
+// ── Switch between Employee / Bike / SIM sub-views (works in both Available and History) ──
 function setViewType(type){
   _viewType=type;
-  // sync cio item filter for history view
-  _cioItemFilter=(type==='all'?'all':type);
-  ['all','bike','sim','company','inventory'].forEach(t=>{
-    const b=document.getElementById('cio-item-'+t);
-    if(b) b.classList.toggle('active',t===type);
+  _assetSubTab=type;
+  // Remember selection for current view
+  if(_lastViewType) _lastViewType[_assetView]=type;
+  const validTypes=['employee','bike','sim'];
+  _syncTypePills(validTypes, type);
+  if(_assetView==='available'){
+    renderAvailableView();
+    return;
+  }
+  // History: show correct sub-view panel
+  const subMap={employee:'hist-sub-employee',bike:'hist-sub-bike',sim:'hist-sub-sim'};
+  Object.entries(subMap).forEach(([t,id])=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=(t===type)?'':'none';
   });
-  // sync asset subtab
-  setAssetSubTab(type==='all'?'bike':type);
-  applyCheckinFilter();
-  renderAssetPanel();
+  if(type==='employee') applyCheckinFilter();
+  else if(type==='bike'){_bikeHistPage=1;renderBikeHistTable();}
+  else if(type==='sim'){_simHistPage=1;renderSimHistTable();}
 }
+
+// Remember last selected type per view
+const _lastViewType={available:'employee',history:'employee'};
 
 function setAssetView(view){
   _assetView=view;
-  ['available','history','status'].forEach(v=>{
+  // Nav button active state
+  ['available','history'].forEach(v=>{
     const btn=document.getElementById('av-view-'+v);
     if(btn) btn.classList.toggle('active',v===view);
   });
-  // Show/hide panels
-  const panels={
-    'history':'cio-view-history-panel',
-    'available':'av-panel-available',
-    'status':'av-panel-status'
-  };
-  Object.entries(panels).forEach(([v,id])=>{
-    const el=document.getElementById(id);
-    if(el) el.style.display=(v===view)?'':'none';
-  });
-  // Hide type pills for Status; show for Available (Bike/SIM only) and History (all)
-  const typePills=document.getElementById('type-pills-wrap');
-  if(typePills) typePills.style.display=(view==='status')?'none':'flex';
-  // For Available view: only Bike and SIM pills; hide All/Company/Inventory
-  const availOnlyHide=['cio-item-all','cio-item-company','cio-item-inventory'];
-  availOnlyHide.forEach(id=>{
-    const b=document.getElementById(id);
-    if(b) b.style.display=(view==='available')?'none':'';
-  });
-  // If switching to Available and current sub-tab is not bike/sim, reset to bike
-  if(view==='available'&&(_assetSubTab!=='bike'&&_assetSubTab!=='sim')){
-    _assetSubTab='bike';
-    ['bike','sim','company','inventory'].forEach(t=>{
-      const b=document.getElementById('asset-sub-'+t);
-      if(b) b.classList.toggle('active',t==='bike');
-    });
-    // Also highlight cio-item-bike pill
-    ['bike','sim'].forEach(t=>{
-      const b=document.getElementById('cio-item-'+t);
-      if(b) b.classList.toggle('active',t==='bike');
-    });
+  // Show/hide main panels
+  const el_hist=document.getElementById('cio-view-history-panel');
+  const el_avail=document.getElementById('av-panel-available');
+  if(el_hist) el_hist.style.display=(view==='history')?'':'none';
+  if(el_avail) el_avail.style.display=(view==='available')?'':'none';
+
+  const validTypes=['employee','bike','sim'];
+  // Restore last selected type for this view
+  _viewType=_lastViewType[view]||'employee';
+  if(!validTypes.includes(_viewType)) _viewType='employee';
+  _syncTypePills(validTypes,_viewType);
+
+  if(view==='available'){
+    renderAvailableView();
+  } else {
+    renderAssetPanel();
   }
-  renderAssetPanel();
+}
+
+// Sync type pill active/hidden state
+function _syncTypePills(validTypes, activeType){
+  ['employee','bike','sim','all','company','inventory'].forEach(t=>{
+    const b=document.getElementById('cio-item-'+t);
+    if(!b) return;
+    if(!validTypes.includes(t)){
+      b.style.display='none';
+    } else {
+      b.style.display='';
+      b.classList.toggle('active', t===activeType);
+    }
+  });
 }
 
 function renderAssetPanel(){
-  if(_assetView==='available') renderAvailableView();
-  else if(_assetView==='history') renderCheckinTable();
-  else renderStatusView();
+  if(_assetView==='available'){
+    renderAvailableView();
+  } else {
+    // history — show correct sub-view
+    const type=_viewType||'employee';
+    const subMap={employee:'hist-sub-employee',bike:'hist-sub-bike',sim:'hist-sub-sim'};
+    Object.entries(subMap).forEach(([t,id])=>{
+      const el=document.getElementById(id);
+      if(el) el.style.display=(t===type)?'':'none';
+    });
+    if(type==='employee') applyCheckinFilter();
+    else if(type==='bike') renderBikeHistTable();
+    else if(type==='sim') renderSimHistTable();
+  }
 }
 
-function applyStatusSearch(){
-  _statusSearch=(document.getElementById('status-search').value||'').toLowerCase().trim();
-  renderStatusView();
+// ── BIKE HISTORY table (standalone, all bikes × all riders) ──
+function _getCioViewRecords(itemType){
+  // Read from state.cioViewRecords (populated by loadMasterAssignments from ap2_cioView)
+  return (state.cioViewRecords||[]).filter(r=>(r.itemType||'').toLowerCase()===itemType);
 }
-function clearStatusSearch(){
-  document.getElementById('status-search').value='';
-  _statusSearch='';
-  renderStatusView();
+
+function renderBikeHistTable(){
+  const q=(document.getElementById('bike-hist-search')||{}).value||'';
+  const rpp=parseInt((document.getElementById('bike-hist-rpp')||{}).value||50);
+  const tbody=document.getElementById('bike-hist-tbody');
+  const countEl=document.getElementById('bike-hist-count');
+  if(!tbody) return;
+
+  // Use cioView records if available (pre-computed sessions), else fall back to raw log
+  const cioRecs=_getCioViewRecords('bike');
+  if(cioRecs.length){
+    // cioView: each record = one checkout session {empId, item, seq, checkOutTs, checkInTs}
+    let rows=cioRecs.map(r=>{
+      const emp=(state.employees||[]).find(e=>(e.EmpID||e.EID)===String(r.empId));
+      const name=emp?emp.Name||r.empId:r.empId;
+      return {bikeId:r.item,empId:String(r.empId),name,seq:r.seq,
+        checkOutTs:r.checkOutTs||'',checkInTs:r.checkInTs||''};
+    });
+    // Filter
+    if(q){ const ql=q.toLowerCase(); rows=rows.filter(r=>r.bikeId.toLowerCase().includes(ql)||r.name.toLowerCase().includes(ql)||String(r.empId).includes(ql)); }
+    // Sort by checkOutTs desc
+    rows.sort((a,b)=>(b.checkOutTs||'').localeCompare(a.checkOutTs||''));
+    if(countEl) countEl.textContent=rows.length+' records';
+    const page=rows.slice(0,rpp);
+    tbody.innerHTML=page.map(r=>`<tr class="fade-in">
+      <td><span class="mono" style="font-size:12px;font-weight:700;color:var(--orange);">${esc(r.bikeId)}</span></td>
+      <td><div class="cs"><span class="cs-main">${esc(r.name)}</span><span class="cs-sub">${esc(String(r.empId))}</span></div></td>
+      <td style="text-align:center;"><span class="badge gray" style="font-size:10px;">#${r.seq}</span></td>
+      <td>${fmtDT(r.checkOutDate||r.checkOutTs||null)}</td>
+      <td>${r.checkInDate||r.checkInTs?fmtDT(r.checkInDate||r.checkInTs):'<span class="badge amber" style="font-size:10px;">Still Out</span>'}</td>
+      <td>${r.active?'<span class="badge amber" style="font-size:10px;">Still Out</span>':'<span class="badge green" style="font-size:10px;">Returned</span>'}</td>
+    </tr>`).join('')||'<tr><td colspan="6"><div class="empty-state"><p>No bike history</p></div></td></tr>';
+    return;
+  }
+
+  // Fallback: build pairs from raw log grouped by BikeID
+  const bikeRecords=(state.checkinout||[]).filter(r=>(r.AssetType||'').toLowerCase()==='bike');
+  const byBike={};
+  bikeRecords.forEach(r=>{
+    const aid=r.AssetID||'';
+    if(!byBike[aid]) byBike[aid]=[];
+    byBike[aid].push(r);
+  });
+
+  const pairs=[];
+  Object.entries(byBike).forEach(([bikeId,evts])=>{
+    const sorted=evts.slice().sort((a,b)=>(a.Timestamp||'').localeCompare(b.Timestamp||''));
+    let pending=null;
+    sorted.forEach(r=>{
+      const act=(r.Action||'').toLowerCase();
+      if(act.includes('out')){
+        if(pending) pairs.push({out:pending,in:null,bikeId});
+        pending=r;
+      } else if(act.includes('in')&&pending){
+        pairs.push({out:pending,in:r,bikeId});
+        pending=null;
+      } else if(act.includes('in')&&!pending){
+        pairs.push({out:null,in:r,bikeId});
+      }
+    });
+    if(pending) pairs.push({out:pending,in:null,bikeId});
+  });
+
+  // Sort newest first
+  pairs.sort((a,b)=>((b.out||b.in||{}).Timestamp||'').localeCompare((a.out||a.in||{}).Timestamp||''));
+
+  // Filter by search
+  const qLow=q.toLowerCase().trim();
+  const filtered=qLow?pairs.filter(p=>{
+    const r=p.out||p.in||{};
+    const bikeObj=(state.bikes||[]).find(b=>b.BikeID===p.bikeId)||{};
+    const hay=(p.bikeId+(bikeObj.PlateNo||'')+(r.RiderName||r.Name||'')+(r.EID||r.EmpID||'')).toLowerCase();
+    return hay.includes(qLow);
+  }):pairs;
+
+  if(countEl) countEl.textContent=filtered.length+' records';
+
+  if(!filtered.length){
+    tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state"><p>No bike history${qLow?' matching search':''}</p><small>${bikeRecords.length?'Try clearing the search.':'No check-in/out records yet.'}</small></div></td></tr>`;
+    renderPagination('bike-hist-ctrl','bike-hist-info',0,_bikeHistPage,rpp,'bikeHistGoToPage');
+    return;
+  }
+
+  const start=(_bikeHistPage-1)*rpp;
+  const page=filtered.slice(start,start+rpp);
+
+  tbody.innerHTML=page.map((p,i)=>{
+    const r=p.out||p.in||{};
+    const bikeObj=(state.bikes||[]).find(b=>b.BikeID===p.bikeId)||{};
+    const rider=r.RiderName||r.Name||'—';
+    const eid=r.EID||r.EmpID||'—';
+    const plate=bikeObj.PlateNo||'—';
+    const stillOut=p.out&&!p.in;
+    return `<tr class="fade-in">
+      <td style="color:var(--text3);font-size:11px;text-align:center;">${start+i+1}</td>
+      <td><span class="mono" style="font-size:12px;font-weight:700;color:var(--orange);">${esc(p.bikeId)}</span></td>
+      <td><span style="font-size:12px;">${esc(plate)}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          ${rider!=='—'?`<div class="avatar-sm" style="background:${strColor(rider)};width:22px;height:22px;font-size:9px;flex-shrink:0;">${initials(rider)}</div>`:''}
+          <div><div style="font-size:12px;font-weight:500;">${esc(rider)}</div><div class="mono" style="font-size:10px;color:var(--text3);">${esc(eid)}</div></div>
+        </div>
+      </td>
+      <td>${p.out?fmtDT(p.out.Timestamp):'<span style="color:var(--text3);">—</span>'}</td>
+      <td>${p.in?fmtDT(p.in.Timestamp):'<span style="color:var(--text3);">—</span>'}</td>
+      <td>${stillOut?'<span class="badge amber" style="font-size:10px;">Still Out</span>':'<span class="badge green" style="font-size:10px;">Returned</span>'}</td>
+    </tr>`;
+  }).join('');
+  renderPagination('bike-hist-ctrl','bike-hist-info',filtered.length,_bikeHistPage,rpp,'bikeHistGoToPage');
 }
+function bikeHistGoToPage(p){_bikeHistPage=p;renderBikeHistTable();}
+
+// ── SIM HISTORY table (standalone, all SIMs × all riders) ──
+function renderSimHistTable(){
+  const q=(document.getElementById('sim-hist-search')||{}).value||'';
+  const rpp=parseInt((document.getElementById('sim-hist-rpp')||{}).value||50);
+  const tbody=document.getElementById('sim-hist-tbody');
+  const countEl=document.getElementById('sim-hist-count');
+  if(!tbody) return;
+
+  // Use cioView records if available
+  const cioRecs=_getCioViewRecords('sim');
+  if(cioRecs.length){
+    let rows=cioRecs.map(r=>{
+      const emp=(state.employees||[]).find(e=>(e.EmpID||e.EID)===String(r.empId));
+      const name=emp?emp.Name||r.empId:r.empId;
+      return {simId:r.item,empId:String(r.empId),name,seq:r.seq,
+        checkOutTs:r.checkOutTs||'',checkInTs:r.checkInTs||''};
+    });
+    if(q){ const ql=q.toLowerCase(); rows=rows.filter(r=>r.simId.toLowerCase().includes(ql)||r.name.toLowerCase().includes(ql)||String(r.empId).includes(ql)); }
+    rows.sort((a,b)=>(b.checkOutTs||'').localeCompare(a.checkOutTs||''));
+    if(countEl) countEl.textContent=rows.length+' records';
+    const page=rows.slice(0,rpp);
+    tbody.innerHTML=page.map(r=>`<tr class="fade-in">
+      <td><span class="mono" style="font-size:12px;font-weight:700;color:var(--purple);">${esc(r.simId)}</span></td>
+      <td><div class="cs"><span class="cs-main">${esc(r.name)}</span><span class="cs-sub">${esc(String(r.empId))}</span></div></td>
+      <td style="text-align:center;"><span class="badge gray" style="font-size:10px;">#${r.seq}</span></td>
+      <td>${fmtDT(r.checkOutDate||r.checkOutTs||null)}</td>
+      <td>${r.checkInDate||r.checkInTs?fmtDT(r.checkInDate||r.checkInTs):'<span class="badge amber" style="font-size:10px;">Still Out</span>'}</td>
+      <td>${r.active?'<span class="badge amber" style="font-size:10px;">Still Out</span>':'<span class="badge green" style="font-size:10px;">Returned</span>'}</td>
+    </tr>`).join('')||'<tr><td colspan="6"><div class="empty-state"><p>No SIM history</p></div></td></tr>';
+    return;
+  }
+
+  // Fallback: build pairs from raw log
+  const simRecords=(state.checkinout||[]).filter(r=>(r.AssetType||'').toLowerCase()==='sim');
+  const bySim={};
+  simRecords.forEach(r=>{
+    const aid=r.AssetID||'';
+    if(!bySim[aid]) bySim[aid]=[];
+    bySim[aid].push(r);
+  });
+
+  const pairs=[];
+  Object.entries(bySim).forEach(([simId,evts])=>{
+    const sorted=evts.slice().sort((a,b)=>(a.Timestamp||'').localeCompare(b.Timestamp||''));
+    let pending=null;
+    sorted.forEach(r=>{
+      const act=(r.Action||'').toLowerCase();
+      if(act.includes('out')){
+        if(pending) pairs.push({out:pending,in:null,simId});
+        pending=r;
+      } else if(act.includes('in')&&pending){
+        pairs.push({out:pending,in:r,simId});
+        pending=null;
+      } else if(act.includes('in')&&!pending){
+        pairs.push({out:null,in:r,simId});
+      }
+    });
+    if(pending) pairs.push({out:pending,in:null,simId});
+  });
+
+  pairs.sort((a,b)=>((b.out||b.in||{}).Timestamp||'').localeCompare((a.out||a.in||{}).Timestamp||''));
+
+  const qLow=q.toLowerCase().trim();
+  const filtered=qLow?pairs.filter(p=>{
+    const r=p.out||p.in||{};
+    const simObj=(state.sims||[]).find(s=>(s.SimID||s.ID)===p.simId)||{};
+    const hay=(p.simId+(simObj.Number||'')+(simObj.Network||'')+(r.RiderName||r.Name||'')+(r.EID||r.EmpID||'')).toLowerCase();
+    return hay.includes(qLow);
+  }):pairs;
+
+  if(countEl) countEl.textContent=filtered.length+' records';
+
+  if(!filtered.length){
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><p>No SIM history${qLow?' matching search':''}</p><small>${simRecords.length?'Try clearing the search.':'No check-in/out records yet.'}</small></div></td></tr>`;
+    renderPagination('sim-hist-ctrl','sim-hist-info',0,_simHistPage,rpp,'simHistGoToPage');
+    return;
+  }
+
+  const start=(_simHistPage-1)*rpp;
+  const page=filtered.slice(start,start+rpp);
+
+  tbody.innerHTML=page.map((p,i)=>{
+    const r=p.out||p.in||{};
+    const simObj=(state.sims||[]).find(s=>(s.SimID||s.ID)===p.simId)||{};
+    const rider=r.RiderName||r.Name||'—';
+    const eid=r.EID||r.EmpID||'—';
+    const simNum=simObj.Number||'—';
+    const network=simObj.Network||'—';
+    const stillOut=p.out&&!p.in;
+    return `<tr class="fade-in">
+      <td style="color:var(--text3);font-size:11px;text-align:center;">${start+i+1}</td>
+      <td><span class="mono" style="font-size:12px;font-weight:700;color:var(--purple);">${esc(p.simId)}</span></td>
+      <td><span class="mono" style="font-size:12px;">${esc(simNum)}</span></td>
+      <td><span style="font-size:12px;">${esc(network)}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          ${rider!=='—'?`<div class="avatar-sm" style="background:${strColor(rider)};width:22px;height:22px;font-size:9px;flex-shrink:0;">${initials(rider)}</div>`:''}
+          <div><div style="font-size:12px;font-weight:500;">${esc(rider)}</div><div class="mono" style="font-size:10px;color:var(--text3);">${esc(eid)}</div></div>
+        </div>
+      </td>
+      <td>${p.out?fmtDT(p.out.Timestamp):'<span style="color:var(--text3);">—</span>'}</td>
+      <td>${p.in?fmtDT(p.in.Timestamp):'<span style="color:var(--text3);">—</span>'}</td>
+      <td>${stillOut?'<span class="badge amber" style="font-size:10px;">Still Out</span>':'<span class="badge green" style="font-size:10px;">Returned</span>'}</td>
+    </tr>`;
+  }).join('');
+  renderPagination('sim-hist-ctrl','sim-hist-info',filtered.length,_simHistPage,rpp,'simHistGoToPage');
+}
+function simHistGoToPage(p){_simHistPage=p;renderSimHistTable();}
+
+function applyStatusSearch(){ renderAssetPanel(); }
+function clearStatusSearch(){ renderAssetPanel(); }
 function avAvailRppChange(){
   _avAvailRpp=parseInt(document.getElementById('av-avail-rpp').value)||50;
   _avAvailPage=1;
   renderAvailableView();
 }
-function avStatusRppChange(){
-  _avStatusRppVal=parseInt(document.getElementById('av-status-rpp').value)||50;
-  _avStatusPage=1;
-  renderStatusView();
-}
+function avStatusRppChange(){ renderAssetPanel(); }
+
 
 // ── AVAILABLE VIEW — unassigned items from the fleet lists ──
 function renderAvailableView(){
   const q=_assetSearch;
-  const type=_assetSubTab;
-  let items=[];
+  const type=_assetSubTab||_viewType||'employee';
+  const thead=document.getElementById('av-avail-thead');
+  const tbody=document.getElementById('av-avail-grid');
+  // Update title dynamically
+  const titleLabel={employee:'Available Employees',bike:'Available Bikes',sim:'Available SIMs'};
+  const titleEl=document.querySelector('#av-panel-available .data-table-title');
+  if(titleEl){
+    const labelMap={employee:'Available Employees (Unassigned)',bike:'Available Bikes',sim:'Available SIMs'};
+    const iconMap={
+      employee:'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
+      bike:'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1 1v6H8l-3.5-5H4"/></svg>',
+      sim:'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>'
+    };
+    const badgeColor={employee:'purple',bike:'orange',sim:'purple'};
+    titleEl.innerHTML=(iconMap[type]||iconMap.bike)+
+      `<span style="margin-left:6px;">${labelMap[type]||'Available'}</span>`+
+      `<span class="badge ${badgeColor[type]||'green'}" style="margin-left:6px;" id="av-avail-count">…</span>`;
+  }
+  // Re-query countEl after innerHTML rewrite (element was replaced)
+  const countEl=document.getElementById('av-avail-count');
 
+  // ── EMPLOYEE: active riders with no bike AND no SIM assigned ──
+  if(type==='employee'){
+    if(thead) thead.innerHTML=`<tr>
+      <th style="width:90px;">Emp ID</th>
+      <th style="width:170px;">Name</th>
+      <th style="width:120px;">Phone</th>
+      <th style="width:85px;">HR Status</th>
+      <th style="width:90px;">CO Exc.</th>
+      <th style="width:80px;">Status</th>
+    </tr>`;
+    const items=(state.employees||[]).filter(e=>{
+      const eid=e.EmpID||e.EID||'';
+      const master=(state.masterMap||{})[eid]||{};
+      const hasBike=(master.bikes&&master.bikes.length>0)||!!(master.bike)||(state.bikes||[]).some(b=>(b.AssignedTo||'')===eid);
+      const hasSim=(master.sims&&master.sims.length>0)||!!(master.sim)||(state.sims||[]).some(s=>(s.AssignedTo||'')===eid);
+      if(hasBike||hasSim) return false;
+      if(q){
+        const hay=(eid+(e.Name||'')+(e.Phone||'')).toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+    const realCountEl=document.getElementById('av-avail-count');
+    if(realCountEl) realCountEl.textContent=items.length;
+    if(!items.length){
+      tbody.innerHTML=`<tr><td colspan="6"><div class="empty-state"><p>No available employees${q?' matching search':''}</p></div></td></tr>`;
+      renderPagination('av-avail-ctrl','av-avail-info',0,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
+      return;
+    }
+    const start=(_avAvailPage-1)*_avAvailRpp;
+    const page=items.slice(start,start+_avAvailRpp);
+    tbody.innerHTML=page.map(e=>{
+      const eid=e.EmpID||e.EID||'—';
+      const st=e.Status||e.HR_Status||'Active';
+      const coExc=e.COExclusion||e.CO_Exclusion||e.Exclusion||'—';
+      return `<tr class="fade-in">
+        <td><span class="mono" style="font-size:12px;font-weight:700;">${esc(eid)}</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="avatar-sm" style="background:${strColor(e.Name||'')};">${initials(e.Name||'?')}</div>
+            <span style="font-size:12px;font-weight:500;">${esc(e.Name||'—')}</span>
+          </div>
+        </td>
+        <td><span class="mono" style="font-size:11px;color:var(--text2);">${esc(e.Phone||'—')}</span></td>
+        <td><span class="badge ${st.toLowerCase()==='active'?'green':'gray'}" style="font-size:10px;">${esc(st)}</span></td>
+        <td><span style="font-size:11px;color:var(--text2);">${esc(coExc)}</span></td>
+        <td><span class="badge green" style="font-size:10px;">Available</span></td>
+      </tr>`;
+    }).join('');
+    renderPagination('av-avail-ctrl','av-avail-info',items.length,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
+    return;
+  }
+
+  // ── BIKE: unassigned, non-maintenance bikes ──
+  let items=[];
   if(type==='bike'){
+    if(thead) thead.innerHTML=`<tr>
+      <th style="width:130px;">Bike ID</th>
+      <th style="width:110px;">Plate No</th>
+      <th style="width:160px;">Make / Model</th>
+      <th style="width:100px;">Emirate</th>
+      <th style="width:130px;">Mulkiya Expiry</th>
+      <th style="width:80px;">Status</th>
+    </tr>`;
     items=(state.bikes||[]).filter(b=>{
-      const st=(b.Status||'').toLowerCase();
-      if(st==='maintenance') return false;
+      if((b.Status||'').toLowerCase()==='maintenance') return false;
       if((b.AssignedTo||'').trim()) return false;
       if(q){
         const hay=((b.BikeID||'')+(b.PlateNo||'')+(b.Make||'')+(b.Model||'')+(b.Emirate||'')).toLowerCase();
         if(!hay.includes(q)) return false;
       }
       return true;
-    }).map(b=>({
-      id:b.BikeID,
-      col1:b.PlateNo||'—',
-      col2:((b.Make||'')+(b.Model&&b.Model!==b.Make?' '+b.Model:'')).trim()||'—',
-      col3:b.Emirate||'—',
-      col4:b.MulkiyaExpiry||'—',
-      h1:'Plate No', h2:'Make / Model', h3:'Emirate', h4:'Mulkiya Expiry'
-    }));
-  }else if(type==='sim'){
+    });
+    const bikeCountEl=document.getElementById('av-avail-count');
+    if(bikeCountEl) bikeCountEl.textContent=items.length;
+    if(!items.length){
+      tbody.innerHTML=`<tr><td colspan="6"><div class="empty-state"><p>No available bikes${q?' matching search':''}</p></div></td></tr>`;
+      renderPagination('av-avail-ctrl','av-avail-info',0,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
+      return;
+    }
+    const start=(_avAvailPage-1)*_avAvailRpp;
+    const page=items.slice(start,start+_avAvailRpp);
+    tbody.innerHTML=page.map(b=>`<tr class="fade-in">
+      <td><span class="mono" style="font-size:12px;font-weight:700;color:var(--orange);">${esc(b.BikeID)}</span></td>
+      <td><span style="font-size:12px;">${esc(b.PlateNo||'—')}</span></td>
+      <td><span style="font-size:12px;">${esc(((b.Make||'')+(b.Model&&b.Model!==b.Make?' '+b.Model:'')).trim()||'—')}</span></td>
+      <td><span style="font-size:12px;">${esc(b.Emirate||'—')}</span></td>
+      <td>${fmtDT(b.MulkiyaExpiry||null)}</td>
+      <td><span class="badge green" style="font-size:10px;">Available</span></td>
+    </tr>`).join('');
+    renderPagination('av-avail-ctrl','av-avail-info',items.length,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
+    return;
+  }
+
+  // ── SIM: unassigned SIMs ──
+  if(type==='sim'){
+    if(thead) thead.innerHTML=`<tr>
+      <th style="width:130px;">SIM ID</th>
+      <th style="width:140px;">SIM Number</th>
+      <th style="width:140px;">Network / Operator</th>
+      <th style="width:80px;">Status</th>
+    </tr>`;
     items=(state.sims||[]).filter(s=>{
       if((s.AssignedTo||'').trim()) return false;
       if(q){
@@ -2336,57 +2918,25 @@ function renderAvailableView(){
         if(!hay.includes(q)) return false;
       }
       return true;
-    }).map(s=>({
-      id:s.SimID||s.ID,
-      col1:s.Number&&s.Number!==(s.SimID||s.ID)?s.Number:'—',
-      col2:s.Network||'—',
-      col3:'', col4:'',
-      h1:'SIM Number', h2:'Network / Operator', h3:'', h4:''
-    }));
-  }else{
-    items=[];
-  }
-
-  // Update table headers dynamically
-  const thead=document.getElementById('av-avail-thead');
-  if(thead&&items.length){
-    const sample=items[0];
-    thead.innerHTML=`<tr>
-      <th style="width:140px;">Asset ID</th>
-      <th>${esc(sample.h1)}</th>
-      <th>${esc(sample.h2)}</th>
-      ${sample.h3?`<th>${esc(sample.h3)}</th>`:''}
-      ${sample.h4?`<th>${esc(sample.h4)}</th>`:''}
-      <th style="width:80px;">Status</th>
-    </tr>`;
-  } else if(thead){
-    thead.innerHTML=`<tr><th>Asset ID</th><th>Details</th><th>Status</th></tr>`;
-  }
-
-  document.getElementById('av-avail-count').textContent=items.length;
-  const tbody=document.getElementById('av-avail-grid');
-  if(!items.length){
-    const typeLabel={bike:'bikes',sim:'SIMs'}[type]||'items';
-    tbody.innerHTML=`<tr><td colspan="6"><div class="empty-state"><p>No available ${typeLabel}${q?' matching search':''}</p></div></td></tr>`;
-    renderPagination('av-avail-ctrl','av-avail-info',0,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
+    });
+    const simCountEl=document.getElementById('av-avail-count');
+    if(simCountEl) simCountEl.textContent=items.length;
+    if(!items.length){
+      tbody.innerHTML=`<tr><td colspan="4"><div class="empty-state"><p>No available SIMs${q?' matching search':''}</p></div></td></tr>`;
+      renderPagination('av-avail-ctrl','av-avail-info',0,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
+      return;
+    }
+    const start=(_avAvailPage-1)*_avAvailRpp;
+    const page=items.slice(start,start+_avAvailRpp);
+    tbody.innerHTML=page.map(s=>`<tr class="fade-in">
+      <td><span class="mono" style="font-size:12px;font-weight:700;color:var(--purple);">${esc(s.SimID||s.ID)}</span></td>
+      <td><span class="mono" style="font-size:12px;">${esc(s.Number||'—')}</span></td>
+      <td><span style="font-size:12px;">${esc(s.Network||'—')}</span></td>
+      <td><span class="badge green" style="font-size:10px;">Available</span></td>
+    </tr>`).join('');
+    renderPagination('av-avail-ctrl','av-avail-info',items.length,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
     return;
   }
-
-  // Paginate
-  const total=items.length;
-  const start=(_avAvailPage-1)*_avAvailRpp;
-  const page=items.slice(start,start+_avAvailRpp);
-  const hasMeta=!!(page[0]&&page[0].h3);
-
-  tbody.innerHTML=page.map(it=>`<tr class="fade-in">
-    <td><span class="mono cs-main" style="font-size:12px;font-weight:700;">${esc(it.id)}</span></td>
-    <td><span style="font-size:12px;">${esc(it.col1)}</span></td>
-    <td><span style="font-size:12px;">${esc(it.col2)}</span></td>
-    ${it.h3?`<td><span style="font-size:12px;">${esc(it.col3)}</span></td>`:''}
-    ${it.h4?`<td><span style="font-size:12px;font-family:var(--mono);">${esc(it.col4)}</span></td>`:''}
-    <td><span class="badge green" style="font-size:10px;">Available</span></td>
-  </tr>`).join('');
-  renderPagination('av-avail-ctrl','av-avail-info',total,_avAvailPage,_avAvailRpp,'avAvailGoToPage');
 }
 function avAvailGoToPage(p){_avAvailPage=p;renderAvailableView();}
 // keep old alias
@@ -2499,22 +3049,22 @@ function avStatusGoToPage(p){_avStatusPage=p;renderStatusView();}
 // ── setAssetSubTab now resets pagination and re-renders ──
 function setAssetSubTab(type){
   _assetSubTab=type;
-  _avHistPage=1;_avStatusPage=1;
-  ['bike','sim','company','inventory'].forEach(t=>{
+  _avAvailPage=1;
+  ['bike','sim'].forEach(t=>{
     const btn=document.getElementById('asset-sub-'+t);
     if(btn) btn.classList.toggle('active',t===type);
   });
-  renderAssetPanel();
+  renderAvailableView();
 }
 
 // Keep aliases so processAll() still works
-function applyBikeFilter(){ if(_assetSubTab==='bike') renderAssetPanel(); }
-function applySimFilter(){  if(_assetSubTab==='sim')  renderAssetPanel(); }
-function applyInvFilter(){  if(_assetSubTab==='inventory') renderAssetPanel(); }
-function clearBikeFilter(){ clearAssetSearch(); }
-function clearSimFilter(){  clearAssetSearch(); }
-function clearInvFilter(){  clearAssetSearch(); }
-function bikeGoToPage(p){ _avHistPage=p; renderHistoryView(); }
+function applyBikeFilter(){ if(_viewType==='bike') renderBikeHistTable(); }
+function applySimFilter(){  if(_viewType==='sim')  renderSimHistTable(); }
+function applyInvFilter(){  /* inventory removed from history */ }
+function clearBikeFilter(){ const s=document.getElementById('bike-hist-search');if(s)s.value='';renderBikeHistTable(); }
+function clearSimFilter(){  const s=document.getElementById('sim-hist-search');if(s)s.value='';renderSimHistTable(); }
+function clearInvFilter(){  /* inventory removed */ }
+function bikeGoToPage(p){ bikeHistGoToPage(p); }
 
 
 
@@ -2575,6 +3125,18 @@ function applyEmpFilter(){
   empPage=1;renderEmpTable();
 }
 function clearEmpFilter(){document.getElementById('emp-search').value='';document.getElementById('emp-status').value='';applyEmpFilter();}
+
+// Global date/time formatter — handles ISO, epoch ms, raw strings
+function fmtDT(raw){
+  if(!raw) return '<span style="color:var(--text3);">—</span>';
+  try{
+    const d=new Date(raw);
+    if(isNaN(d)) return '<span style="color:var(--text3);">—</span>';
+    const date=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    const time=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    return `<span class="mono" style="font-size:11px;">${date} ${time}</span>`;
+  }catch(e){return '<span style="color:var(--text3);">—</span>';}
+}
 
 function getAssignedBike(eid){
   return (state.bikes||[]).find(b=>(b.AssignedTo||'')===(eid||''));
@@ -2673,8 +3235,11 @@ const GFORM_FIELDS={
   assetDetail:'entry.1835291401' // sim number / bike number / inventory name / yes/no
 };
 
-function genRefId(){
-  const n=new Date();
+function genRefId(offsetMs){
+  const n=new Date(Date.now()+(offsetMs||0));
+  return genRefIdFromDate(n);
+}
+function genRefIdFromDate(n){
   return 'REF-'+n.getFullYear()+String(n.getMonth()+1).padStart(2,'0')+String(n.getDate()).padStart(2,'0')+
     'T'+String(n.getHours()).padStart(2,'0')+String(n.getMinutes()).padStart(2,'0')+
     String(n.getSeconds()).padStart(2,'0')+String(n.getMilliseconds()).padStart(3,'0');
@@ -2894,7 +3459,7 @@ function openNewCheckinModal(){
     .filter(e=>(e.Status||'Active').toLowerCase()==='active')
     .map(e=>({
       value: e.EmpID||e.EID,
-      label: (e.Name||(e.EmpID||e.EID)) + (e.EmpID?' ['+e.EmpID+']':'')
+      label: (e.EmpID||e.EID) + ' - ' + (e.Name||e.EmpID||e.EID)
     }));
   sdSetOptions('rider',riderOptions);
   document.getElementById('rider-info-panel').classList.remove('visible');
@@ -3057,32 +3622,57 @@ function addInventoryItems(){
 }
 
 function renderCoSection(eid){
-  // Use masterMap (derived from ap2_cioView) as authoritative source for current assignments
-  const master=(state.masterMap||{})[eid]||{};
-  const emp=eid?(state.employees||[]).find(e=>(e.EmpID||e.EID)===eid):null;
-  const assignedBike=eid?getAssignedBike(eid):null;
-  const assignedSim=eid?getAssignedSim(eid):null;
+  // Build full assigned item list from masterMap (cioView-backed) + live bike/SIM state fallback
+  const assigned=_getAllAssignedItems(eid);
 
-  // Disable button if ap2_cioView data shows assignment OR live state confirms it
-  const hasBike=!!(master.bike&&master.bike.trim())||(assignedBike!=null)||(emp&&emp._hasBike);
-  const hasSim=!!(master.sim&&master.sim.trim())||(assignedSim!=null)||(emp&&emp._hasSim);
-  const hasCompany=!!(master.company&&master.company.trim())||(emp&&emp._hasCompany);
-  const hasInventory=!!(master.inventory&&master.inventory.trim()&&master.inventory.toLowerCase()!=='no'&&master.inventory!=='0')||(emp&&emp._hasInventory);
+  // Also check live bike/SIM AssignedTo as an additional fallback for items missed by masterMap
+  (state.bikes||[]).forEach(b=>{
+    if((b.AssignedTo||'')===eid&&!assigned.some(it=>it.type==='Bike'&&it.id===b.BikeID)){
+      const meta=b.Model||b.PlateNo||'';
+      assigned.push({type:'Bike',id:b.BikeID,meta});
+    }
+  });
+  (state.sims||[]).forEach(s=>{
+    const sid=s.SimID||s.ID;
+    if((s.AssignedTo||'')===eid&&!assigned.some(it=>it.type==='SIM'&&it.id===sid)){
+      const meta=s.Network||s.Number||'';
+      assigned.push({type:'SIM',id:sid,meta});
+    }
+  });
 
-  // Set disabled state on type buttons
-  const typeChecks={Bike:hasBike, SIM:hasSim, Company:hasCompany, Inventory:hasInventory};
+  const assignedTypes=new Set(assigned.map(it=>it.type.toLowerCase()));
+
+  // Lock buttons for types that already have items checked out; clear for others
   ['Bike','SIM','Company','Inventory'].forEach(t=>{
     const b=document.getElementById('co-type-'+t);
     if(!b) return;
-    b.classList.remove('selected');
-    if(typeChecks[t]){
+    b.classList.remove('selected','disabled-asset');
+    b.title='';
+    if(assignedTypes.has(t.toLowerCase())){
       b.classList.add('disabled-asset');
-      b.title=t+' already assigned to this rider';
-    }else{
-      b.classList.remove('disabled-asset');
-      b.title='';
+      const existing=assigned.filter(it=>it.type.toLowerCase()===t.toLowerCase()).map(it=>it.id).join(', ');
+      b.title=t+' already assigned: '+existing+'. Use Check In or Swap first.';
     }
   });
+
+  // Show existing assigned items as read-only info above the selector
+  const existingWrap=document.getElementById('co-existing-list');
+  if(existingWrap){
+    if(assigned.length){
+      const typeBadge={Bike:'orange',SIM:'purple',Company:'blue',Inventory:'amber'};
+      existingWrap.style.display='';
+      existingWrap.innerHTML='<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Already Assigned (locked)</div>'+
+        assigned.map(it=>`<div style="display:flex;align-items:center;gap:7px;padding:5px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:4px;">
+          <span class="badge ${typeBadge[it.type]||'gray'}" style="font-size:10px;flex-shrink:0;">${esc(it.type)}</span>
+          <span class="mono" style="font-size:12px;font-weight:600;">${esc(it.id)}</span>
+          ${it.meta?`<span style="font-size:11px;color:var(--text3);">${esc(it.meta)}</span>`:''}
+          <span class="badge amber" style="font-size:10px;margin-left:auto;">Locked</span>
+        </div>`).join('');
+    } else {
+      existingWrap.style.display='none';
+      existingWrap.innerHTML='';
+    }
+  }
 
   document.getElementById('co-items-panel').style.display='none';
   document.getElementById('co-items-empty').style.display='';
@@ -3100,31 +3690,41 @@ function renderCoItemsPanel(type, eid){
   let hasLocked=false;
   let options=[];
 
+  // Build set of all assigned bike/SIM IDs from masterMap full arrays (cioView-backed)
+  const allAssignedBikes=new Set();
+  const allAssignedSims=new Set();
+  Object.values(state.masterMap||{}).forEach(a=>{
+    (a.bikes||[]).forEach(id=>allAssignedBikes.add(id));
+    (a.sims||[]).forEach(id=>allAssignedSims.add(id));
+    if(a.bike) allAssignedBikes.add(a.bike);
+    if(a.sim) allAssignedSims.add(a.sim);
+  });
+  (state.bikes||[]).forEach(b=>{ if((b.AssignedTo||'').trim()) allAssignedBikes.add(b.BikeID); });
+  (state.sims||[]).forEach(s=>{ if((s.AssignedTo||'').trim()) allAssignedSims.add(s.SimID||s.ID); });
+
   if(type==='Bike'){
+    // Any bike appearing as "out" in any employee's log is assigned
+    const logBikes=new Set();
+    (state.checkinout||[]).forEach(r=>{
+      if((r.AssetType||'').toLowerCase()!=='bike') return;
+      const aid=(r.AssetID||'').trim(); if(!aid) return;
+    });
+    // Use masterMap + bike.AssignedTo to determine availability
     const available=(state.bikes||[]).filter(b=>{
-      const isAvail=(b.Status||'').toLowerCase()==='available'&&!(b.AssignedTo||'').trim();
-      const alreadyInCart=_coSelectedItems.some(i=>i.type==='Bike'&&i.id===b.BikeID);
-      return isAvail&&!alreadyInCart;
+      if(allAssignedBikes.has(b.BikeID)) return false;
+      if(_coSelectedItems.some(i=>i.type==='Bike'&&i.id===b.BikeID)) return false;
+      return true;
     });
-    const locked=(state.bikes||[]).filter(b=>(b.AssignedTo||'').trim()&&(b.AssignedTo||'')!==eid);
-    hasLocked=locked.length>0;
-    options=available.map(b=>({
-      value:b.BikeID,
-      label:b.BikeID+(b.PlateNo?' · '+b.PlateNo:'')+(b.Make?' · '+b.Make:'')+(b.Model&&b.Model!==b.Make?' '+b.Model:'')
-    }));
+    hasLocked=allAssignedBikes.size>0;
+    options=available.map(b=>({value:b.BikeID,label:b.BikeID}));
   }else if(type==='SIM'){
-    // Show Sim Number · Network for easy identification
     const available=(state.sims||[]).filter(sm=>{
-      const isAvail=!(sm.AssignedTo||'').trim();
-      const alreadyInCart=_coSelectedItems.some(i=>i.type==='SIM'&&i.id===(sm.SimID||sm.ID));
-      return isAvail&&!alreadyInCart;
+      if(allAssignedSims.has(sm.SimID||sm.ID)) return false;
+      if(_coSelectedItems.some(i=>i.type==='SIM'&&i.id===(sm.SimID||sm.ID))) return false;
+      return true;
     });
-    const locked=(state.sims||[]).filter(sm=>(sm.AssignedTo||'').trim()&&(sm.AssignedTo||'')!==eid);
-    hasLocked=locked.length>0;
-    options=available.map(sm=>({
-      value:sm.SimID||sm.ID,
-      label:(sm.SimID||sm.ID)+(sm.Number&&sm.Number!==(sm.SimID||sm.ID)?' · '+sm.Number:'')+(sm.Network?' · '+sm.Network:'')
-    }));
+    hasLocked=allAssignedSims.size>0;
+    options=available.map(sm=>({value:sm.SimID||sm.ID,label:sm.SimID||sm.ID}));
   }
   // Company and Inventory are handled by inline panels (co-company-inline / co-inventory-inline)
 
@@ -3190,43 +3790,76 @@ function renderCoSelectedList(){
 }
 
 // ── CHECK IN rendering ──
+function _getAllAssignedItems(eid){
+  // Read directly from masterMap which is now built from cioView (most accurate source)
+  // masterMap[eid].bikes/sims/companies/inventories are full arrays
+  const master=(state.masterMap||{})[eid]||{};
+  const items=[];
+  const typeLabel={bike:'Bike',sim:'SIM',company:'Company',inventory:'Inventory'};
+
+  (master.bikes||[]).forEach(id=>{
+    items.push({type:'Bike',id,meta:''});
+  });
+  (master.sims||[]).forEach(id=>{
+    items.push({type:'SIM',id,meta:''});
+  });
+  (master.companies||[]).forEach(id=>{
+    items.push({type:'Company',id,meta:''});
+  });
+  (master.inventories||[]).forEach(id=>{
+    items.push({type:'Inventory',id,meta:''});
+  });
+
+  // If masterMap has no entry (cioView not loaded yet), fallback to single values
+  if(!items.length){
+    if(master.bike) items.push({type:'Bike',id:master.bike,meta:''});
+    if(master.sim) items.push({type:'SIM',id:master.sim,meta:''});
+    if(master.company) items.push({type:'Company',id:master.company,meta:''});
+    if(master.inventory) items.push({type:'Inventory',id:master.inventory,meta:''});
+  }
+  return items;
+}
+
 function renderCiSection(eid){
   const list=document.getElementById('checkin-items-list');
   document.getElementById('checkin-confirm-box').style.display='none';
   _checkinPending=null;
-  // Get all items assigned to this rider — use masterMap (from ap2_cioView) as authoritative source
-  const master=(state.masterMap||{})[eid]||{};
-  const bike=getAssignedBike(eid);
-  const sim=getAssignedSim(eid);
-  const emp=(state.employees||[]).find(e=>(e.EmpID||e.EID)===eid);
-  // Use masterMap values if available, else fall back to live state
-  const bikeId=master.bike||(bike?bike.BikeID:'');
-  const simId=master.sim||(sim?(sim.SimID||sim.ID):'');
-  const companyId=master.company||'';
-  const invVal=master.inventory||(emp&&emp.Inventory?emp.Inventory:'');
-  const hasInv=invVal&&invVal.toLowerCase()!=='no'&&invVal!=='0';
-  const hasCompany=companyId&&companyId.trim();
-  const items=[];
-  if(bikeId){const b=(state.bikes||[]).find(x=>x.BikeID===bikeId)||{BikeID:bikeId,Model:''};items.push({type:'Bike',id:bikeId,meta:b.Model||'',obj:b});}
-  if(simId){const sm=(state.sims||[]).find(x=>(x.SimID||x.ID)===simId)||{SimID:simId,Network:''};items.push({type:'SIM',id:simId,meta:sm.Network||'',obj:sm});}
-  if(hasCompany) items.push({type:'Company',id:companyId,meta:'',obj:null});
-  if(hasInv) items.push({type:'Inventory',id:invVal,meta:'',obj:null});
+  // Get assigned items from masterMap (cioView-backed) first
+  const items=_getAllAssignedItems(eid);
+
+  // Fallback: also check live bike/SIM AssignedTo for items not yet in masterMap
+  (state.bikes||[]).forEach(b=>{
+    if((b.AssignedTo||'')===eid&&!items.some(it=>it.type==='Bike'&&it.id===b.BikeID)){
+      items.push({type:'Bike',id:b.BikeID,meta:b.Model||b.PlateNo||'',obj:b});
+    }
+  });
+  (state.sims||[]).forEach(s=>{
+    const sid=s.SimID||s.ID;
+    if((s.AssignedTo||'')===eid&&!items.some(it=>it.type==='SIM'&&it.id===sid)){
+      items.push({type:'SIM',id:sid,meta:s.Network||s.Number||'',obj:s});
+    }
+  });
+
   if(!items.length){
     list.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--text3);font-size:13px;">No items currently assigned to this rider.</div>';
     return;
   }
+  // Badge colour per type
+  const typeBadge={Bike:'orange',SIM:'purple',Company:'blue',Inventory:'amber'};
   list.innerHTML=items.map((it,i)=>`
-    <div class="checkin-item-row">
-      <div class="ci-info">
-        <span class="ci-id">${esc(it.type)}: ${esc(it.id)}</span>
-        ${it.meta?`<span class="ci-meta">${esc(it.meta)}</span>`:''}
+    <div class="checkin-item-row" style="gap:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+        <span class="badge ${typeBadge[it.type]||'gray'}" style="font-size:10px;flex-shrink:0;">${esc(it.type)}</span>
+        <div class="ci-info" style="min-width:0;">
+          <span class="ci-id">${esc(it.id)}</span>
+          ${it.meta?`<span class="ci-meta">${esc(it.meta)}</span>`:''}
+        </div>
       </div>
-      <button class="tb-btn sm danger" onclick="requestCheckinItem(${i})">
+      <button class="tb-btn sm danger" style="flex-shrink:0;" onclick="requestCheckinItem(${i})">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Check In
       </button>
     </div>`).join('');
-  // Store items list for reference
   list._items=items;
 }
 
@@ -3295,11 +3928,24 @@ function renderSwapSection(eid){
   const list=document.getElementById('swap-assigned-list');
   document.getElementById('swap-new-section').style.display='none';
   _swapSelectedOld=null;
-  const bike=getAssignedBike(eid);
-  const sim=getAssignedSim(eid);
-  const items=[];
-  if(bike) items.push({type:'Bike',id:bike.BikeID,meta:bike.Model||''});
-  if(sim) items.push({type:'SIM',id:sim.SimID||sim.ID,meta:sim.Network||''});
+  // Get all assigned items from masterMap (cioView-backed)
+  const allItems=_getAllAssignedItems(eid);
+
+  // Fallback: also check live bike/SIM AssignedTo for items not in masterMap
+  (state.bikes||[]).forEach(b=>{
+    if((b.AssignedTo||'')===eid&&!allItems.some(it=>it.type==='Bike'&&it.id===b.BikeID)){
+      allItems.push({type:'Bike',id:b.BikeID,meta:b.Model||b.PlateNo||''});
+    }
+  });
+  (state.sims||[]).forEach(s=>{
+    const sid=s.SimID||s.ID;
+    if((s.AssignedTo||'')===eid&&!allItems.some(it=>it.type==='SIM'&&it.id===sid)){
+      allItems.push({type:'SIM',id:sid,meta:s.Network||s.Number||''});
+    }
+  });
+
+  // Swap only supports Bike and SIM
+  const items=allItems.filter(it=>it.type==='Bike'||it.type==='SIM');
   if(!items.length){
     list.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--text3);font-size:13px;">No items assigned to this rider to swap.</div>';
     return;
@@ -3334,13 +3980,38 @@ function selectSwapOld(idx){
   document.getElementById('swap-current-type').textContent=_swapSelectedOld.type;
   document.getElementById('swap-current-id').textContent=_swapSelectedOld.id;
   // Populate searchable replacement dropdown (same type, available only)
+  // Build assigned sets from masterMap (authoritative, using full arrays) + live AssignedTo as fallback
+  const assignedBikes=new Set();
+  const assignedSims=new Set();
+  Object.values(state.masterMap||{}).forEach(a=>{
+    // Use full arrays if available, fall back to single values
+    (a.bikes||[]).forEach(id=>assignedBikes.add(id));
+    (a.sims||[]).forEach(id=>assignedSims.add(id));
+    if(a.bike) assignedBikes.add(a.bike);
+    if(a.sim) assignedSims.add(a.sim);
+  });
+  (state.bikes||[]).forEach(b=>{ if((b.AssignedTo||'').trim()) assignedBikes.add(b.BikeID); });
+  (state.sims||[]).forEach(s=>{ if((s.AssignedTo||'').trim()) assignedSims.add(s.SimID||s.ID); });
+
   let replOptions=[];
   if(_swapSelectedOld.type==='Bike'){
-    replOptions=(state.bikes||[]).filter(b=>(b.Status||'').toLowerCase()==='available'&&!(b.AssignedTo||'').trim()&&b.BikeID!==_swapSelectedOld.id)
+    // Exclude ALL assigned bikes (globally) except the one being returned (which becomes available)
+    replOptions=(state.bikes||[])
+      .filter(b=>{
+        if(b.BikeID===_swapSelectedOld.id) return false; // item being returned — not a replacement
+        if(assignedBikes.has(b.BikeID)&&b.BikeID!==_swapSelectedOld.id) return false; // assigned to someone else
+        return true;
+      })
       .map(b=>({value:b.BikeID,label:b.BikeID}));
   }else if(_swapSelectedOld.type==='SIM'){
-    replOptions=(state.sims||[]).filter(s=>!(s.AssignedTo||'').trim()&&(s.SimID||s.ID)!==_swapSelectedOld.id)
-      .map(s=>({value:s.SimID||s.ID,label:(s.Number||s.SimID||s.ID)+(s.Network?' · '+s.Network:'')}));
+    replOptions=(state.sims||[])
+      .filter(s=>{
+        const sid=s.SimID||s.ID;
+        if(sid===_swapSelectedOld.id) return false; // item being returned — not a replacement
+        if(assignedSims.has(sid)&&sid!==_swapSelectedOld.id) return false; // assigned to someone else
+        return true;
+      })
+      .map(s=>({value:s.SimID||s.ID,label:s.SimID||s.ID}));
   }
   sdSetOptions('swapnew',replOptions);
   document.getElementById('swap-new-section').style.display='';
@@ -3368,15 +4039,14 @@ async function submitCheckin(){
   // ── CHECK OUT ──
   if(action==='Check Out'){
     if(!_coSelectedItems.length){showToast('Add at least one item to check out','warn');return;}
-    // Validate all items are still available
+    // Validate all items are still available (use masterMap + CIO log)
+    const allAssigned={bikes:new Set(),sims:new Set()};
+    Object.values(state.masterMap||{}).forEach(a=>{ if(a.bike) allAssigned.bikes.add(a.bike); if(a.sim) allAssigned.sims.add(a.sim); });
+    (state.bikes||[]).forEach(b=>{ if((b.AssignedTo||'').trim()) allAssigned.bikes.add(b.BikeID); });
+    (state.sims||[]).forEach(s=>{ if((s.AssignedTo||'').trim()) allAssigned.sims.add(s.SimID||s.ID); });
     for(const it of _coSelectedItems){
-      if(it.type==='Bike'){
-        const bike=(state.bikes||[]).find(b=>b.BikeID===it.id);
-        if(bike&&(bike.AssignedTo||'').trim()){showToast(it.id+' is already assigned','error');return;}
-      }else if(it.type==='SIM'){
-        const sim=(state.sims||[]).find(s=>(s.SimID||s.ID)===it.id);
-        if(sim&&(sim.AssignedTo||'').trim()){showToast(it.id+' is already assigned','error');return;}
-      }
+      if(it.type==='Bike'&&allAssigned.bikes.has(it.id)){showToast(it.id+' is already assigned to a rider','error');return;}
+      if(it.type==='SIM'&&allAssigned.sims.has(it.id)){showToast(it.id+' is already assigned to a rider','error');return;}
     }
     const records=[];
     for(const it of _coSelectedItems){
@@ -3408,29 +4078,36 @@ async function submitCheckin(){
     const oldType=_swapSelectedOld.type;
     const oldId=_swapSelectedOld.id;
 
-    // Validate: item to return must be checked out (assigned to this rider)
-    if(oldType==='Bike'){
-      const ob=state.bikes.find(b=>b.BikeID===oldId);
-      if(!ob||(ob.AssignedTo||'').trim()!==riderEid){showToast(oldId+' is not currently checked out to this rider','error');return;}
-    }else if(oldType==='SIM'){
-      const os=(state.sims||[]).find(s=>(s.SimID||s.ID)===oldId);
-      if(!os||(os.AssignedTo||'').trim()!==riderEid){showToast(oldId+' is not currently checked out to this rider','error');return;}
+    // Validate: item to return must appear in rider's currently-assigned list (from CIO log)
+    const riderItems=_getAllAssignedItems(riderEid);
+    const riderHasOld=riderItems.some(it=>it.type===oldType&&it.id===oldId);
+    if(!riderHasOld){
+      // Fallback: check live state
+      let liveFallback=false;
+      if(oldType==='Bike'){const ob=state.bikes.find(b=>b.BikeID===oldId);liveFallback=ob&&(ob.AssignedTo||'')===(riderEid);}
+      else if(oldType==='SIM'){const os=(state.sims||[]).find(s=>(s.SimID||s.ID)===oldId);liveFallback=os&&(os.AssignedTo||'')===(riderEid);}
+      if(!liveFallback){showToast(oldId+' is not currently checked out to this rider','error');return;}
     }
 
-    // Validate: replacement must be available (checked in, not assigned)
-    if(oldType==='Bike'){
-      const nb=state.bikes.find(b=>b.BikeID===newId);
-      if(!nb||(nb.AssignedTo||'').trim()||(nb.Status||'').toLowerCase()!=='available'){showToast(newId+' is not available','error');return;}
-    }else if(oldType==='SIM'){
-      const ns=(state.sims||[]).find(s=>(s.SimID||s.ID)===newId);
-      if(!ns||(ns.AssignedTo||'').trim()){showToast(newId+' is not available','error');return;}
-    }
+    // Validate: replacement must not appear in any rider's assigned list
+    const allItems=[];
+    (state.employees||[]).forEach(e=>{
+      const eid2=e.EmpID||e.EID;
+      if(eid2!==riderEid) _getAllAssignedItems(eid2).forEach(it=>allItems.push(it));
+    });
+    const newAlreadyAssigned=allItems.some(it=>it.type===oldType&&it.id===newId);
+    if(newAlreadyAssigned){showToast(newId+' is already assigned to another rider','error');return;}
 
-    const recIn={Timestamp:ts,RefID:makeRef(),RiderName:rider?rider.Name:'Unknown',EmpID:riderEid,
+    // Check-Out ID generated exactly 2ms after Check-In ID to guarantee uniqueness
+    const _swapBaseTs=new Date();
+    const checkInRefId=genRefIdFromDate(_swapBaseTs);
+    const checkOutRefId=genRefIdFromDate(new Date(_swapBaseTs.getTime()+2));
+
+    const recIn={Timestamp:ts,RefID:checkInRefId,RiderName:rider?rider.Name:'Unknown',EmpID:riderEid,
       RiderID:rider?rider.RiderID||'':'',Company:rider?rider.Company||'':'',
       AssetType:oldType,AssetID:oldId,Action:'Check In',Condition:condition,Notes:notes,CheckedBy:checkedBy};
 
-    const recOut={Timestamp:ts,RefID:makeRef(),RiderName:rider?rider.Name:'Unknown',EmpID:riderEid,
+    const recOut={Timestamp:ts,RefID:checkOutRefId,RiderName:rider?rider.Name:'Unknown',EmpID:riderEid,
       RiderID:rider?rider.RiderID||'':'',Company:rider?rider.Company||'':'',
       AssetType:oldType,AssetID:newId,Action:'Check Out',Condition:condition,Notes:notes,CheckedBy:checkedBy};
 
