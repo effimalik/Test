@@ -649,7 +649,7 @@ let _datasets = [
   { key: 'ap2_master',   label: 'Master Sheet',  apiKey: 'master',   paramKey: 'type', ttl: 900000 },
   { key: 'ap2_sim',      label: 'SIMs',          apiKey: 'sim',      paramKey: 'type', ttl: 900000 },
   { key: 'ap2_docLog',   label: 'Doc Log',       apiKey: 'docLog',   paramKey: 'type', ttl: 900000 },
-  { key: 'ap2_userAdmin',label: 'User Admin',    apiKey: 'loginData',paramKey: 'type', ttl: 900000 },
+  { key: 'ap2_loginData',label: 'User Admin',    apiKey: 'loginData',paramKey: 'type', ttl: 900000 },
 ];  // [{key, label, apiKey, paramKey, ttl}]
 
 /* Colour palette for avatars */
@@ -681,7 +681,7 @@ function _setGuard(msg, isError = false) {
 /* Gate key — same convention as ap2_employee, ap2_bike, etc.
    Presence of this key in the session's permitted datasets is the
    sole access gate, matching dataLayer.js's permission model. */
-const GATE_KEY = 'ap2_userAdmin';
+const GATE_KEY = 'ap2_loginData';
 
 function _getSessionDatasets() {
   // Mirrors dataLayer.js's own lookup order: window.Auth first, then
