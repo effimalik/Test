@@ -624,18 +624,51 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
 'use strict';
 
 /* ═══════════════════════════════════════════════════════
-   CONFIG — replace with your GAS deployment URL
+   GAS URL — only needed for write actions (saveUser, updateUser).
+   All READ data comes from the ap2_loginData IDB cache populated
+   by dataLayer.js exactly as ap2_employee does in allEmp.html.
 ═══════════════════════════════════════════════════════ */
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwrFtPEGxNMbIJMEPbBnjkgoxHYC6fojf4jkxJbLUQqAs0winJXwKhsijATPRl_5cLT/exec'; // ← paste your GAS URL here
+const GAS_URL = ''; // ← paste your GAS URL here (needed for saves only)
 
 /* ═══════════════════════════════════════════════════════
-   MASTER DATA STORE
-   Populated from GAS via fetchSheet()
+   IDB CONFIG — mirrors allEmp.html exactly
+═══════════════════════════════════════════════════════ */
+const _IDB_NAME   = 'ap2_fleet_cache';
+const _IDB_STORE  = 'datasets';
+const _CACHE_KEY  = 'ap2_loginData';
+
+let _idbConn = null;
+function _getDB() {
+  if (_idbConn) return Promise.resolve(_idbConn);
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(_IDB_NAME);
+    req.onsuccess = e => { _idbConn = e.target.result; res(_idbConn); };
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+/* Read ap2_loginData from IDB.
+   Shape: { ts, fingerprint, data: { LoginReq:[...], Users:[...], Permissions:[...] } }
+   Returns the inner .data object or null. */
+async function _readCache() {
+  const db  = await _getDB();
+  const rec = await new Promise((res, rej) => {
+    const req = db.transaction(_IDB_STORE, 'readonly')
+                  .objectStore(_IDB_STORE).get(_CACHE_KEY);
+    req.onsuccess = () => res(req.result || null);
+    req.onerror   = () => rej(req.error);
+  });
+  if (!rec || !rec.data) return null;
+  return rec.data;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MASTER DATA STORE — populated from IDB cache
 ═══════════════════════════════════════════════════════ */
 let _state = {
-  loginReqs:   [],  // rows from LoginReq sheet  [{ts, email, status}]
-  users:       [],  // rows from Users sheet      [{email, name, role, status}]
-  permissions: [],  // rows from Permissions sheet [{email, dataset, label, apiKey, paramKey, ttl}]
+  loginReqs:   [],  // from cache.data.LoginReq
+  users:       [],  // from cache.data.Users
+  permissions: [],  // from cache.data.Permissions
 };
 
 /* Fixed dataset catalogue — the dropdown always offers exactly these 5,
@@ -649,7 +682,6 @@ let _datasets = [
   { key: 'ap2_master',   label: 'Master Sheet',  apiKey: 'master',   paramKey: 'type', ttl: 900000 },
   { key: 'ap2_sim',      label: 'SIMs',          apiKey: 'sim',      paramKey: 'type', ttl: 900000 },
   { key: 'ap2_docLog',   label: 'Doc Log',       apiKey: 'docLog',   paramKey: 'type', ttl: 900000 },
-  { key: 'ap2_loginData',label: 'User Admin',    apiKey: 'loginData',paramKey: 'type', ttl: 900000 },
 ];  // [{key, label, apiKey, paramKey, ttl}]
 
 /* Colour palette for avatars */
@@ -724,24 +756,14 @@ async function _bootGuard() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   GAS API HELPERS
+   GAS POST HELPER — writes only (saveUser / updateUser)
 ═══════════════════════════════════════════════════════ */
-async function _gasGet(action, params = {}) {
-  if (!GAS_URL) throw new Error('GAS_URL not configured');
-  const qs = new URLSearchParams({ action, ...params });
-  const res = await fetch(`${GAS_URL}?${qs}`, { method: 'GET' });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  return data;
-}
-
 async function _gasPost(action, payload = {}) {
-  if (!GAS_URL) throw new Error('GAS_URL not configured');
+  if (!GAS_URL) throw new Error('GAS_URL not configured — set the GAS_URL constant.');
   const res = await fetch(GAS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, ...payload })
+    body: JSON.stringify({ action, ...payload }),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
@@ -750,73 +772,38 @@ async function _gasPost(action, payload = {}) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   LOAD DATA FROM GAS
+   LOAD DATA — IDB only, same as allEmp.html
 ═══════════════════════════════════════════════════════ */
 
-/* Fetch all three sheets at once */
-async function loadAll() {
-  // If no GAS URL yet, show placeholder data
-  if (!GAS_URL) {
-    _showNoUrlNotice();
-    return;
-  }
-  try {
-    const [lrData, usData, pmData] = await Promise.all([
-      _gasGet('getLoginReqs'),
-      _gasGet('getUsers'),
-      _gasGet('getPermissions'),
-    ]);
-    _state.loginReqs   = lrData.rows  || [];
-    _state.users       = usData.rows  || [];
-    _state.permissions = pmData.rows  || [];
-    _buildDatasets();
-    renderLoginReqs();
-    renderUsers();
-    renderPermissionsSheet();
-  } catch (err) {
-    toast('Failed to load data: ' + err.message, 'error');
-  }
+/* Normalise cache rows into _state.
+   Cache rows may be plain objects (named keys) or arrays (positional).
+   LoginReq  cols: [0]=Timestamp [1]=Email [2]=Status
+   Users     cols: [0]=Email [1]=Name [2]=Role [3]=Status
+   Permissions cols: [0]=Email [1]=Dataset [2]=Label [3]=ApiKey [4]=ParamKey [5]=TTL */
+function _normaliseState(data) {
+  _state.loginReqs = (data.LoginReq || []).map(r => Array.isArray(r)
+    ? { timestamp: r[0], email: r[1], status: r[2] }
+    : r
+  );
+  _state.users = (data.Users || []).map(r => Array.isArray(r)
+    ? { email: r[0], name: r[1], role: r[2], status: r[3] }
+    : r
+  );
+  _state.permissions = (data.Permissions || []).map(r => Array.isArray(r)
+    ? { email: r[0], dataset: r[1], label: r[2], apiKey: r[3], paramKey: r[4], ttl: Number(r[5]) }
+    : r
+  );
+  _buildDatasets();
 }
 
-async function loadLoginReqs() {
-  if (!GAS_URL) { _showNoUrlNotice(); return; }
-  const tbody = document.getElementById('loginreq-tbody');
-  tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><i class="ti ti-loader" style="animation:spin 1s linear infinite;"></i><span>Refreshing…</span></div></td></tr>`;
-  try {
-    const data = await _gasGet('getLoginReqs');
-    _state.loginReqs = data.rows || [];
-    renderLoginReqs();
-  } catch (err) { toast('Error: ' + err.message, 'error'); }
-}
-
-async function loadUsers() {
-  if (!GAS_URL) { _showNoUrlNotice(); return; }
-  const tbody = document.getElementById('users-tbody');
-  tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><i class="ti ti-loader" style="animation:spin 1s linear infinite;"></i><span>Refreshing…</span></div></td></tr>`;
-  try {
-    const [usData, pmData] = await Promise.all([_gasGet('getUsers'), _gasGet('getPermissions')]);
-    _state.users       = usData.rows || [];
-    _state.permissions = pmData.rows || [];
-    _buildDatasets();
-    renderUsers();
-    renderPermissionsSheet();
-  } catch (err) { toast('Error: ' + err.message, 'error'); }
-}
-
-/* Overlay live Permissions-sheet values (ApiKey/ParamKey/TTL/Label) onto
-   the fixed 5-dataset catalogue, in case they were edited in the sheet.
-   The catalogue's set of keys never changes — only its default values do. */
+/* Overlay any live apiKey/paramKey/ttl values from the Permissions data
+   onto the fixed 5-dataset catalogue, so cards are pre-filled correctly. */
 function _buildDatasets() {
   const byKey = {};
   for (const row of _state.permissions) {
-    const key = row.dataset || row[1];
-    if (!key || byKey[key]) continue; // first match wins
-    byKey[key] = {
-      label:    row.label    || row[2] || '',
-      apiKey:   row.apiKey   || row[3] || '',
-      paramKey: row.paramKey || row[4] || '',
-      ttl:      Number(row.ttl || row[5] || 0) || null,
-    };
+    const key = row.dataset;
+    if (!key || byKey[key]) continue;
+    byKey[key] = { label: row.label, apiKey: row.apiKey, paramKey: row.paramKey, ttl: Number(row.ttl) || null };
   }
   _datasets = _datasets.map(ds => {
     const live = byKey[ds.key];
@@ -831,19 +818,45 @@ function _buildDatasets() {
   });
 }
 
-/* ═══════════════════════════════════════════════════════
-   NO-URL PLACEHOLDER
-═══════════════════════════════════════════════════════ */
-function _showNoUrlNotice() {
-  ['loginreq-tbody','users-tbody','perms-tbody'].forEach(id => {
+/* Main load: read IDB, normalise, render all three tabs */
+async function loadAll() {
+  try {
+    const data = await _readCache();
+    if (!data) {
+      _showNoCacheNotice();
+      return;
+    }
+    _normaliseState(data);
+    renderLoginReqs();
+    renderUsers();
+    renderPermissionsSheet();
+  } catch (err) {
+    toast('Failed to load from cache: ' + err.message, 'error');
+    console.error('[userAdmin] loadAll error:', err);
+  }
+}
+
+/* Refresh — re-reads IDB (dataLayer.js may have refreshed it) */
+async function loadLoginReqs() {
+  const tbody = document.getElementById('loginreq-tbody');
+  tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><i class="ti ti-loader" style="animation:spin 1s linear infinite;"></i><span>Refreshing…</span></div></td></tr>`;
+  await loadAll();
+}
+async function loadUsers() {
+  const tbody = document.getElementById('users-tbody');
+  tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><i class="ti ti-loader" style="animation:spin 1s linear infinite;"></i><span>Refreshing…</span></div></td></tr>`;
+  await loadAll();
+}
+
+/* Shown when ap2_loginData hasn't been populated by dataLayer.js yet */
+function _showNoCacheNotice() {
+  [['loginreq-tbody',4],['users-tbody',5],['perms-tbody',6]].forEach(([id, cols]) => {
     const el = document.getElementById(id);
-    if (!el) return;
-    const cols = id === 'users-tbody' ? 5 : id === 'perms-tbody' ? 6 : 4;
-    el.innerHTML = `<tr><td colspan="${cols}">
+    if (el) el.innerHTML = `<tr><td colspan="${cols}">
       <div class="empty-state">
-        <i class="ti ti-plug-connected-x"></i>
-        <strong>GAS URL not configured</strong>
-        <span style="max-width:340px;">Open this file and set the <code style="font-family:var(--mono);font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:4px;">GAS_URL</code> constant at the top of the script to your Apps Script deployment URL.</span>
+        <i class="ti ti-database-off"></i>
+        <strong>Cache not ready</strong>
+        <span style="max-width:320px;">The <code style="font-family:var(--mono);font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:4px;">ap2_loginData</code> cache hasn't been populated yet. It will load automatically once dataLayer.js syncs.</span>
       </div>
     </td></tr>`;
   });
@@ -1294,28 +1307,50 @@ function _esc(s) {
 /* ═══════════════════════════════════════════════════════
    THEME SYNC — parent index.html pushes theme via postMessage
 ═══════════════════════════════════════════════════════ */
+/* Background cache watcher — mirrors allEmp.html's _bgWatcher.
+   Re-renders whenever dataLayer.js pushes a fresh ap2_loginData entry. */
+(function () {
+  let _debounce = null;
+  async function _applyFromIDB() {
+    try {
+      const data = await _readCache();
+      if (!data) return;
+      _normaliseState(data);
+      renderLoginReqs();
+      renderUsers();
+      renderPermissionsSheet();
+    } catch (e) {
+      console.warn('[userAdmin] background refresh error:', e.message);
+    }
+  }
+  function _debounced() {
+    if (_debounce) clearTimeout(_debounce);
+    _debounce = setTimeout(_applyFromIDB, 200);
+  }
+  setInterval(_applyFromIDB, 30000);
+  window.addEventListener('ap-cache-updated', _debounced);
+})();
+
 window.addEventListener('message', e => {
   if (!e.data) return;
   if (e.data.type === 'ap-theme' && e.data.theme) {
     document.documentElement.setAttribute('data-theme', e.data.theme);
   }
   if (e.data.type === 'ap-cache-updated') {
-    // not used here (this page reads from GAS, not IDB) — ignore
+    window.dispatchEvent(new CustomEvent('ap-cache-updated'));
   }
 });
 
 /* ═══════════════════════════════════════════════════════
-   GAS RESPONSE SHAPES EXPECTED
-   (document for your GAS Code.gs)
-
-   action=getLoginReqs → { rows: [{timestamp,email,status},...] }
-   action=getUsers     → { rows: [{email,name,role,status},...] }
-   action=getPermissions→{ rows: [{email,dataset,label,apiKey,paramKey,ttl},...] }
+   GAS WRITE ENDPOINT SHAPES (for your Code.gs)
+   Reading is IDB-only — no GAS needed for reads.
 
    POST action=saveUser   → { success:true }
-     body: {name,email,role,status, permissions:[{dataset,label,apiKey,paramKey,ttl},...]}
+     body: { name, email, role, status,
+             permissions: [{dataset, label, apiKey, paramKey, ttl}, ...] }
+
    POST action=updateUser → { success:true }
-     body: same as saveUser (existing rows for email replaced entirely)
+     body: same as saveUser (replaces all existing rows for that email)
 ═══════════════════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════════════════
