@@ -7,9 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-<script src="https://effimalik.github.io/Test/shared/auth.js"></script>
-<script src="https://effimalik.github.io/Test/shared/code.js"></script>
-<script src="https://effimalik.github.io/Test/shared/dataLayer.js"></script>
+<script src="https://effimalik.github.io/Testing/shared/auth.js"></script>
+<script src="https://effimalik.github.io/Testing/shared/code.js"></script>
 
 <style>
 /* ══ Reset ══ */
@@ -621,6 +620,12 @@ const _IDB_STORE  = 'datasets';
 const _CACHE_KEY  = 'ap2_loginData';
 
 let _idbConn = null;
+
+/* Open IDB without specifying a version — the store is created by
+   dataLayer.js running in the parent shell. We never call onupgradeneeded
+   here; we just read what's already there. If the store doesn't exist
+   yet (NotFoundError), _readCache returns null and we wait for
+   ap-cache-updated from the parent to retry. */
 function _getDB() {
   if (_idbConn) return Promise.resolve(_idbConn);
   return new Promise((res, rej) => {
@@ -630,19 +635,24 @@ function _getDB() {
   });
 }
 
-/* Read ap2_loginData from IDB.
-   Shape: { ts, fingerprint, data: { LoginReq:[...], Users:[...], Permissions:[...] } }
-   Returns the inner .data object or null. */
 async function _readCache() {
-  const db  = await _getDB();
-  const rec = await new Promise((res, rej) => {
-    const req = db.transaction(_IDB_STORE, 'readonly')
-                  .objectStore(_IDB_STORE).get(_CACHE_KEY);
-    req.onsuccess = () => res(req.result || null);
-    req.onerror   = () => rej(req.error);
-  });
-  if (!rec || !rec.data) return null;
-  return rec.data;
+  try {
+    const db  = await _getDB();
+    // Guard: store may not exist if dataLayer hasn't initialised yet
+    if (!db.objectStoreNames.contains(_IDB_STORE)) return null;
+    const rec = await new Promise((res, rej) => {
+      const req = db.transaction(_IDB_STORE, 'readonly')
+                    .objectStore(_IDB_STORE).get(_CACHE_KEY);
+      req.onsuccess = () => res(req.result || null);
+      req.onerror   = () => rej(req.error);
+    });
+    if (!rec || !rec.data) return null;
+    return rec.data;
+  } catch (e) {
+    // NotFoundError or version mismatch — store not ready yet, return null
+    if (e.name === 'NotFoundError' || e.name === 'InvalidStateError') return null;
+    throw e;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
