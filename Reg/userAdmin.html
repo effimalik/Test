@@ -340,15 +340,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
 .toast.success { background: var(--teal-dim); color: var(--teal); border-color: rgba(57,211,83,.25); }
 .toast.error { background: var(--red-dim); color: var(--red); border-color: rgba(248,81,73,.25); }
 
-/* ══ Access guard overlay ══ */
-#access-guard {
-  position: fixed; inset: 0; z-index: 500;
-  background: var(--bg); display: flex; align-items: center; justify-content: center;
-}
-.guard-box { text-align: center; color: var(--text3); display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.guard-box i { font-size: 40px; color: var(--red); opacity: .7; display: inline-flex; }
-.guard-box h3 { font-size: 16px; color: var(--text); }
-.guard-box p { font-size: 13px; max-width: 320px; }
+
 
 @keyframes spin { to { transform: rotate(360deg); } }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -358,17 +350,8 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
 </head>
 <body>
 
-<!-- ══ Access guard ══ -->
-<div id="access-guard">
-  <div class="guard-box">
-    <i class="ti ti-loader" style="animation:spin 1s linear infinite;color:var(--accent);"></i>
-    <h3>Checking access…</h3>
-    <p>Verifying your session and permissions.</p>
-  </div>
-</div>
-
 <!-- ══ Main page ══ -->
-<div class="page" id="main-page" style="display:none;">
+<div class="page" id="main-page">
 
   <!-- Tab bar -->
   <div class="tab-bar">
@@ -698,62 +681,7 @@ function _initials(name) {
   return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
 }
 
-/* ═══════════════════════════════════════════════════════
-   ACCESS GUARD — only Admin role may see this portal
-═══════════════════════════════════════════════════════ */
-function _setGuard(msg, isError = false) {
-  const g = document.getElementById('access-guard');
-  g.innerHTML = `<div class="guard-box">
-    <i class="ti ti-${isError ? 'lock' : 'loader'}" style="${isError ? '' : 'animation:spin 1s linear infinite;color:var(--accent);'}${isError ? 'color:var(--red)' : ''}"></i>
-    <h3>${isError ? 'Access Denied' : 'Checking access…'}</h3>
-    <p>${msg}</p>
-  </div>`;
-}
 
-/* Gate key — same convention as ap2_employee, ap2_bike, etc.
-   Presence of this key in the session's permitted datasets is the
-   sole access gate, matching dataLayer.js's permission model. */
-const GATE_KEY = 'ap2_loginData';
-
-function _getSessionDatasets() {
-  // Mirrors dataLayer.js's own lookup order: window.Auth first, then
-  // the ap_session sessionStorage key it's built from.
-  try {
-    if (window.Auth && typeof window.Auth.getDatasets === 'function') {
-      return window.Auth.getDatasets() || {};
-    }
-  } catch (e) { /* fall through */ }
-  try {
-    const raw = sessionStorage.getItem('ap_session');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      return parsed.datasets || {};
-    }
-  } catch (e) { /* fall through */ }
-  return {};
-}
-
-async function _bootGuard() {
-  // auth.js's own session-guard IIFE already redirects to login.html if
-  // there's no valid/active session, so by the time we get here a
-  // session is expected to exist. We just wait for it to be populated.
-  let datasets = {};
-  for (let i = 0; i < 20; i++) {
-    datasets = _getSessionDatasets();
-    if (datasets && Object.keys(datasets).length) break;
-    await new Promise(r => setTimeout(r, 150));
-  }
-
-  if (!datasets || !datasets[GATE_KEY]) {
-    _setGuard(`Your account does not have the <code style="font-family:var(--mono);background:var(--bg3);padding:1px 5px;border-radius:4px;">${GATE_KEY}</code> permission. Ask an Admin to grant it from the Permissions sheet.`, true);
-    return false;
-  }
-
-  // Hide guard, show page
-  document.getElementById('access-guard').style.display = 'none';
-  document.getElementById('main-page').style.display = 'flex';
-  return true;
-}
 
 /* ═══════════════════════════════════════════════════════
    GAS POST HELPER — writes only (saveUser / updateUser)
@@ -1357,8 +1285,6 @@ window.addEventListener('message', e => {
    INIT
 ═══════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-  const ok = await _bootGuard();
-  if (!ok) return;
   await loadAll();
 });
 </script>
