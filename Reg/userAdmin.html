@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-<script src="https://effimalik.github.io/Test/shared/auth.js"></script>
-<script src="https://effimalik.github.io/Test/shared/code.js"></script>
+<script src="https://effimalik.github.io/Testing/shared/auth.js"></script>
+<script src="https://effimalik.github.io/Testing/shared/code.js"></script>
 
 <style>
 /* ══ Reset ══ */
@@ -719,17 +719,29 @@ async function _gasPost(action, payload = {}) {
    Users     cols: [0]=Email [1]=Name [2]=Role [3]=Status
    Permissions cols: [0]=Email [1]=Dataset [2]=Label [3]=ApiKey [4]=ParamKey [5]=TTL */
 function _normaliseState(data) {
-  _state.loginReqs = (data.LoginReq || []).map(r => Array.isArray(r)
-    ? { timestamp: r[0], email: r[1], status: r[2] }
-    : r
+  // Cache rows are plain objects with keys as GAS returns them.
+  // Column headers may be capitalised (Email, Dataset, ApiKey…) or
+  // lowercase depending on how GAS serialises them — normalise all to
+  // lowercase keys so the rest of the code works uniformly.
+  function _norm(r, map) {
+    if (Array.isArray(r)) return map(r);   // positional fallback
+    const out = {};
+    for (const [k, v] of Object.entries(r)) out[k.toLowerCase()] = v;
+    // alias camelCase fields that GAS may capitalise
+    if (out.apikey   !== undefined) { out.apiKey   = out.apikey;   delete out.apikey;   }
+    if (out.paramkey !== undefined) { out.paramKey = out.paramkey; delete out.paramkey; }
+    if (out.ttl      !== undefined) out.ttl = Number(out.ttl) || 0;
+    return out;
+  }
+
+  _state.loginReqs = (data.LoginReq || []).map(r =>
+    _norm(r, a => ({ timestamp: a[0], email: a[1], status: a[2] }))
   );
-  _state.users = (data.Users || []).map(r => Array.isArray(r)
-    ? { email: r[0], name: r[1], role: r[2], status: r[3] }
-    : r
+  _state.users = (data.Users || []).map(r =>
+    _norm(r, a => ({ email: a[0], name: a[1], role: a[2], status: a[3] }))
   );
-  _state.permissions = (data.Permissions || []).map(r => Array.isArray(r)
-    ? { email: r[0], dataset: r[1], label: r[2], apiKey: r[3], paramKey: r[4], ttl: Number(r[5]) }
-    : r
+  _state.permissions = (data.Permissions || []).map(r =>
+    _norm(r, a => ({ email: a[0], dataset: a[1], label: a[2], apiKey: a[3], paramKey: a[4], ttl: Number(a[5]) }))
   );
   _buildDatasets();
 }
