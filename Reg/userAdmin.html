@@ -1039,6 +1039,11 @@ function _msToLabel(ms) {
   const secs = Math.round(ms / 1000);
   return secs > 0 ? `${secs} Seconds` : 'No expiry set';
 }
+function _ttlCell(ttl) {
+  const ms = _toNum(ttl);
+  if (!ms) return `<span style="color:var(--text3);">${_msToLabel(ms)}</span>`;
+  return `<span>${ms} <span style="color:var(--text3);">(${_msToLabel(ms)})</span></span>`;
+}
 function _ttlSelectOptions(selectedMs) {
   const sel = _toNum(selectedMs) || 900000;
   let opts = TTL_OPTIONS.map(o => `<option value="${o.ms}" ${o.ms === sel ? 'selected' : ''}>${o.label}</option>`).join('');
@@ -1108,10 +1113,16 @@ function _normaliseState(data) {
   function _norm(r, map) {
     if (Array.isArray(r)) return map(r);
     const out = {};
-    for (const [k, v] of Object.entries(r)) out[k.toLowerCase()] = v;
+    for (const [k, v] of Object.entries(r)) {
+      // strip anything in parens/brackets and non-alphanumerics so
+      // "TTL(ms)", "TTL_ms", "ttl ms" etc. all collapse to "ttl"
+      const cleanKey = k.toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]/g, '');
+      out[cleanKey] = v;
+    }
     if (out.apikey   !== undefined) { out.apiKey   = out.apikey;   delete out.apikey;   }
     if (out.paramkey !== undefined) { out.paramKey = out.paramkey; delete out.paramkey; }
     if (out.ttl      !== undefined) out.ttl = _toNum(out.ttl);
+    else if (out.ttlms !== undefined) { out.ttl = _toNum(out.ttlms); delete out.ttlms; }
     return out;
   }
 
