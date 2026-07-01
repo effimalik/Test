@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-<script src="https://effimalik.github.io/Test/shared/auth.js"></script>
-<script src="https://effimalik.github.io/Test/shared/code.js"></script>
+<script src="https://effimalik.github.io/Testing/shared/auth.js"></script>
+<script src="https://effimalik.github.io/Testing/shared/code.js"></script>
 
 <style>
 /* ══ Reset ══ */
@@ -143,6 +143,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
 .data-table {
   display: grid; width: 100%; font-size: clamp(11px,1.3vw,13px); min-width: 560px;
 }
+.data-table.wide-table { min-width: 760px; }
 .data-table thead, .data-table tbody, .data-table tr { display: contents; }
 .data-table thead th {
   position: sticky; top: 0; z-index: 2; background: var(--bg3);
@@ -159,6 +160,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
   overflow: hidden; text-overflow: ellipsis;
   transition: background .12s;
 }
+.data-table td.cell-action { justify-content: flex-end; }
 .data-table td.truncate { white-space: nowrap; }
 .data-table td[colspan], .data-table th[colspan] { grid-column: 1 / -1; display: block; }
 .data-table tr:last-child td { border-bottom: none; }
@@ -494,12 +496,86 @@ tbody.tbody-anim tr { animation: rowFadeIn .22s ease; }
 .perm-row-fields input:disabled, .perm-row-fields select:disabled { opacity: .45; cursor: not-allowed; }
 .perm-card-wrap { display: flex; flex-direction: column; gap: 6px; }
 
-/* responsive */
-@media (max-width: 640px) {
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+
+/* ── Tablet / narrow desktop ── */
+@media (max-width: 900px) {
+  .field-row { grid-template-columns: 1fr; }
+  .info-row { gap: 8px; }
+  .modal.wide { width: min(700px, 96vw); }
+}
+
+/* ── Mobile: tables become stacked cards ── */
+@media (max-width: 760px) {
+  .page { padding: 8px; }
+  .tab-bar { gap: 3px; margin-bottom: 10px; }
+  .tab-btn { padding: 8px 10px; font-size: 11.5px; }
+  .tab-btn i { font-size: 14px; }
+  .sec-header { margin-bottom: 10px; }
+  .sec-header > .tb-btn { width: 100%; justify-content: center; }
+
+  .table-toolbar { gap: 8px; }
+  .tt-search { flex: 1 1 100%; max-width: none; }
+  .tt-filter { flex: 1 1 100%; }
+  .tt-filter select { width: 100%; }
+  .tt-spacer { display: none; }
+  .tt-count { flex-basis: 100%; text-align: right; }
+
+  .table-wrap { overflow-x: hidden; }
+  .data-table, .data-table.wide-table { display: block; min-width: 0; width: 100%; }
+  .data-table thead { display: none; }
+  .data-table tbody { display: block; }
+  .data-table tbody tr {
+    display: block; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 4px 12px; margin-bottom: 10px;
+  }
+  .data-table tbody tr:last-child { margin-bottom: 0; }
+  .data-table tbody tr:hover td { background: transparent; }
+  .data-table td {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--border);
+    text-align: right; white-space: normal;
+  }
+  .data-table td:last-child { border-bottom: none; }
+  .data-table td::before {
+    content: attr(data-label); flex-shrink: 0;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--text3); text-align: left;
+  }
+  .data-table td.cell-user {
+    display: block; padding: 12px 0 10px; border-bottom: 1px solid var(--border); margin-bottom: 2px;
+  }
+  .data-table td.cell-user::before { display: none; }
+  .data-table td.cell-action { display: block; padding: 10px 0 12px; }
+  .data-table td.cell-action::before { display: none; }
+  .data-table td.cell-action > div,
+  .data-table td.cell-action button { width: 100%; }
+  .data-table td[colspan] {
+    display: block; text-align: left; padding: 0; border-bottom: none;
+  }
+  .data-table td[colspan]::before { display: none; }
+
+  .pagination-bar { justify-content: center; text-align: center; }
+  .pg-info { flex-basis: 100%; text-align: center; }
+  .pg-controls { flex-basis: 100%; justify-content: center; }
+
+  .modal-header, .modal-body, .modal-footer { padding-left: 14px; padding-right: 14px; }
+  .modal-footer { flex-wrap: wrap; }
+  .modal-footer button { flex: 1 1 auto; }
   .drawer-panel { width: 100vw; }
-  .table-toolbar { padding: 9px 10px; }
+  .drawer-footer { flex-wrap: wrap; }
+  .drawer-footer button { flex: 1 1 auto; }
+
   .field-row { grid-template-columns: 1fr; }
   .perm-fields.three { grid-template-columns: 1fr 1fr; }
+  .toast { left: 12px; right: 12px; bottom: 12px; max-width: none; }
+}
+
+@media (max-width: 420px) {
+  .perm-fields, .perm-fields.three { grid-template-columns: 1fr; }
+  .tab-btn span.tab-badge { margin-left: 2px; }
 }
 </style>
 </head>
@@ -674,7 +750,7 @@ tbody.tbody-anim tr { animation: rowFadeIn .22s ease; }
         <span class="tt-count" id="perms-count"></span>
       </div>
       <div class="table-wrap">
-        <table class="data-table" style="min-width:760px;grid-template-columns:20% 14% 19% 15% 15% 17%;">
+        <table class="data-table wide-table" style="grid-template-columns:20% 14% 19% 15% 15% 17%;">
           <thead>
             <tr>
               <th class="th-sort" data-key="email" onclick="_setSort('perms','email')">Email <i class="ti ti-chevron-up"></i></th>
@@ -1271,10 +1347,10 @@ function renderLoginReqs() {
            </button>
          </div>`;
     return `<tr>
-      <td style="font-family:var(--mono);font-size:11.5px;color:var(--text3);">${_esc(ts)}</td>
-      <td style="font-family:var(--mono);font-size:12px;">${_esc(email)}</td>
-      <td><span class="badge gold">Pending</span></td>
-      <td style="justify-content:flex-end;">${actionBtn}</td>
+      <td data-label="Timestamp" style="font-family:var(--mono);font-size:11.5px;color:var(--text3);">${_esc(ts)}</td>
+      <td data-label="Email" style="font-family:var(--mono);font-size:12px;">${_esc(email)}</td>
+      <td data-label="Status"><span class="badge gold">Pending</span></td>
+      <td data-label="Action" class="cell-action">${actionBtn}</td>
     </tr>`;
   }).join('');
   _renderPaginationBar('requests', total, ui);
@@ -1318,11 +1394,11 @@ function renderHistory() {
       ? `<button class="tb-btn sm" onclick="switchTab('tab-users'); openProfileDrawer('${_esc(email)}')"><i class="ti ti-user-circle"></i> View Profile</button>`
       : `<span style="color:var(--text3);font-size:11.5px;">—</span>`;
     return `<tr>
-      <td style="font-family:var(--mono);font-size:11.5px;color:var(--text3);">${_esc(ts)}</td>
-      <td style="font-family:var(--mono);font-size:12px;">${_esc(email)}</td>
-      <td>${badge}</td>
-      <td>${reason}</td>
-      <td style="justify-content:flex-end;">${action}</td>
+      <td data-label="Timestamp" style="font-family:var(--mono);font-size:11.5px;color:var(--text3);">${_esc(ts)}</td>
+      <td data-label="Email" style="font-family:var(--mono);font-size:12px;">${_esc(email)}</td>
+      <td data-label="Status">${badge}</td>
+      <td data-label="Reason">${reason}</td>
+      <td data-label="Action" class="cell-action">${action}</td>
     </tr>`;
   }).join('');
   _renderPaginationBar('history', total, ui);
@@ -1368,7 +1444,7 @@ function renderUsers() {
     const roleBadge = _roleBadge(role);
 
     return `<tr>
-      <td>
+      <td class="cell-user">
         <div class="user-cell">
           <div class="avatar" style="background:${av.bg};color:${av.fg};">${initials}</div>
           <div>
@@ -1377,13 +1453,15 @@ function renderUsers() {
           </div>
         </div>
       </td>
-      <td>${roleBadge}</td>
-      <td>${statusBadge}</td>
-      <td>
-        <span style="font-family:var(--mono);font-size:12px;color:var(--text2);">${row.dsCnt}</span>
-        <span style="font-size:11px;color:var(--text3);"> module${row.dsCnt !== 1 ? 's' : ''}</span>
+      <td data-label="Role">${roleBadge}</td>
+      <td data-label="Status">${statusBadge}</td>
+      <td data-label="Datasets">
+        <span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--text2);">${row.dsCnt}</span>
+          <span style="font-size:11px;color:var(--text3);"> module${row.dsCnt !== 1 ? 's' : ''}</span>
+        </span>
       </td>
-      <td style="justify-content:flex-end;">
+      <td data-label="Actions" class="cell-action">
         <button class="tb-btn sm primary" onclick="openProfileDrawer('${_esc(email)}')">
           <i class="ti ti-user-circle"></i> Profile
         </button>
@@ -1424,12 +1502,12 @@ function renderPermissionsSheet() {
   }
 
   tbody.innerHTML = pageRows.map(row => `<tr>
-      <td style="font-family:var(--mono);font-size:11.5px;">${_esc(row.email)}</td>
-      <td style="font-family:var(--mono);font-size:11.5px;">${_esc(row.dataset)}</td>
-      <td>${_esc(row.label)}</td>
-      <td style="font-family:var(--mono);font-size:11.5px;">${_esc(row.apiKey)}</td>
-      <td style="font-family:var(--mono);font-size:11.5px;">${_esc(row.paramKey)}</td>
-      <td style="font-family:var(--mono);font-size:11.5px;">${_esc(row.ttl)} <span style="color:var(--text3);">(${_msToLabel(row.ttl)})</span></td>
+      <td data-label="Email" style="font-family:var(--mono);font-size:11.5px;">${_esc(row.email)}</td>
+      <td data-label="Dataset" style="font-family:var(--mono);font-size:11.5px;">${_esc(row.dataset)}</td>
+      <td data-label="Label">${_esc(row.label)}</td>
+      <td data-label="ApiKey" style="font-family:var(--mono);font-size:11.5px;">${_esc(row.apiKey)}</td>
+      <td data-label="ParamKey" style="font-family:var(--mono);font-size:11.5px;">${_esc(row.paramKey)}</td>
+      <td data-label="TTL" style="font-family:var(--mono);font-size:11.5px;"><span>${_esc(row.ttl)} <span style="color:var(--text3);">(${_msToLabel(row.ttl)})</span></span></td>
     </tr>`).join('');
   _renderPaginationBar('perms', total, ui);
 }
