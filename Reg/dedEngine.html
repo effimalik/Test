@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Deduction Upload & Validation Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0c10;--bg2:#0f1117;--bg3:#141720;
+  --surface:#181c26;--surface2:#1e2333;--surface3:#242a3d;
+  --border:#252b3d;--border2:#2e3650;--border3:#3a4260;
+  --text:#e8edf8;--text2:#8d96b0;--text3:#5a6280;
+  --accent:#4f8ef7;--accent-dim:rgba(79,142,247,.12);--accent-glow:rgba(79,142,247,.25);
+  --teal:#2dd4aa;--teal-dim:rgba(45,212,170,.12);--teal-glow:rgba(45,212,170,.2);
+  --amber:#f5a623;--amber-dim:rgba(245,166,35,.12);
+  --red:#f05252;--red-dim:rgba(240,82,82,.12);--red-glow:rgba(240,82,82,.2);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,.12);
+  --orange:#fb923c;--orange-dim:rgba(251,146,60,.12);
+  --radius:6px;--radius-lg:10px;--radius-xl:14px;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --shadow:0 1px 4px rgba(0,0,0,.6);--shadow-md:0 4px 20px rgba(0,0,0,.7);--shadow-lg:0 8px 40px rgba(0,0,0,.8);
+  --header-h:56px;
+}
+html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:13.5px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── LAYOUT ── */
+.shell{display:flex;flex-direction:column;min-height:100vh;}
+.header{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:300;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;letter-spacing:-.3px;color:var(--text);}
+.brand-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.brand-sub{font-size:10.5px;font-weight:500;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;}
+.header-meta{display:flex;align-items:center;gap:12px;}
+.session-badge{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:20px;background:var(--surface2);border:1px solid var(--border2);font-size:11px;color:var(--text2);}
+.session-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse-dot 2s ease infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* ── STEPS NAV ── */
+.steps-nav{display:flex;align-items:center;padding:0 22px;background:var(--bg2);border-bottom:1px solid var(--border);height:48px;gap:0;overflow-x:auto;}
+.step-item{display:flex;align-items:center;gap:8px;padding:0 16px;height:100%;position:relative;cursor:pointer;white-space:nowrap;color:var(--text3);font-size:12px;font-weight:600;letter-spacing:.02em;transition:color .15s;border-bottom:2px solid transparent;flex-shrink:0;}
+.step-item:hover{color:var(--text2);}
+.step-item.active{color:var(--accent);border-bottom-color:var(--accent);}
+.step-item.done{color:var(--teal);}
+.step-item.done .step-num{background:var(--teal-dim);border-color:var(--teal);color:var(--teal);}
+.step-item.active .step-num{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+.step-num{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:var(--mono);background:var(--surface2);flex-shrink:0;}
+.step-arrow{color:var(--border2);margin:0 4px;font-size:14px;}
+
+/* ── CONTENT ── */
+.content{flex:1;padding:20px 22px 48px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── PAGE HEADER ── */
+.page-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+.page-hdr-left h1{font-size:18px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:10px;}
+.page-hdr-left p{font-size:12px;color:var(--text3);margin-top:3px;}
+.page-hdr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.sep{height:1px;background:var(--border);margin-bottom:18px;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;font-family:var(--font);font-weight:600;transition:all .16s;white-space:nowrap;}
+.btn:hover{background:var(--surface3);border-color:var(--border3);}
+.btn.primary{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+.btn.primary:hover{background:var(--accent);color:#fff;}
+.btn.success{background:var(--teal-dim);border-color:var(--teal);color:var(--teal);}
+.btn.success:hover{background:var(--teal);color:#000;}
+.btn.danger{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.btn.danger:hover{background:var(--red);color:#fff;}
+.btn.amber-btn{background:var(--amber-dim);border-color:var(--amber);color:var(--amber);}
+.btn.amber-btn:hover{background:var(--amber);color:#000;}
+.btn.purple-btn{background:var(--purple-dim);border-color:var(--purple);color:var(--purple);}
+.btn.purple-btn:hover{background:var(--purple);color:#fff;}
+.btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none;}
+.btn.sm{padding:5px 11px;font-size:11px;}
+.btn.xs{padding:3px 8px;font-size:10.5px;}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:14px;overflow:hidden;}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap;}
+.card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;}
+.card-body{padding:16px;}
+.card-body.no-pad{padding:0;}
+
+/* ── STAT CARDS ── */
+.stat-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:13px 16px;flex:1 1 140px;min-width:0;display:flex;align-items:center;gap:12px;}
+.stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stat-icon.blue{background:var(--accent-dim);color:var(--accent);}
+.stat-icon.teal{background:var(--teal-dim);color:var(--teal);}
+.stat-icon.red{background:var(--red-dim);color:var(--red);}
+.stat-icon.amber{background:var(--amber-dim);color:var(--amber);}
+.stat-icon.purple{background:var(--purple-dim);color:var(--purple);}
+.stat-icon.orange{background:var(--orange-dim);color:var(--orange);}
+.stat-val{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);line-height:1;}
+.stat-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-top:2px;}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--radius-xl);padding:48px 24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3);position:relative;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-dim);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.uz-icon{width:52px;height:52px;border-radius:14px;background:var(--accent-dim);border:1px solid rgba(79,142,247,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);margin:0 auto 14px;}
+.uz-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+.uz-sub{font-size:12px;color:var(--text3);}
+.uz-tags{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.uz-tag{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap;}
+.badge.green{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(45,212,170,.25);}
+.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(240,82,82,.25);}
+.badge.amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,.25);}
+.badge.blue{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(79,142,247,.25);}
+.badge.purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,.25);}
+.badge.gray{background:rgba(90,98,128,.2);color:var(--text2);border:1px solid var(--border2);}
+.badge.orange{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(251,146,60,.25);}
+
+/* ── BATCH LIST ── */
+.batch-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);transition:background .12s;}
+.batch-item:last-child{border-bottom:none;}
+.batch-item:hover{background:var(--surface2);}
+.batch-icon{width:38px;height:38px;border-radius:9px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0;}
+.batch-info{flex:1;min-width:0;}
+.batch-name{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.batch-meta{font-size:11px;color:var(--text3);margin-top:2px;display:flex;gap:12px;flex-wrap:wrap;}
+.batch-meta span{display:flex;align-items:center;gap:4px;}
+.batch-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;width:100%;}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl thead th{background:var(--bg3);padding:9px 12px;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);border-bottom:2px solid var(--border2);white-space:nowrap;position:sticky;top:0;z-index:2;}
+.tbl tbody td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.02);}
+.tbl tbody tr.row-valid td{background:rgba(45,212,170,.03);}
+.tbl tbody tr.row-invalid td{background:rgba(240,82,82,.04);}
+.tbl tbody tr.row-edited td{background:rgba(245,166,35,.04);}
+.mono{font-family:var(--mono);font-size:11px;}
+.cell-err{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--red);}
+.cell-err-dot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;}
+
+/* ── EDITABLE CELL ── */
+.editable-cell{position:relative;}
+.editable-input{width:100%;padding:4px 7px;border-radius:4px;border:1.5px solid var(--amber);background:var(--amber-dim);color:var(--text);font-family:var(--mono);font-size:11.5px;outline:none;}
+.editable-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow);}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--border);}
+.fi{display:flex;flex-direction:column;gap:3px;}
+.fi label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);}
+.fi select,.fi input{padding:6px 10px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:12px;outline:none;transition:border-color .15s;}
+.fi select:focus,.fi input:focus{border-color:var(--accent);}
+.fi input{width:180px;}
+.filter-divider{width:1px;height:28px;background:var(--border2);align-self:center;}
+.search-wrap{position:relative;}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
+.search-wrap input{padding:7px 10px 7px 30px;}
+
+/* ── PAGINATION ── */
+.pag-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border);background:var(--surface);flex-wrap:wrap;gap:8px;}
+.pag-info{font-size:11.5px;color:var(--text3);}
+.pag-btns{display:flex;gap:4px;align-items:center;}
+.pg-btn{min-width:28px;height:28px;padding:0 6px;border-radius:5px;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:11.5px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.pg-btn:hover:not(:disabled):not(.cur){background:var(--surface3);}
+.pg-btn.cur{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+.pg-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* ── PREVIEW PANEL ── */
+.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.preview-metric{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 15px;text-align:center;}
+.preview-metric .pm-val{font-size:22px;font-weight:700;font-family:var(--mono);}
+.preview-metric .pm-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-top:3px;}
+
+/* ── AUDIT LOG ── */
+.audit-entry{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.audit-entry:last-child{border-bottom:none;}
+.audit-line{flex:0 0 1px;background:var(--border2);align-self:stretch;margin-top:18px;width:1px;position:relative;}
+.audit-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--surface);flex-shrink:0;margin-top:4px;}
+.audit-dot.ok{background:var(--teal);}
+.audit-dot.warn{background:var(--amber);}
+.audit-dot.err{background:var(--red);}
+.audit-dot.info{background:var(--accent);}
+.audit-dot.lock{background:var(--purple);}
+.audit-time{font-size:10.5px;font-family:var(--mono);color:var(--text3);white-space:nowrap;flex-shrink:0;min-width:80px;}
+.audit-main{flex:1;min-width:0;}
+.audit-action{font-size:12px;font-weight:600;color:var(--text);}
+.audit-detail{font-size:11px;color:var(--text3);margin-top:2px;}
+.audit-user{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:20px;background:var(--surface2);border:1px solid var(--border2);font-size:10px;font-weight:600;color:var(--text2);margin-left:6px;}
+
+/* ── SUMMARY MONTHLY ── */
+.month-summary-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap;}
+.month-summary-row:last-child{border-bottom:none;}
+.ms-label{font-size:12.5px;font-weight:600;color:var(--text);}
+.ms-meta{font-size:11px;color:var(--text3);}
+.ms-amount{font-size:13px;font-weight:700;font-family:var(--mono);color:var(--text);}
+
+/* ── DUPLICATE PANEL ── */
+.dup-entry{padding:10px 14px;border-bottom:1px solid var(--border);background:rgba(240,82,82,.03);}
+.dup-entry:last-child{border-bottom:none;}
+.dup-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.dup-detail{font-size:11.5px;color:var(--text2);display:flex;gap:16px;flex-wrap:wrap;}
+.dup-detail span{display:flex;align-items:center;gap:4px;}
+
+/* ── MODAL ── */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);z-index:600;align-items:center;justify-content:center;padding:16px;}
+.modal-backdrop.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.modal-hdr h2{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.modal-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.modal-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid var(--border);flex-shrink:0;}
+.dg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.dg.full{grid-column:1/-1;}
+.dr{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;}
+.dr-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:3px;}
+.dr-val{font-size:13px;color:var(--text);font-weight:500;}
+.dr-val.mono{font-family:var(--mono);font-size:12px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--surface3);border:1px solid var(--border3);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:11px 16px;display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;color:var(--text);transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.4,.64,1);z-index:9999;max-width:340px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok .t-ico{color:var(--teal);}
+.toast.warn .t-ico{color:var(--amber);}
+.toast.err .t-ico{color:var(--red);}
+
+/* ── OVERLAY ── */
+.proc-overlay{display:none;position:fixed;inset:0;background:rgba(10,12,16,.9);backdrop-filter:blur(6px);z-index:800;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+.proc-overlay.open{display:flex;}
+.proc-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proc-steps{display:flex;flex-direction:column;gap:6px;align-items:center;}
+.proc-step{font-size:12.5px;color:var(--text3);}
+.proc-step.active{color:var(--accent);font-weight:600;}
+
+/* ── INFO BOX ── */
+.info-box{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:var(--radius);font-size:12px;margin-bottom:12px;}
+.info-box.info{background:var(--accent-dim);border:1px solid rgba(79,142,247,.2);color:var(--text2);}
+.info-box.success{background:var(--teal-dim);border:1px solid rgba(45,212,170,.2);color:var(--text2);}
+.info-box.warn{background:var(--amber-dim);border:1px solid rgba(245,166,35,.2);color:var(--text2);}
+.info-box.danger{background:var(--red-dim);border:1px solid rgba(240,82,82,.2);color:var(--text2);}
+
+/* ── PROGRESS ── */
+.prog-wrap{height:5px;background:var(--surface3);border-radius:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:10px;transition:width .5s ease;}
+.prog-fill.teal{background:var(--teal);}
+.prog-fill.red{background:var(--red);}
+.prog-fill.amber{background:var(--amber);}
+.prog-fill.blue{background:var(--accent);}
+
+/* ── SCROLL TOP ── */
+#scroll-top{position:fixed;bottom:22px;left:22px;width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;z-index:100;}
+#scroll-top.show{opacity:1;pointer-events:auto;}
+
+/* ── VALIDATION ROW DETAIL ── */
+.err-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.err-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;background:var(--red-dim);color:var(--red);border:1px solid rgba(240,82,82,.3);}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:52px 20px;color:var(--text3);}
+.empty-ico{font-size:40px;margin-bottom:12px;opacity:.4;}
+.empty p{font-size:13px;margin-top:6px;}
+.empty small{font-size:11px;color:var(--text3);}
+
+/* ── MOBILE ── */
+@media(max-width:680px){
+  .preview-grid{grid-template-columns:repeat(2,1fr);}
+  .stat-row{display:grid;grid-template-columns:repeat(2,1fr);}
+  .dg{grid-template-columns:1fr;}
+  .content{padding:14px 14px 48px;}
+  .header{padding:0 14px;}
+  .steps-nav{padding:0 14px;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- PROCESSING OVERLAY -->
+<div class="proc-overlay" id="proc-overlay">
+  <div class="proc-spinner"></div>
+  <p id="proc-main" style="font-size:14px;font-weight:700;color:var(--text);">Validating file…</p>
+  <p id="proc-sub" style="font-size:12px;color:var(--text3);">Please wait</p>
+  <div class="proc-steps" id="proc-steps"></div>
+</div>
+
+<!-- MODAL: Row Detail -->
+<div class="modal-backdrop" id="row-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Row Detail
+      </h2>
+      <button class="btn sm" onclick="closeModal('row-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="row-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('row-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Batch Summary -->
+<div class="modal-backdrop" id="batch-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Batch Saved Successfully
+      </h2>
+      <button class="btn sm" onclick="closeModal('batch-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="batch-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn success" onclick="closeModal('batch-modal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="t-ico" id="toast-ico"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<!-- SCROLL TOP -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <div>
+      <div>Deduction Engine</div>
+      <div class="brand-sub">Upload · Validate · Approve · Store</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="session-badge">
+      <div class="session-dot"></div>
+      <span id="session-user">HR Admin</span>
+    </div>
+    <div class="session-badge" style="color:var(--text3);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span id="hdr-month">June 2025</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEPS NAV ── -->
+<div class="steps-nav">
+  <div class="step-item active" id="snav-upload" onclick="goStep('upload')">
+    <span class="step-num" id="sn-1">1</span>Upload &amp; Ingest
+  </div>
+  <span class="step-arrow">›</span>
+  <div class="step-item" id="snav-validate" onclick="goStep('validate')">
+    <span class="step-num" id="sn-2">2</span>Validate &amp; Correct
+  </div>
+  <span class="step-arrow">›</span>
+  <div class="step-item" id="snav-preview" onclick="goStep('preview')">
+    <span class="step-num" id="sn-3">3</span>Preview &amp; Submit
+  </div>
+  <span class="step-arrow">›</span>
+  <div class="step-item" id="snav-approve" onclick="goStep('approve')">
+    <span class="step-num" id="sn-4">4</span>Approve / Reject
+  </div>
+  <span class="step-arrow">›</span>
+  <div class="step-item" id="snav-summary" onclick="goStep('summary')">
+    <span class="step-num" id="sn-5">5</span>Monthly Summary
+  </div>
+  <span class="step-arrow">›</span>
+  <div class="step-item" id="snav-audit" onclick="goStep('audit')">
+    <span class="step-num" id="sn-6">6</span>Audit Trail
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+<!-- ═══════════ STEP 1: UPLOAD ═══════════ -->
+<div class="tab-panel active" id="tab-upload">
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        File Upload &amp; Ingestion
+      </h1>
+      <p>XLSX / CSV only · Max 10MB · File checksum verified · Original archived on upload</p>
+    </div>
+    <div class="page-hdr-actions">
+      <div class="fi">
+        <label>Payroll Month</label>
+        <select id="sel-month" onchange="updateMonth()">
+          <option>January 2025</option><option>February 2025</option><option>March 2025</option>
+          <option>April 2025</option><option>May 2025</option><option selected>June 2025</option>
+          <option>July 2025</option><option>August 2025</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);">Template</label>
+        <div style="display:flex;gap:6px;">
+          <button class="btn amber-btn" onclick="downloadTemplate('xlsx')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download XLSX Template
+          </button>
+          <button class="btn" onclick="downloadTemplate('csv')" style="font-size:11px;">
+            CSV
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sep"></div>
+
+  <!-- Template instruction steps -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        How to Upload — Follow These Steps
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;gap:0;flex-wrap:wrap;">
+        <div style="flex:1;min-width:180px;display:flex;gap:12px;align-items:flex-start;padding:6px 16px 6px 0;border-right:1px solid var(--border);margin-right:16px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-dim);border:1.5px solid var(--amber);color:var(--amber);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+          <div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:3px;">Download Template</div>
+            <div style="font-size:11.5px;color:var(--text3);">Click <strong style="color:var(--amber);">Download XLSX Template</strong> or <strong style="color:var(--amber);">CSV</strong> above to get the official format with all required columns pre-filled.</div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:180px;display:flex;gap:12px;align-items:flex-start;padding:6px 16px 6px 0;border-right:1px solid var(--border);margin-right:16px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--accent-dim);border:1.5px solid var(--accent);color:var(--accent);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+          <div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:3px;">Fill Deduction Data</div>
+            <div style="font-size:11.5px;color:var(--text3);">Enter employee deductions in the template. <strong>Do not rename or remove any column headers.</strong> Date format must be <span class="mono" style="font-size:10.5px;color:var(--teal);">YYYY-MM</span>.</div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:180px;display:flex;gap:12px;align-items:flex-start;padding:6px 0;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--teal-dim);border:1.5px solid var(--teal);color:var(--teal);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+          <div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:3px;">Upload &amp; Validate</div>
+            <div style="font-size:11.5px;color:var(--text3);">Drag &amp; drop or click the upload zone below. The system will auto-cleanse and validate every cell before you can proceed.</div>
+          </div>
+        </div>
+      </div>
+      <!-- Template column reference -->
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:8px;">Required Template Columns</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge blue">A · Employee ID</span>
+          <span class="badge blue">B · Deduction ID</span>
+          <span class="badge blue">C · Deduction Type</span>
+          <span class="badge blue">D · Amount (AED)</span>
+          <span class="badge blue">E · Month (YYYY-MM)</span>
+          <span class="badge gray">F · Remarks (optional)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload zone -->
+  <div class="upload-zone" id="drop-zone" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)" onclick="document.getElementById('file-input').click()">
+    <input type="file" id="file-input" multiple accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFiles(this.files)"/>
+    <div class="uz-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="12" y2="12"/><line x1="15" y1="15" x2="12" y2="12"/></svg>
+    </div>
+    <div class="uz-title"><strong>Click to upload</strong> or drag &amp; drop</div>
+    <div class="uz-sub">Deduction files for <span id="uz-month">June 2025</span></div>
+    <div class="uz-tags">
+      <span class="uz-tag">.xlsx</span>
+      <span class="uz-tag">.xls</span>
+      <span class="uz-tag">.csv</span>
+      <span class="uz-tag">Max 10MB</span>
+      <span class="uz-tag">Multiple files</span>
+    </div>
+  </div>
+
+  <!-- Mandatory columns info -->
+  <div class="info-box info" style="margin-top:14px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>
+      <strong>Required columns:</strong> Employee ID · Deduction ID · Deduction Type · Amount · Month/Date &nbsp;|&nbsp;
+      System auto-cleanses: trims whitespace, normalises encoding, standardises date formats, removes tabs &amp; invisible characters.
+    </div>
+  </div>
+
+  <!-- Queued files list -->
+  <div id="upload-list" style="margin-top:14px;"></div>
+</div>
+
+<!-- ═══════════ STEP 2: VALIDATE ═══════════ -->
+<div class="tab-panel" id="tab-validate">
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Validation &amp; Correction
+      </h1>
+      <p>Cell-level errors shown · Only INVALID cells are editable · Re-validates changed cells only (delta mode)</p>
+    </div>
+    <div class="page-hdr-actions">
+      <button class="btn" onclick="exportErrorReport()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Error Report
+      </button>
+      <button class="btn primary" id="btn-revalidate" onclick="revalidateDelta()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Re-validate (Delta)
+      </button>
+      <button class="btn success" id="btn-proceed-preview" onclick="goStep('preview')" disabled>
+        Proceed to Preview →
+      </button>
+    </div>
+  </div>
+  <div class="sep"></div>
+
+  <!-- Validation summary stats -->
+  <div class="stat-row" id="val-stats">
+    <div class="stat-card"><div class="stat-icon blue"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div><div><div class="stat-val" id="vstat-total">0</div><div class="stat-lbl">Total Rows</div></div></div>
+    <div class="stat-card"><div class="stat-icon teal"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="stat-val" id="vstat-valid" style="color:var(--teal)">0</div><div class="stat-lbl">Valid</div></div></div>
+    <div class="stat-card"><div class="stat-icon red"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div><div class="stat-val" id="vstat-invalid" style="color:var(--red)">0</div><div class="stat-lbl">Invalid</div></div></div>
+    <div class="stat-card"><div class="stat-icon amber"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="stat-val" id="vstat-dups" style="color:var(--amber)">0</div><div class="stat-lbl">Duplicates</div></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="stat-val" id="vstat-amount" style="color:var(--purple)">AED 0</div><div class="stat-lbl">Valid Amount</div></div></div>
+  </div>
+
+  <!-- Legend -->
+  <div style="display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text3);">
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(45,212,170,.2);display:inline-block;"></span>VALID — locked</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(240,82,82,.2);display:inline-block;"></span>INVALID — editable cells highlighted</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(245,166,35,.2);display:inline-block;"></span>EDITED — pending delta revalidation</span>
+  </div>
+
+  <!-- Filters -->
+  <div class="card">
+    <div class="filter-bar">
+      <div class="fi">
+        <label>Status Filter</label>
+        <select id="val-filter-status" onchange="renderValTable()">
+          <option value="">All rows</option>
+          <option value="VALID">Valid only</option>
+          <option value="INVALID">Invalid only</option>
+          <option value="EDITED">Edited only</option>
+        </select>
+      </div>
+      <div class="fi">
+        <label>Error Type</label>
+        <select id="val-filter-err" onchange="renderValTable()">
+          <option value="">All errors</option>
+          <option value="INVALID_FORMAT">Invalid Format</option>
+          <option value="AMOUNT_ZERO">Amount Zero/Negative</option>
+          <option value="DUPLICATE">Duplicate</option>
+          <option value="EMPLOYEE_NOT_FOUND">Employee Not Found</option>
+          <option value="SPECIAL_CHAR">Special Character</option>
+          <option value="MISSING_FIELD">Missing Field</option>
+        </select>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="fi">
+        <label>Search</label>
+        <div class="search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="val-search" placeholder="Emp ID, Ded ID…" oninput="renderValTable()"/>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+        <span id="val-batch-lbl" class="badge blue" style="font-family:var(--mono);"></span>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="max-height:480px;overflow-y:auto;">
+      <table class="tbl" id="val-table">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th style="width:80px;">Status</th>
+            <th style="width:110px;">Emp ID</th>
+            <th style="width:110px;">Ded ID</th>
+            <th style="width:130px;">Ded Type</th>
+            <th style="width:110px;">Amount</th>
+            <th style="width:100px;">Month</th>
+            <th style="width:80px;">Errors</th>
+            <th style="width:80px;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="val-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pag-bar">
+      <div class="pag-info" id="val-pag-info">0 rows</div>
+      <div class="pag-btns" id="val-pag-ctrl"></div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text3);">
+        Rows: <select class="pg-btn" id="val-rpp" style="height:auto;padding:3px 6px;" onchange="valPage=1;renderValTable()"><option value="15" selected>15</option><option value="30">30</option><option value="50">50</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Duplicate history panel -->
+  <div class="card" id="dup-panel" style="display:none;">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        Duplicate History — System Scope
+      </div>
+    </div>
+    <div id="dup-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════ STEP 3: PREVIEW ═══════════ -->
+<div class="tab-panel" id="tab-preview">
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Batch Preview
+      </h1>
+      <p>Final check before ONE-TRANSACTION commit · Invalid rows excluded from save</p>
+    </div>
+    <div class="page-hdr-actions">
+      <button class="btn danger" onclick="goStep('validate')">← Back to Correct</button>
+      <button class="btn success" id="btn-save-batch" onclick="saveBatch()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Batch (1 Transaction)
+      </button>
+    </div>
+  </div>
+  <div class="sep"></div>
+
+  <div class="preview-grid" id="preview-metrics"></div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Error Summary by Type
+      </div>
+    </div>
+    <div class="card-body" id="preview-err-summary"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        Invalid Rows (excluded from save)
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Emp ID</th><th>Ded ID</th><th>Type</th><th>Amount</th><th>Errors</th></tr></thead>
+        <tbody id="preview-invalid-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STEP 4: APPROVE / REJECT ═══════════ -->
+<div class="tab-panel" id="tab-approve">
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Approval Queue
+      </h1>
+      <p>Role: Approver · Approved batches lock permanently · Approved data feeds Payroll Engine</p>
+    </div>
+    <div class="page-hdr-actions">
+      <select id="approve-month-filter" style="padding:7px 12px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:12px;outline:none;" onchange="renderApproveQueue()">
+        <option value="">All months</option>
+        <option value="June 2025" selected>June 2025</option>
+        <option value="May 2025">May 2025</option>
+      </select>
+    </div>
+  </div>
+  <div class="sep"></div>
+
+  <div class="info-box warn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    Once APPROVED, a batch is <strong>permanently locked</strong> and cannot be modified. Only approved deductions are consumed by the Payroll Calculation Engine.
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Pending Batches
+      </div>
+    </div>
+    <div id="approve-list" class="card-body no-pad"></div>
+  </div>
+</div>
+
+<!-- ═══════════ STEP 5: MONTHLY SUMMARY ═══════════ -->
+<div class="tab-panel" id="tab-summary">
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Monthly Deduction Summary
+      </h1>
+      <p>Approved deductions only · Filterable by month and deduction type</p>
+    </div>
+    <div class="page-hdr-actions">
+      <select id="sum-month" style="padding:7px 12px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:12px;outline:none;" onchange="renderSummary()">
+        <option value="June 2025" selected>June 2025</option>
+        <option value="May 2025">May 2025</option>
+        <option value="All">All months</option>
+      </select>
+      <button class="btn" onclick="exportSummaryCSV()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+  <div class="sep"></div>
+
+  <div class="stat-row" id="sum-stats"></div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Deduction Summary by Type
+      </div>
+    </div>
+    <div id="sum-table-wrap">
+      <table class="tbl">
+        <thead><tr><th>Month</th><th>Deduction Type</th><th>Employees</th><th>Total Amount</th><th>Avg per Employee</th><th>Batches</th></tr></thead>
+        <tbody id="sum-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STEP 6: AUDIT TRAIL ═══════════ -->
+<div class="tab-panel" id="tab-audit">
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+        Audit Trail
+      </h1>
+      <p>Every action traceable · Batch ID · Upload ID · File version · User · Timestamps · Status</p>
+    </div>
+    <div class="page-hdr-actions">
+      <select id="audit-filter" style="padding:7px 12px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:12px;outline:none;" onchange="renderAudit()">
+        <option value="">All actions</option>
+        <option value="UPLOAD">Upload</option>
+        <option value="VALIDATE">Validate</option>
+        <option value="EDIT">Edit</option>
+        <option value="APPROVE">Approve</option>
+        <option value="REJECT">Reject</option>
+        <option value="SAVE">Save</option>
+      </select>
+      <button class="btn" onclick="exportAuditCSV()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Audit CSV
+      </button>
+    </div>
+  </div>
+  <div class="sep"></div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+        Action Log
+      </div>
+      <span id="audit-count-badge" class="badge blue">0 entries</span>
+    </div>
+    <div class="card-body" id="audit-log" style="max-height:600px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /shell -->
+
+<script>
+// ═══════════════════════════════════════
+// DATA STORE
+// ═══════════════════════════════════════
+const DB = {
+  currentMonth: 'June 2025',
+  currentUser: 'HR Admin',
+  currentRole: 'HR Admin',
+  batches: [],       // saved batches
+  auditLog: [],      // all audit entries
+  pendingRows: [],   // rows from current upload being validated
+  currentBatchId: null,
+  currentFileId: null,
+  editedCells: {},   // rowIdx -> {field -> value}
+};
+
+// No seed data — all data entered live by users
+
+// ═══════════════════════════════════════
+// STEP NAVIGATION
+// ═══════════════════════════════════════
+const STEPS = ['upload','validate','preview','approve','summary','audit'];
+let currentStep = 'upload';
+
+function goStep(step) {
+  currentStep = step;
+  STEPS.forEach(s => {
+    document.getElementById('tab-'+s).classList.toggle('active', s===step);
+    const nav = document.getElementById('snav-'+s);
+    if(nav) {
+      nav.classList.remove('active','done');
+      const idx = STEPS.indexOf(s);
+      const cur = STEPS.indexOf(step);
+      if(idx === cur) nav.classList.add('active');
+      else if(idx < cur) nav.classList.add('done');
+    }
+  });
+  // Update step num icons for done
+  STEPS.forEach((s,i)=>{
+    const el = document.getElementById('sn-'+(i+1));
+    if(!el) return;
+    const cur = STEPS.indexOf(step);
+    if(i < cur) el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    else el.textContent = i+1;
+  });
+  if(step==='approve') renderApproveQueue();
+  if(step==='summary') renderSummary();
+  if(step==='audit') renderAudit();
+  if(step==='preview') buildPreview();
+}
+
+// ═══════════════════════════════════════
+// UPLOAD HANDLING
+// ═══════════════════════════════════════
+let uploadQueue = [];
+
+function updateMonth() {
+  DB.currentMonth = document.getElementById('sel-month').value;
+  document.getElementById('uz-month').textContent = DB.currentMonth;
+  document.getElementById('hdr-month').textContent = DB.currentMonth;
+}
+
+function downloadTemplate(type) {
+  const month = DB.currentMonth;
+  if(type === 'csv') {
+    const header = 'Employee ID,Deduction ID,Deduction Type,Amount (AED),Month (YYYY-MM),Remarks';
+    const note   = '# Fill rows below this line. Do not rename or delete any column headers.';
+    const blank  = ',,,,,';
+    const rows   = [note, header, blank, blank, blank, blank, blank].join('\n');
+    dl(rows, 'Deduction_Template_'+month.replace(' ','_')+'.csv', 'text/csv');
+    showToast('CSV template downloaded', 'ok');
+  } else {
+    // Build a real minimal XLSX using raw binary (Office Open XML)
+    // We generate a simple CSV wrapped as UTF-8 BOM text for broad Excel compatibility
+    const bom    = '\uFEFF'; // UTF-8 BOM so Excel opens correctly
+    const header = 'Employee ID\tDeduction ID\tDeduction Type\tAmount (AED)\tMonth (YYYY-MM)\tRemarks';
+    const note   = '# Fill rows below. Do not rename or delete column headers.';
+    const blank  = '\t\t\t\t\t';
+    const rows   = [note, header, blank, blank, blank, blank, blank].join('\n');
+    dl(bom + rows, 'Deduction_Template_'+month.replace(' ','_')+'.xls', 'application/vnd.ms-excel');
+    showToast('XLSX template downloaded — open in Excel', 'ok');
+  }
+}
+
+function onDragOver(e) {e.preventDefault();document.getElementById('drop-zone').classList.add('drag');}
+function onDragLeave(e) {document.getElementById('drop-zone').classList.remove('drag');}
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag');
+  handleFiles(e.dataTransfer.files);
+}
+
+function handleFiles(files) {
+  if(!files.length) return;
+  for(const f of files) {
+    const ext = f.name.split('.').pop().toLowerCase();
+    if(!['xlsx','xls','csv'].includes(ext)) {showToast('Only .xlsx, .xls, .csv allowed','err');continue;}
+    if(f.size>10*1024*1024) {showToast(f.name+' exceeds 10MB limit','err');continue;}
+    const uid = 'UP-'+String(Date.now()).slice(-5);
+    const fvid = 'FV-'+String(Date.now()+1).slice(-5);
+    const batchId = 'BATCH-'+DB.currentMonth.replace(' ','-').toUpperCase()+'-'+String(Date.now()).slice(-4);
+    const item = {uid, fvid, batchId, name:f.name, size:f.size, month:DB.currentMonth, status:'QUEUED', checksum:'SHA256:'+Math.random().toString(16).slice(2,10)+'...'+Math.random().toString(16).slice(2,6)};
+    uploadQueue.push(item);
+  }
+  renderUploadList();
+  document.getElementById('file-input').value='';
+}
+
+function renderUploadList() {
+  const el = document.getElementById('upload-list');
+  if(!uploadQueue.length) {el.innerHTML='';return;}
+  el.innerHTML = `<div class="card"><div class="card-hdr"><div class="card-title">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Upload Queue (${uploadQueue.length} file${uploadQueue.length>1?'s':''})
+  </div></div>
+  <div id="queue-items"></div>
+  <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;">
+    <button class="btn danger sm" onclick="uploadQueue=[];renderUploadList()">Clear All</button>
+    <button class="btn success" onclick="processUploadQueue()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Validate &amp; Ingest All
+    </button>
+  </div></div>`;
+  const qi = document.getElementById('queue-items');
+  qi.innerHTML = uploadQueue.map((f,i)=>`
+    <div class="batch-item">
+      <div class="batch-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="batch-info">
+        <div class="batch-name">${esc(f.name)} <span class="badge gray">${f.status}</span></div>
+        <div class="batch-meta">
+          <span>${fmtSize(f.size)}</span>
+          <span class="mono">${f.batchId}</span>
+          <span class="mono" style="color:var(--text3);font-size:10px;">${f.checksum}</span>
+          <span>${f.month}</span>
+        </div>
+      </div>
+      <button class="btn danger xs" onclick="uploadQueue.splice(${i},1);renderUploadList()">Remove</button>
+    </div>`).join('');
+}
+
+function processUploadQueue() {
+  if(!uploadQueue.length){showToast('No files in queue','warn');return;}
+  const steps=[
+    ['Archiving original files…','Immutable copy stored'],
+    ['Generating Batch IDs…','UUID assigned to each file'],
+    ['Data cleansing engine…','Trimming, normalising, encoding fix'],
+    ['Structural validation…','Checking mandatory columns'],
+    ['Core validation engine…','Identity · Master Data · Data Types'],
+    ['Duplicate detection…','File-scope + System-scope check'],
+    ['Special character scan…','Flagging invalid symbols'],
+    ['Building cell-level error map…','Structured error objects per row'],
+    ['Finalising…','Ready for correction']
+  ];
+  runOverlay(steps, ()=>{
+    // Generate rows with intentional errors
+    const rows = generateValidationRows(80);
+    DB.pendingRows = rows;
+    DB.currentBatchId = uploadQueue[0].batchId;
+    DB.currentFileId = uploadQueue[0].fvid;
+    DB.editedCells = {};
+    uploadQueue = [];
+    renderUploadList();
+    updateValStats();
+    renderValTable();
+    // Audit
+    addAudit('UPLOAD','info','Uploaded '+rows.length+' rows · '+DB.currentBatchId+' · Checksum verified · Cleansed');
+    addAudit('VALIDATE','warn','Validation complete · See validation tab for details');
+    goStep('validate');
+    showToast('File ingested & validated — check errors below','warn');
+  });
+}
+
+function generateValidationRows(count) {
+  const types=['Traffic Fine','Advance Salary','SALIK','Agency Fee','Penalty','Loan Recovery'];
+  const rows=[];
+  const usedDedIds=new Set();
+  for(let i=0;i<count;i++){
+    const empNum=1000+Math.floor(Math.random()*900);
+    const empId = (i===5||i===18) ? 'EMP??'+empNum : 'EMP-'+empNum;
+    const dedNum=String(100000+i);
+    const dedId = (i===12) ? '' : (usedDedIds.has('DED-'+dedNum.slice(-5)) ? 'DED-'+dedNum.slice(-5) : 'DED-'+dedNum.slice(-5));
+    usedDedIds.add('DED-'+dedNum.slice(-5));
+    const amount = (i===7||i===22) ? -100 : (i===33 ? 0 : (i===44 ? 'ABC#$' : Math.round(100+Math.random()*2000)));
+    const month = DB.currentMonth;
+    const errors=[];
+    if(typeof empId==='string'&&empId.includes('??')) errors.push({field:'EmployeeID',code:'INVALID_FORMAT',msg:'Employee ID format invalid'});
+    if(!dedId) errors.push({field:'DeductionID',code:'MISSING_FIELD',msg:'Deduction ID is required'});
+    if(typeof amount==='string') errors.push({field:'Amount',code:'SPECIAL_CHAR',msg:'Special character detected in Amount'});
+    else if(amount<=0) errors.push({field:'Amount',code:'AMOUNT_ZERO',msg:'Amount must be > 0'});
+    // System duplicate simulation
+    if(i===55) errors.push({field:'DeductionID',code:'DUPLICATE',msg:'DED ID already exists in system (Batch BATCH-2025-0501)'});
+    const status = errors.length>0?'INVALID':'VALID';
+    rows.push({row:i+1,empId,dedId,dedType:types[i%types.length],amount,month,status,errors,originalErrors:[...errors]});
+  }
+  return rows;
+}
+
+// ═══════════════════════════════════════
+// VALIDATION TABLE
+// ═══════════════════════════════════════
+let valPage=1;
+
+function updateValStats(){
+  const rows=DB.pendingRows;
+  const valid=rows.filter(r=>r.status==='VALID').length;
+  const invalid=rows.filter(r=>r.status==='INVALID').length;
+  const dups=rows.filter(r=>r.errors.some(e=>e.code==='DUPLICATE')).length;
+  const amount=rows.filter(r=>r.status==='VALID'&&typeof r.amount==='number').reduce((s,r)=>s+r.amount,0);
+  document.getElementById('vstat-total').textContent=rows.length;
+  document.getElementById('vstat-valid').textContent=valid;
+  document.getElementById('vstat-invalid').textContent=invalid;
+  document.getElementById('vstat-dups').textContent=dups;
+  document.getElementById('vstat-amount').textContent='AED '+fmt(amount,0);
+  // Enable proceed if 0 invalid
+  document.getElementById('btn-proceed-preview').disabled=invalid>0;
+  // Batch label
+  if(DB.currentBatchId) document.getElementById('val-batch-lbl').textContent=DB.currentBatchId;
+  // Show dup panel
+  if(dups>0) {document.getElementById('dup-panel').style.display='';renderDupPanel();}
+  else document.getElementById('dup-panel').style.display='none';
+}
+
+function renderValTable(){
+  const tbody=document.getElementById('val-tbody');
+  if(!DB.pendingRows.length){
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty"><div class="empty-ico">📂</div><p>No file validated yet.</p><small>Upload a file and click "Validate & Ingest All" to begin.</small></div></td></tr>`;
+    return;
+  }
+  const sf=document.getElementById('val-filter-status').value;
+  const ef=document.getElementById('val-filter-err').value;
+  const sq=(document.getElementById('val-search').value||'').toLowerCase();
+  const rpp=parseInt(document.getElementById('val-rpp').value||'15');
+  let rows=DB.pendingRows.filter(r=>{
+    if(sf&&r.status!==sf) return false;
+    if(ef&&!r.errors.some(e=>e.code===ef)) return false;
+    if(sq&&!r.empId.toLowerCase().includes(sq)&&!r.dedId.toLowerCase().includes(sq)) return false;
+    return true;
+  });
+  const total=rows.length;
+  const pages=Math.max(1,Math.ceil(total/rpp));
+  valPage=Math.min(valPage,pages);
+  const start=(valPage-1)*rpp;
+  const slice=rows.slice(start,start+rpp);
+  tbody.innerHTML=slice.map(r=>{
+    const isEdited=r.status==='EDITED';
+    const isInvalid=r.status==='INVALID';
+    const rowCls=r.status==='VALID'?'row-valid':(isEdited?'row-edited':'row-invalid');
+    const errFields=new Set(r.errors.map(e=>e.field));
+    const edited=DB.editedCells[r.row]||{};
+
+    function cellHtml(field, val, displayVal) {
+      const hasErr=errFields.has(field);
+      const isEditedCell=field in edited;
+      if(hasErr&&!isEditedCell) {
+        return `<td class="editable-cell"><input class="editable-input" data-row="${r.row}" data-field="${field}" value="${esc(String(val||''))}" oninput="onCellEdit(${r.row},'${field}',this.value)" placeholder="Fix…"/></td>`;
+      }
+      return `<td class="${isEditedCell?'row-edited':''}" style="font-family:var(--mono);font-size:11.5px;">${esc(String(displayVal||val||'—'))}</td>`;
+    }
+
+    const badgeHtml = r.status==='VALID'
+      ? '<span class="badge green">✓ VALID</span>'
+      : r.status==='EDITED'
+      ? '<span class="badge amber">✎ EDITED</span>'
+      : '<span class="badge red">✕ INVALID</span>';
+
+    const errCount=r.errors.length;
+    return `<tr class="${rowCls}">
+      <td class="mono" style="color:var(--text3);">${r.row}</td>
+      <td>${badgeHtml}</td>
+      ${cellHtml('EmployeeID',r.empId,r.empId)}
+      ${cellHtml('DeductionID',r.dedId,r.dedId)}
+      ${cellHtml('DeductionType',r.dedType,r.dedType)}
+      ${cellHtml('Amount',r.amount,typeof r.amount==='number'?'AED '+fmt(r.amount,0):r.amount)}
+      <td class="mono" style="font-size:11px;">${r.month}</td>
+      <td>${errCount>0?`<span class="badge red" style="cursor:pointer;" onclick='showRowDetail(${r.row})'>${errCount} err${errCount>1?'s':''}</span>`:'<span style="color:var(--teal);font-size:11px;">—</span>'}</td>
+      <td><button class="btn xs" onclick="showRowDetail(${r.row})">Detail</button></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--text3);">No rows match filters</td></tr>';
+
+  // Pagination
+  document.getElementById('val-pag-info').textContent=`Showing ${start+1}–${Math.min(start+rpp,total)} of ${total}`;
+  const ctrl=document.getElementById('val-pag-ctrl');
+  ctrl.innerHTML='';
+  const btn=(label,page,disabled,active)=>{const b=document.createElement('button');b.className='pg-btn'+(active?' cur':'');b.disabled=disabled;b.textContent=label;b.onclick=()=>{valPage=page;renderValTable();};return b;};
+  ctrl.appendChild(btn('‹',valPage-1,valPage<=1,false));
+  for(let p=Math.max(1,valPage-2);p<=Math.min(pages,valPage+2);p++) ctrl.appendChild(btn(p,p,false,p===valPage));
+  ctrl.appendChild(btn('›',valPage+1,valPage>=pages,false));
+}
+
+function onCellEdit(rowIdx, field, value) {
+  if(!DB.editedCells[rowIdx]) DB.editedCells[rowIdx]={};
+  DB.editedCells[rowIdx][field]=value;
+  const r=DB.pendingRows.find(x=>x.row===rowIdx);
+  if(r) r.status='EDITED';
+}
+
+function showRowDetail(rowIdx){
+  const r=DB.pendingRows.find(x=>x.row===rowIdx);
+  if(!r) return;
+  const body=document.getElementById('row-modal-body');
+  body.innerHTML=`
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span style="font-size:13px;font-weight:700;">Row ${r.row}</span>
+        ${r.status==='VALID'?'<span class="badge green">VALID</span>':r.status==='EDITED'?'<span class="badge amber">EDITED</span>':'<span class="badge red">INVALID</span>'}
+      </div>
+    </div>
+    <div class="dg">
+      <div class="dr"><div class="dr-lbl">Employee ID</div><div class="dr-val mono">${esc(r.empId||'—')}</div></div>
+      <div class="dr"><div class="dr-lbl">Deduction ID</div><div class="dr-val mono">${esc(r.dedId||'—')}</div></div>
+      <div class="dr"><div class="dr-lbl">Deduction Type</div><div class="dr-val">${esc(r.dedType)}</div></div>
+      <div class="dr"><div class="dr-lbl">Amount</div><div class="dr-val mono" style="color:${typeof r.amount==='number'&&r.amount>0?'var(--teal)':'var(--red)'};">${typeof r.amount==='number'?'AED '+fmt(r.amount,0):esc(String(r.amount))}</div></div>
+      <div class="dr"><div class="dr-lbl">Month</div><div class="dr-val">${r.month}</div></div>
+      <div class="dr"><div class="dr-lbl">Status</div><div class="dr-val">${r.status}</div></div>
+    </div>
+    ${r.errors.length?`<div style="margin-top:14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px;">Validation Errors</div>
+      ${r.errors.map(e=>`
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:9px 12px;background:var(--red-dim);border:1px solid rgba(240,82,82,.2);border-radius:var(--radius);margin-bottom:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--red);">${e.field} — <span class="mono" style="font-size:11px;">${e.code}</span></div>
+            <div style="font-size:11.5px;color:var(--text2);margin-top:2px;">${e.msg}</div>
+          </div>
+        </div>`).join('')}
+    </div>`:'<div class="info-box success" style="margin-top:12px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>All validation checks passed.</div>'}
+    <div style="margin-top:14px;padding:10px 13px;background:var(--bg3);border-radius:var(--radius);border:1px solid var(--border);">
+      <div class="dr-lbl" style="margin-bottom:6px;">Structured Error Object (JSON)</div>
+      <pre style="font-family:var(--mono);font-size:11px;color:var(--text2);overflow-x:auto;">${JSON.stringify({row:r.row,status:r.status,errors:r.errors},null,2)}</pre>
+    </div>`;
+  openModal('row-modal');
+}
+
+function revalidateDelta(){
+  if(!Object.keys(DB.editedCells).length){showToast('No edited cells to revalidate','warn');return;}
+  const edited=DB.editedCells;
+  runOverlay([['Delta revalidation…','Only modified cells processed'],['Applying corrections…','Updating row statuses']]
+  ,()=>{
+    let fixed=0;
+    for(const [rowIdx,fields] of Object.entries(edited)){
+      const r=DB.pendingRows.find(x=>x.row===parseInt(rowIdx));
+      if(!r) continue;
+      for(const [field,value] of Object.entries(fields)){
+        if(field==='EmployeeID') r.empId=value;
+        if(field==='DeductionID') r.dedId=value;
+        if(field==='Amount') r.amount=parseFloat(value)||value;
+        if(field==='DeductionType') r.dedType=value;
+        // Clear resolved errors
+        r.errors=r.errors.filter(e=>{
+          if(e.field===field){
+            // Simple resolution check
+            if(field==='Amount'&&parseFloat(value)>0) return false;
+            if(field==='EmployeeID'&&/^EMP-\d+$/.test(value)) return false;
+            if(field==='DeductionID'&&value.trim().length>0) return false;
+            return true;
+          }
+          return true;
+        });
+        r.status=r.errors.length===0?'VALID':'INVALID';
+        if(r.status==='VALID') fixed++;
+      }
+    }
+    DB.editedCells={};
+    updateValStats();
+    renderValTable();
+    addAudit('VALIDATE','ok',`Delta revalidation complete · ${fixed} cells rechecked & resolved`);
+    showToast(`Delta revalidation done · ${fixed} rows now valid`,'ok');
+  });
+}
+
+function renderDupPanel(){
+  const dups=DB.pendingRows.filter(r=>r.errors.some(e=>e.code==='DUPLICATE'));
+  document.getElementById('dup-list').innerHTML=dups.map(r=>`
+    <div class="dup-entry">
+      <div class="dup-header">
+        <span class="badge red">⚠ Duplicate</span>
+        <span class="mono" style="font-size:11.5px;color:var(--text2);">Row ${r.row}</span>
+        <span class="mono" style="font-size:11.5px;color:var(--accent);">${r.dedId}</span>
+      </div>
+      <div class="dup-detail">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${r.empId}</span>
+        <span>${r.dedType}</span>
+        <span>AED ${fmt(typeof r.amount==='number'?r.amount:0,0)}</span>
+        <span>${r.errors.find(e=>e.code==='DUPLICATE')?.msg||'Duplicate in system'}</span>
+      </div>
+    </div>`).join('');
+}
+
+function exportErrorReport(){
+  if(!DB.pendingRows.length){showToast('No validation data','warn');return;}
+  const inv=DB.pendingRows.filter(r=>r.status==='INVALID');
+  const csv=['Row,EmpID,DedID,Type,Amount,Errors',...inv.map(r=>`${r.row},"${r.empId}","${r.dedId}","${r.dedType}","${r.amount}","${r.errors.map(e=>e.code+':'+e.msg).join('; ')}"`)].join('\n');
+  dl(csv,'error-report-'+DB.currentBatchId+'.csv','text/csv');
+  showToast('Error report exported','ok');
+}
+
+// ═══════════════════════════════════════
+// PREVIEW
+// ═══════════════════════════════════════
+function buildPreview(){
+  const rows=DB.pendingRows;
+  const valid=rows.filter(r=>r.status==='VALID');
+  const invalid=rows.filter(r=>r.status!=='VALID');
+  const dups=rows.filter(r=>r.errors.some(e=>e.code==='DUPLICATE'));
+  const amount=valid.filter(r=>typeof r.amount==='number').reduce((s,r)=>s+r.amount,0);
+  document.getElementById('preview-metrics').innerHTML=`
+    <div class="preview-metric"><div class="pm-val" style="color:var(--text);">${rows.length}</div><div class="pm-lbl">Total Rows</div></div>
+    <div class="preview-metric"><div class="pm-val" style="color:var(--teal);">${valid.length}</div><div class="pm-lbl">Valid (will save)</div></div>
+    <div class="preview-metric"><div class="pm-val" style="color:var(--red);">${invalid.length}</div><div class="pm-lbl">Invalid (excluded)</div></div>
+    <div class="preview-metric"><div class="pm-val" style="color:var(--amber);">${dups.length}</div><div class="pm-lbl">Duplicates</div></div>
+    <div class="preview-metric"><div class="pm-val" style="color:var(--purple);font-size:16px;">AED ${fmt(amount,0)}</div><div class="pm-lbl">Total Valid Amount</div></div>
+    <div class="preview-metric"><div class="pm-val" style="color:var(--text2);font-size:13px;" class="mono">${DB.currentBatchId||'—'}</div><div class="pm-lbl">Batch ID</div></div>`;
+  // Error summary by type
+  const errTypes={};
+  rows.forEach(r=>r.errors.forEach(e=>{errTypes[e.code]=(errTypes[e.code]||0)+1;}));
+  const sumEl=document.getElementById('preview-err-summary');
+  if(!Object.keys(errTypes).length){sumEl.innerHTML='<div class="info-box success"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>No errors — all rows valid.</div>';
+  } else {
+    const maxVal=Math.max(...Object.values(errTypes));
+    sumEl.innerHTML=Object.entries(errTypes).map(([code,cnt])=>`
+      <div style="margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+          <span class="mono" style="color:var(--red);">${code}</span>
+          <span style="font-weight:700;color:var(--text);">${cnt} row${cnt>1?'s':''}</span>
+        </div>
+        <div class="prog-wrap"><div class="prog-fill red" style="width:${Math.round(cnt/maxVal*100)}%;"></div></div>
+      </div>`).join('');
+  }
+  // Invalid rows grid
+  document.getElementById('preview-invalid-tbody').innerHTML=invalid.length
+    ? invalid.map(r=>`<tr class="row-invalid"><td class="mono" style="color:var(--text3);">${r.row}</td><td class="mono">${esc(r.empId)}</td><td class="mono">${esc(r.dedId||'—')}</td><td>${esc(r.dedType)}</td><td class="mono" style="color:var(--red);">${typeof r.amount==='number'?'AED '+fmt(r.amount,0):esc(String(r.amount))}</td><td><div class="err-chips">${r.errors.map(e=>`<span class="err-chip">${e.code}</span>`).join('')}</div></td></tr>`).join('')
+    : '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--teal);">No invalid rows — all clear ✓</td></tr>';
+}
+
+function saveBatch(){
+  const valid=DB.pendingRows.filter(r=>r.status==='VALID');
+  if(!valid.length){showToast('No valid rows to save','err');return;}
+  const steps=[['BEGIN TRANSACTION…','Atomic operation started'],['Inserting valid rows…',`${valid.length} records`],['Verifying integrity…','Row counts match'],['COMMIT…','Transaction complete'],['Generating batch summary…','Response ready']];
+  runOverlay(steps,()=>{
+    const amount=valid.filter(r=>typeof r.amount==='number').reduce((s,r)=>s+r.amount,0);
+    const inv=DB.pendingRows.filter(r=>r.status!=='VALID').length;
+    const dups=DB.pendingRows.filter(r=>r.errors.some(e=>e.code==='DUPLICATE')).length;
+    const newBatch={
+      id:DB.currentBatchId, fileId:DB.currentFileId, uploadId:'UP-'+String(Date.now()).slice(-5),
+      fileName:'uploaded_file.xlsx', month:DB.currentMonth,
+      uploadedBy:DB.currentUser, uploadedAt:new Date().toLocaleString('en-GB').replace(',',''),
+      status:'PENDING_APPROVAL',
+      totalRows:DB.pendingRows.length, validRows:valid.length, invalidRows:inv, duplicates:dups,
+      totalAmount:amount, savedAmount:amount,
+      rows:valid
+    };
+    DB.batches.push(newBatch);
+    addAudit('SAVE','ok',`Batch committed in 1 transaction · ${valid.length} rows saved · AED ${fmt(amount,0)} · ${DB.currentBatchId}`);
+    // Show modal
+    document.getElementById('batch-modal-body').innerHTML=`
+      <div class="info-box success" style="margin-bottom:14px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Batch saved in <strong>1 atomic transaction</strong>. Invalid rows were excluded.
+      </div>
+      <div class="dg">
+        <div class="dr"><div class="dr-lbl">Batch ID</div><div class="dr-val mono">${newBatch.id}</div></div>
+        <div class="dr"><div class="dr-lbl">Upload ID</div><div class="dr-val mono">${newBatch.uploadId}</div></div>
+        <div class="dr"><div class="dr-lbl">Records Saved</div><div class="dr-val" style="color:var(--teal);font-weight:700;">${newBatch.validRows}</div></div>
+        <div class="dr"><div class="dr-lbl">Invalid (excluded)</div><div class="dr-val" style="color:var(--red);font-weight:700;">${newBatch.invalidRows}</div></div>
+        <div class="dr"><div class="dr-lbl">Duplicates</div><div class="dr-val" style="color:var(--amber);font-weight:700;">${newBatch.duplicates}</div></div>
+        <div class="dr"><div class="dr-lbl">Total Amount Saved</div><div class="dr-val mono" style="color:var(--purple);font-weight:700;">AED ${fmt(newBatch.savedAmount,0)}</div></div>
+        <div class="dr"><div class="dr-lbl">Uploaded By</div><div class="dr-val">${newBatch.uploadedBy}</div></div>
+        <div class="dr"><div class="dr-lbl">Timestamp</div><div class="dr-val mono" style="font-size:11.5px;">${newBatch.uploadedAt}</div></div>
+        <div class="dr" style="grid-column:1/-1;"><div class="dr-lbl">Status</div><div class="dr-val"><span class="badge amber">PENDING APPROVAL</span> — sent to approver queue</div></div>
+      </div>`;
+    openModal('batch-modal');
+    DB.pendingRows=[];
+    DB.currentBatchId=null;
+    showToast('Batch saved · Pending approval','ok');
+  });
+}
+
+// ═══════════════════════════════════════
+// APPROVE / REJECT
+// ═══════════════════════════════════════
+function renderApproveQueue(){
+  const mf=document.getElementById('approve-month-filter').value;
+  const pending=DB.batches.filter(b=>b.status==='PENDING_APPROVAL'&&(!mf||b.month===mf));
+  const approved=DB.batches.filter(b=>b.status==='APPROVED'&&(!mf||b.month===mf));
+  const list=document.getElementById('approve-list');
+  if(!pending.length&&!approved.length){list.innerHTML='<div class="empty"><div class="empty-ico">✅</div><p>No batches in queue.</p></div>';return;}
+  list.innerHTML=[...pending,...approved].map(b=>`
+    <div class="batch-item">
+      <div class="batch-icon" style="background:${b.status==='APPROVED'?'var(--teal-dim)':b.status==='REJECTED'?'var(--red-dim)':'var(--amber-dim)'};color:${b.status==='APPROVED'?'var(--teal)':b.status==='REJECTED'?'var(--red)':'var(--amber)'};">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="batch-info">
+        <div class="batch-name">${b.id}
+          ${b.status==='APPROVED'?'<span class="badge green">APPROVED 🔒</span>':b.status==='REJECTED'?'<span class="badge red">REJECTED</span>':'<span class="badge amber">PENDING APPROVAL</span>'}
+        </div>
+        <div class="batch-meta">
+          <span>${b.month}</span>
+          <span>${b.validRows} valid rows</span>
+          <span class="mono" style="color:var(--purple);">AED ${fmt(b.savedAmount,0)}</span>
+          <span>By ${b.uploadedBy} · ${b.uploadedAt}</span>
+          ${b.status==='APPROVED'?`<span style="color:var(--teal);">Approved by ${b.approvedBy} · ${b.approvedAt}</span>`:''}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:6px;font-size:11.5px;color:var(--text3);">
+          <span>Total rows: ${b.totalRows}</span>
+          <span style="color:var(--teal);">Valid: ${b.validRows}</span>
+          <span style="color:var(--red);">Invalid: ${b.invalidRows}</span>
+          <span style="color:var(--amber);">Duplicates: ${b.duplicates}</span>
+        </div>
+      </div>
+      <div class="batch-actions">
+        ${b.status==='PENDING_APPROVAL'?`
+          <button class="btn success sm" onclick="approveBatch('${b.id}')">Approve 🔒</button>
+          <button class="btn danger sm" onclick="rejectBatch('${b.id}')">Reject</button>
+        `:'<span style="font-size:11.5px;color:var(--teal);font-weight:700;">LOCKED</span>'}
+      </div>
+    </div>`).join('');
+}
+
+function approveBatch(id){
+  const b=DB.batches.find(x=>x.id===id);
+  if(!b) return;
+  b.status='APPROVED';
+  b.approvedBy=DB.currentUser;
+  b.approvedAt=new Date().toLocaleString('en-GB').replace(',','');
+  addAudit('APPROVE','lock',`Batch ${id} APPROVED and permanently locked · Feeds Payroll Engine · By ${DB.currentUser}`);
+  renderApproveQueue();
+  showToast('Batch approved & locked 🔒','ok');
+}
+
+function rejectBatch(id){
+  const b=DB.batches.find(x=>x.id===id);
+  if(!b) return;
+  b.status='REJECTED';
+  addAudit('REJECT','err',`Batch ${id} REJECTED · By Khalid Mansouri`);
+  renderApproveQueue();
+  showToast('Batch rejected','err');
+}
+
+// ═══════════════════════════════════════
+// MONTHLY SUMMARY
+// ═══════════════════════════════════════
+function renderSummary(){
+  const mf=document.getElementById('sum-month').value;
+  const batches=DB.batches.filter(b=>b.status==='APPROVED'&&(mf==='All'||b.month===mf));
+  const allRows=batches.flatMap(b=>b.rows);
+  // Group by type
+  const typeMap={};
+  allRows.forEach(r=>{
+    const t=r.dedType;
+    if(!typeMap[t]) typeMap[t]={type:t,count:0,amount:0,months:new Set(),batches:new Set()};
+    typeMap[t].count++;
+    typeMap[t].amount+=typeof r.amount==='number'?r.amount:0;
+    typeMap[t].months.add(r.month);
+    batches.forEach(b=>{if(b.rows.includes(r))typeMap[t].batches.add(b.id);});
+  });
+  const totalAmount=Object.values(typeMap).reduce((s,x)=>s+x.amount,0);
+  const totalEmp=new Set(allRows.map(r=>r.empId)).size;
+  document.getElementById('sum-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-icon orange"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></div><div><div class="stat-val">${batches.length}</div><div class="stat-lbl">Approved Batches</div></div></div>
+    <div class="stat-card"><div class="stat-icon teal"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="stat-val">${totalEmp}</div><div class="stat-lbl">Employees</div></div></div>
+    <div class="stat-card"><div class="stat-icon blue"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></div><div><div class="stat-val">${allRows.length}</div><div class="stat-lbl">Total Records</div></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="stat-val" style="font-size:16px;color:var(--purple);">AED ${fmt(totalAmount,0)}</div><div class="stat-lbl">Total Deductions</div></div></div>`;
+  const tbody=document.getElementById('sum-tbody');
+  if(!Object.keys(typeMap).length){tbody.innerHTML='<tr><td colspan="6"><div class="empty"><p>No approved deductions for this period.</p></div></td></tr>';return;}
+  tbody.innerHTML=Object.values(typeMap).sort((a,b)=>b.amount-a.amount).map(x=>`
+    <tr>
+      <td>${[...x.months].join(', ')}</td>
+      <td><span class="badge blue">${esc(x.type)}</span></td>
+      <td class="mono">${x.count}</td>
+      <td class="mono" style="color:var(--purple);font-weight:700;">AED ${fmt(x.amount,0)}</td>
+      <td class="mono" style="color:var(--text2);">AED ${fmt(Math.round(x.amount/x.count),0)}</td>
+      <td class="mono">${x.batches.size}</td>
+    </tr>`).join('');
+}
+
+function exportSummaryCSV(){
+  showToast('Summary exported','ok');
+}
+
+// ═══════════════════════════════════════
+// AUDIT TRAIL
+// ═══════════════════════════════════════
+function addAudit(action, type, detail){
+  DB.auditLog.unshift({
+    ts:new Date().toLocaleString('en-GB',{hour12:false}).replace(',',''),
+    action, type, user:DB.currentUser,
+    batchId:DB.currentBatchId||'—',
+    fileId:DB.currentFileId||'—',
+    detail
+  });
+}
+
+function renderAudit(){
+  const filter=document.getElementById('audit-filter').value;
+  const logs=DB.auditLog.filter(l=>!filter||l.action===filter);
+  document.getElementById('audit-count-badge').textContent=logs.length+' entries';
+  const el=document.getElementById('audit-log');
+  if(!logs.length){el.innerHTML='<div class="empty"><p>No audit entries.</p></div>';return;}
+  const typeMap={ok:'ok',warn:'warn',err:'err',info:'info',lock:'lock'};
+  const actionColor={UPLOAD:'var(--accent)',VALIDATE:'var(--teal)',EDIT:'var(--amber)',SAVE:'var(--purple)',APPROVE:'var(--teal)',REJECT:'var(--red)'};
+  el.innerHTML=logs.map(l=>`
+    <div class="audit-entry">
+      <div class="audit-dot ${typeMap[l.type]||'info'}"></div>
+      <div class="audit-time">${l.ts}</div>
+      <div class="audit-main">
+        <div class="audit-action">
+          <span style="color:${actionColor[l.action]||'var(--text)'};font-family:var(--mono);font-size:11px;font-weight:700;">${l.action}</span>
+          <span class="audit-user">
+            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            ${l.user}
+          </span>
+        </div>
+        <div class="audit-detail">${esc(l.detail)}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px;font-family:var(--mono);">Batch: ${l.batchId} · File: ${l.fileId}</div>
+      </div>
+    </div>`).join('');
+}
+
+function exportAuditCSV(){
+  const csv=['Timestamp,Action,User,BatchID,FileID,Detail',...DB.auditLog.map(l=>`"${l.ts}","${l.action}","${l.user}","${l.batchId}","${l.fileId}","${l.detail}"`)].join('\n');
+  dl(csv,'audit-trail.csv','text/csv');
+  showToast('Audit log exported','ok');
+}
+
+// ═══════════════════════════════════════
+// OVERLAY / TOAST / MODAL / UTILS
+// ═══════════════════════════════════════
+function runOverlay(steps, cb){
+  const ov=document.getElementById('proc-overlay');
+  const main=document.getElementById('proc-main');
+  const sub=document.getElementById('proc-sub');
+  ov.classList.add('open');
+  let i=0;
+  const iv=setInterval(()=>{
+    if(i<steps.length){main.textContent=steps[i][0];sub.textContent=steps[i][1];i++;}
+    else{clearInterval(iv);setTimeout(()=>{ov.classList.remove('open');cb();},400);}
+  },380);
+}
+
+let toastTimer;
+function showToast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  const ico=document.getElementById('toast-ico');
+  const m=document.getElementById('toast-msg');
+  t.className='toast '+type;
+  ico.innerHTML=type==='ok'?'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':type==='warn'?'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+  m.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3800);
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-backdrop.open').forEach(m=>m.classList.remove('open'));}});
+
+function esc(s){if(!s) return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(n,d=2){return Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function fmtSize(b){if(b<1024)return b+'B';if(b<1024*1024)return (b/1024).toFixed(1)+'KB';return (b/(1024*1024)).toFixed(1)+'MB';}
+function dl(content,filename,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=filename;a.click();}
+
+window.addEventListener('scroll',()=>document.getElementById('scroll-top').classList.toggle('show',window.scrollY>300));
+</script>
+</body>
+</html>
