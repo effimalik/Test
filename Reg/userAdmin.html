@@ -140,19 +140,22 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
 }
 .table-wrap { overflow-x: auto; overflow-y: auto; flex: 1 1 auto; min-height: 60px; -webkit-overflow-scrolling: touch; }
 
-.data-table { width: 100%; border-collapse: collapse; font-size: clamp(11px,1.3vw,13px); min-width: 560px; }
+.data-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: clamp(11px,1.3vw,13px); min-width: 560px; }
 .data-table thead th {
   position: sticky; top: 0; z-index: 2; background: var(--bg3);
   text-align: left; font-size: clamp(9px,1vw,10.5px); font-weight: 600;
   color: var(--text3); text-transform: uppercase; letter-spacing: .07em;
   padding: clamp(8px,1.2vw,11px) clamp(8px,1.2vw,14px);
   border-bottom: 2px solid var(--border);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .data-table td {
   padding: clamp(9px,1.2vw,12px) clamp(8px,1.2vw,14px);
   border-bottom: 1px solid var(--border); color: var(--text);
   vertical-align: middle;
+  overflow: hidden; text-overflow: ellipsis;
 }
+.data-table td.truncate { white-space: nowrap; }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tbody tr { transition: background .12s; }
 .data-table tbody tr:hover td { background: var(--bg3); }
@@ -540,6 +543,12 @@ tbody.tbody-anim tr { animation: rowFadeIn .22s ease; }
       </div>
       <div class="table-wrap">
         <table class="data-table">
+          <colgroup>
+            <col style="width:20%;">
+            <col style="width:32%;">
+            <col style="width:16%;">
+            <col style="width:32%;">
+          </colgroup>
           <thead>
             <tr>
               <th class="th-sort" data-key="timestamp" onclick="_setSort('requests','timestamp')">Timestamp <i class="ti ti-chevron-up"></i></th>
@@ -584,6 +593,13 @@ tbody.tbody-anim tr { animation: rowFadeIn .22s ease; }
       </div>
       <div class="table-wrap">
         <table class="data-table">
+          <colgroup>
+            <col style="width:16%;">
+            <col style="width:26%;">
+            <col style="width:13%;">
+            <col style="width:23%;">
+            <col style="width:22%;">
+          </colgroup>
           <thead>
             <tr>
               <th class="th-sort" data-key="timestamp" onclick="_setSort('history','timestamp')">Timestamp <i class="ti ti-chevron-up"></i></th>
@@ -629,6 +645,13 @@ tbody.tbody-anim tr { animation: rowFadeIn .22s ease; }
       </div>
       <div class="table-wrap">
         <table class="data-table">
+          <colgroup>
+            <col style="width:36%;">
+            <col style="width:16%;">
+            <col style="width:14%;">
+            <col style="width:14%;">
+            <col style="width:20%;">
+          </colgroup>
           <thead>
             <tr>
               <th class="th-sort" data-key="name" onclick="_setSort('users','name')">User <i class="ti ti-chevron-up"></i></th>
@@ -667,6 +690,14 @@ tbody.tbody-anim tr { animation: rowFadeIn .22s ease; }
       </div>
       <div class="table-wrap">
         <table class="data-table" style="min-width:760px;">
+          <colgroup>
+            <col style="width:22%;">
+            <col style="width:15%;">
+            <col style="width:21%;">
+            <col style="width:16%;">
+            <col style="width:16%;">
+            <col style="width:10%;">
+          </colgroup>
           <thead>
             <tr>
               <th class="th-sort" data-key="email" onclick="_setSort('perms','email')">Email <i class="ti ti-chevron-up"></i></th>
