@@ -576,13 +576,70 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
     </div>
   </div>
   <div class="sep"></div>
+
+  <!-- Google Sheets Web App URL config -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-hdr">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Google Sheets Integration — dedLog
+      </div>
+      <span id="gs-status-badge" class="badge gray">Not configured</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+        <div class="fi" style="flex:1;min-width:260px;">
+          <label>Apps Script Web App URL</label>
+          <input type="text" id="gs-url" class="fi" placeholder="https://script.google.com/macros/s/…/exec"
+            style="width:100%;padding:7px 11px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-family:var(--mono);font-size:11.5px;outline:none;"
+            oninput="onGsUrlChange(this.value)"/>
+        </div>
+        <button class="btn primary sm" onclick="testGsConnection()">Test Connection</button>
+      </div>
+      <div style="margin-top:10px;padding:9px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-size:11.5px;color:var(--text3);line-height:1.7;">
+        <strong style="color:var(--amber);">Setup (one-time):</strong>
+        Open your Google Sheet → <strong>Extensions → Apps Script</strong> → paste the Apps Script code below → click <strong>Deploy → New deployment → Web App</strong> → set <em>Execute as: Me</em>, <em>Who has access: Anyone</em> → copy the URL and paste it above.
+      </div>
+    </div>
+  </div>
+
   <div class="info-box warn">
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-    Once <strong>APPROVED</strong>, a batch is permanently locked and cannot be modified.
+    Once <strong>APPROVED</strong>, a batch is permanently locked, pushed to Google Sheets in one call (appending to existing data), and cannot be modified.
   </div>
+
   <div class="card">
     <div class="card-hdr"><div class="card-title">Pending Batches</div></div>
     <div id="approve-list" class="card-body" style="padding:0;"></div>
+  </div>
+
+  <!-- Apps Script code modal trigger -->
+  <div style="text-align:center;margin-top:8px;">
+    <button class="btn sm" onclick="openModal('apps-script-modal')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      View Apps Script Code to Deploy
+    </button>
+  </div>
+</div>
+
+<!-- MODAL: Apps Script Code -->
+<div class="modal-backdrop" id="apps-script-modal">
+  <div class="modal" style="max-width:720px;">
+    <div class="modal-hdr">
+      <h2>📋 Apps Script Code — paste this in Google Apps Script</h2>
+      <button class="btn sm" onclick="closeModal('apps-script-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box info" style="margin-bottom:12px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>Open your Google Sheet → <strong>Extensions → Apps Script</strong> → delete any existing code → paste below → <strong>Deploy → New deployment → Web App</strong> → Execute as: <em>Me</em> · Access: <em>Anyone</em> → Copy the URL.</div>
+      </div>
+      <pre id="apps-script-code" style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:14px;font-family:var(--mono);font-size:11.5px;color:var(--teal);overflow-x:auto;white-space:pre;line-height:1.65;max-height:420px;overflow-y:auto;"></pre>
+    </div>
+    <div class="modal-foot">
+      <button class="btn primary" onclick="copyAppsScript()">Copy Code</button>
+      <button class="btn" onclick="closeModal('apps-script-modal')">Close</button>
+    </div>
   </div>
 </div>
 
@@ -1423,16 +1480,204 @@ function renderApproveQueue() {
     </div>`).join('');
 }
 
-function approveBatch(id) {
+// ── Google Sheets config ──
+const GS = {
+  SHEET_ID:   '1rloK0PsZUHVQeUIcPOmYETUuQrX-Y4g-OiGX_wkxgVk',
+  SHEET_NAME: 'dedLog',
+  webAppUrl:  ''   // set by user via input
+};
+
+function onGsUrlChange(val) {
+  GS.webAppUrl = val.trim();
+  const badge = document.getElementById('gs-status-badge');
+  if (GS.webAppUrl.startsWith('https://script.google.com')) {
+    badge.className   = 'badge amber';
+    badge.textContent = 'URL set — not tested';
+  } else if (GS.webAppUrl === '') {
+    badge.className   = 'badge gray';
+    badge.textContent = 'Not configured';
+  } else {
+    badge.className   = 'badge red';
+    badge.textContent = 'Invalid URL';
+  }
+}
+
+function testGsConnection() {
+  const url = GS.webAppUrl;
+  if (!url) { showToast('Paste your Apps Script Web App URL first', 'warn'); return; }
+  runOverlay('Testing connection…', 'Sending ping to Google Sheets');
+  fetch(url + '?action=ping', { method:'GET', mode:'no-cors' })
+    .then(() => {
+      hideOverlay();
+      const badge = document.getElementById('gs-status-badge');
+      badge.className   = 'badge green';
+      badge.textContent = '✓ Connected';
+      showToast('Connection successful — Google Sheets ready', 'ok');
+    })
+    .catch(err => {
+      hideOverlay();
+      const badge = document.getElementById('gs-status-badge');
+      badge.className   = 'badge red';
+      badge.textContent = 'Connection failed';
+      showToast('Connection failed: ' + err.message, 'err');
+    });
+}
+
+async function approveBatch(id) {
   const b = DB.batches.find(x => x.id === id);
   if (!b) return;
+
+  // Check Web App URL is configured
+  if (!GS.webAppUrl || !GS.webAppUrl.startsWith('https://script.google.com')) {
+    showToast('Configure the Google Sheets Web App URL first', 'warn');
+    return;
+  }
+
+  // Lock batch immediately in UI
   b.status     = 'APPROVED';
   b.approvedBy = DB.currentUser;
   b.approvedAt = nowStr();
-  addAudit('APPROVE','lock', `Batch ${id} APPROVED and permanently locked · Feeds Payroll Engine`);
-  renderApproveQueue();
-  showToast('Batch approved & permanently locked 🔒','ok');
+
+  // Build rows payload — all valid rows in one array
+  // Columns: EmpID | DedID | Type | Amount | Month
+  const rows = b.rows.map(r => [
+    r.empId,
+    r.dedId,
+    r.dedType,
+    typeof r.amount === 'number' ? r.amount : parseFloat(String(r.amount).replace(/,/g,'')) || 0,
+    b.month   // always use the batch Payroll Month, not the row-level month
+  ]);
+
+  const payload = {
+    action:    'appendRows',
+    sheetName: GS.SHEET_NAME,
+    batchId:   b.id,
+    approvedBy: b.approvedBy,
+    approvedAt: b.approvedAt,
+    rows:      rows          // entire batch in ONE call
+  };
+
+  runOverlay('Pushing to Google Sheets…', `Appending ${rows.length} rows to dedLog in one call`);
+
+  try {
+    const res = await fetch(GS.webAppUrl, {
+      method:  'POST',
+      mode:    'no-cors',          // required for Apps Script Web App
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload)
+    });
+
+    // no-cors means we can't read response body — treat as success if no throw
+    hideOverlay();
+    addAudit('APPROVE','lock',
+      `Batch ${id} APPROVED & pushed to Google Sheets dedLog · ${rows.length} rows appended in 1 call`);
+    renderApproveQueue();
+    showToast(`✓ Approved & pushed ${rows.length} rows to Google Sheets`, 'ok');
+
+    // Update GS badge
+    const badge = document.getElementById('gs-status-badge');
+    badge.className   = 'badge green';
+    badge.textContent = `✓ ${rows.length} rows pushed`;
+
+  } catch (err) {
+    hideOverlay();
+    // Revert approval on network failure
+    b.status = 'PENDING_APPROVAL';
+    addAudit('APPROVE','err', `Batch ${id} approval FAILED — Google Sheets push error: ${err.message}`);
+    renderApproveQueue();
+    showToast('Google Sheets push failed: ' + err.message, 'err');
+  }
 }
+
+// ── Apps Script code (shown in modal for user to deploy) ──
+const APPS_SCRIPT_CODE = `// ============================================================
+// Deduction Engine → Google Sheets Connector
+// Sheet ID  : 1rloK0PsZUHVQeUIcPOmYETUuQrX-Y4g-OiGX_wkxgVk
+// Sheet Tab : dedLog
+// Deploy as : Web App · Execute as Me · Access Anyone
+// ============================================================
+
+const SHEET_ID   = '1rloK0PsZUHVQeUIcPOmYETUuQrX-Y4g-OiGX_wkxgVk';
+const SHEET_NAME = 'dedLog';
+const HEADERS    = ['EmpID','DedID','Type','Amount','Month','BatchID','ApprovedBy','ApprovedAt'];
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+
+    if (data.action === 'appendRows') {
+      const ss    = SpreadsheetApp.openById(SHEET_ID);
+      const sheet = ss.getSheetByName(SHEET_NAME);
+
+      // Create header row if sheet is empty
+      if (sheet.getLastRow() === 0) {
+        sheet.appendRow(HEADERS);
+        sheet.getRange(1, 1, 1, HEADERS.length)
+          .setFontWeight('bold')
+          .setBackground('#1a73e8')
+          .setFontColor('#ffffff');
+      }
+
+      // Append ALL rows in ONE batch call (not row by row)
+      const rowsToWrite = data.rows.map(r => [
+        r[0],          // EmpID
+        r[1],          // DedID
+        r[2],          // Type
+        r[3],          // Amount
+        r[4],          // Month (Payroll Month — set automatically from batch selection)
+        data.batchId,  // BatchID
+        data.approvedBy,
+        data.approvedAt
+      ]);
+
+      if (rowsToWrite.length > 0) {
+        const startRow = sheet.getLastRow() + 1;
+        sheet.getRange(startRow, 1, rowsToWrite.length, HEADERS.length)
+          .setValues(rowsToWrite);  // Single write — all rows at once
+      }
+
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          status: 'ok',
+          rowsAppended: rowsToWrite.length,
+          batchId: data.batchId
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', msg: 'Unknown action' }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', msg: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  // Ping endpoint for connection test
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok', msg: 'Deduction Engine connector is live' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+function copyAppsScript() {
+  document.getElementById('apps-script-code').textContent = APPS_SCRIPT_CODE;
+  navigator.clipboard.writeText(APPS_SCRIPT_CODE)
+    .then(() => showToast('Apps Script code copied to clipboard', 'ok'))
+    .catch(() => showToast('Select & copy the code manually', 'warn'));
+}
+
+// Populate code on modal open
+document.addEventListener('click', e => {
+  if (e.target.closest('[onclick*="apps-script-modal"]')) {
+    setTimeout(() => {
+      document.getElementById('apps-script-code').textContent = APPS_SCRIPT_CODE;
+    }, 50);
+  }
+});
 
 function rejectBatch(id) {
   const b = DB.batches.find(x => x.id === id);
