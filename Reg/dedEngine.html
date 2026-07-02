@@ -589,18 +589,22 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
       <p>Approved deductions only · Filterable by month and type</p>
     </div>
     <div class="page-hdr-actions">
-      <select class="sel" id="sum-mf" onchange="renderSummary()">
+      <select class="sel" id="sum-mf">
         <option value="ALL">All months</option>
         <option value="June 2025">June 2025</option>
         <option value="May 2025">May 2025</option>
         <option value="April 2025">April 2025</option>
       </select>
-      <button class="btn sm" onclick="exportSummaryCSV()">↓ Export CSV</button>
+      <button class="btn primary sm" onclick="renderSummary()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Load Summary
+      </button>
+      <button class="btn sm" id="btn-export-sum" onclick="exportSummaryCSV()" style="display:none;">↓ Export CSV</button>
     </div>
   </div>
   <div class="sep"></div>
   <div class="stat-row" id="sum-stats"></div>
-  <div class="card">
+  <div class="card" id="sum-card" style="display:none;">
     <div class="card-hdr"><div class="card-title">Deduction Breakdown by Type</div></div>
     <div class="tbl-wrap">
       <table class="tbl">
@@ -609,38 +613,9 @@ html,body{min-height:100%;font-family:var(--font);background:var(--bg);color:var
       </table>
     </div>
   </div>
-</div>
-
-<!-- ══ STEP 6: AUDIT ══ -->
-<div class="tab-panel" id="tab-audit">
-  <div class="page-hdr">
-    <div>
-      <h1>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
-        Audit Trail
-      </h1>
-      <p>Every action traceable · Batch ID · File version · User · Timestamps · Status</p>
-    </div>
-    <div class="page-hdr-actions">
-      <select class="sel" id="audit-filter" onchange="renderAudit()">
-        <option value="">All actions</option>
-        <option value="UPLOAD">Upload</option>
-        <option value="VALIDATE">Validate</option>
-        <option value="EDIT">Edit</option>
-        <option value="SAVE">Save</option>
-        <option value="APPROVE">Approve</option>
-        <option value="REJECT">Reject</option>
-      </select>
-      <button class="btn sm" onclick="exportAuditCSV()">↓ Export Audit CSV</button>
-    </div>
-  </div>
-  <div class="sep"></div>
-  <div class="card">
-    <div class="card-hdr">
-      <div class="card-title">Action Log</div>
-      <span id="audit-count" class="badge blue">0 entries</span>
-    </div>
-    <div class="card-body" id="audit-log" style="max-height:600px;overflow-y:auto;"></div>
+  <div id="sum-empty" style="text-align:center;padding:52px 20px;color:var(--text3);">
+    <div style="font-size:38px;opacity:.3;margin-bottom:12px;">📊</div>
+    <p style="font-size:13px;">Select a month filter and click <strong style="color:var(--accent);">Load Summary</strong> to view approved deduction data.</p>
   </div>
 </div>
 
@@ -1779,6 +1754,17 @@ function renderSummary() {
   const totalAmt = allRows.filter(r=>typeof r.amount==='number').reduce((s,r)=>s+r.amount,0);
   const totalEmp = new Set(allRows.map(r=>r.empId)).size;
 
+  // Show/hide card and empty state
+  const hasData = allRows.length > 0;
+  document.getElementById('sum-card').style.display  = hasData ? '' : 'none';
+  document.getElementById('sum-empty').style.display = hasData ? 'none' : '';
+  document.getElementById('btn-export-sum').style.display = hasData ? '' : 'none';
+
+  if (!hasData) {
+    document.getElementById('sum-stats').innerHTML = '';
+    return;
+  }
+
   document.getElementById('sum-stats').innerHTML = `
     <div class="stat-card"><div class="stat-icon blue"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/></svg></div><div><div class="stat-val">${approved.length}</div><div class="stat-lbl">Approved Batches</div></div></div>
     <div class="stat-card"><div class="stat-icon teal"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="stat-val">${totalEmp}</div><div class="stat-lbl">Employees</div></div></div>
@@ -1794,12 +1780,7 @@ function renderSummary() {
     typeMap[t].months.add(r.month);
   });
 
-  const tbody = document.getElementById('sum-tbody');
-  if (!Object.keys(typeMap).length) {
-    tbody.innerHTML = '<tr><td colspan="6"><div class="empty"><p>No approved deductions for this period.</p></div></td></tr>';
-    return;
-  }
-  tbody.innerHTML = Object.values(typeMap).sort((a,b)=>b.amount-a.amount).map(x=>`
+  document.getElementById('sum-tbody').innerHTML = Object.values(typeMap).sort((a,b)=>b.amount-a.amount).map(x=>`
     <tr>
       <td>${[...x.months].join(', ')}</td>
       <td><span class="badge blue">${esc(x.type)}</span></td>
@@ -1819,39 +1800,7 @@ function addAudit(action, type, detail) {
   DB.auditLog.unshift({ ts:nowStr(), action, type, user:DB.currentUser, batchId:DB.currentBatchId||'—', fileId:DB.currentFileId||'—', detail });
 }
 
-function renderAudit() {
-  const filter = document.getElementById('audit-filter').value;
-  const logs   = DB.auditLog.filter(l => !filter || l.action === filter);
-  document.getElementById('audit-count').textContent = logs.length + ' entries';
-  const el = document.getElementById('audit-log');
-  if (!logs.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-ico">📋</div><p>No audit entries yet.</p><p style="font-size:11px;margin-top:6px;">Actions will appear here as you use the system.</p></div>';
-    return;
-  }
-  const colors = { UPLOAD:'var(--accent)', VALIDATE:'var(--teal)', EDIT:'var(--amber)', SAVE:'var(--purple)', APPROVE:'var(--teal)', REJECT:'var(--red)' };
-  el.innerHTML = logs.map(l => `
-    <div class="audit-entry">
-      <div class="audit-dot ${l.type}"></div>
-      <div class="audit-time">${l.ts}</div>
-      <div class="audit-main">
-        <div class="audit-action">
-          <span style="color:${colors[l.action]||'var(--text)'};font-family:var(--mono);font-size:11px;font-weight:700;">${l.action}</span>
-          <span style="margin-left:8px;font-size:11px;color:var(--text3);background:var(--surface2);padding:1px 7px;border-radius:20px;border:1px solid var(--border2);">${l.user}</span>
-        </div>
-        <div class="audit-detail">${esc(l.detail)}</div>
-        <div style="font-size:10px;color:var(--text3);margin-top:2px;font-family:var(--mono);">Batch: ${l.batchId} · File: ${l.fileId}</div>
-      </div>
-    </div>`).join('');
-}
 
-function exportAuditCSV() {
-  if (!DB.auditLog.length) { showToast('No audit entries to export','warn'); return; }
-  const csv = ['\uFEFF' + 'Timestamp,Action,User,BatchID,FileID,Detail',
-    ...DB.auditLog.map(l => `"${l.ts}","${l.action}","${l.user}","${l.batchId}","${l.fileId}","${l.detail.replace(/"/g,"'")}"`)
-  ].join('\n');
-  dl(csv, 'Audit_Trail.csv', 'text/csv;charset=utf-8');
-  showToast('Audit trail exported','ok');
-}
 
 // ═══════════════════════════════════════════════
 // OVERLAY
